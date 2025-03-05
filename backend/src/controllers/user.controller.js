@@ -1,5 +1,6 @@
 import pool from "../config/db.js";
 import comparePassword from "../utils/comparePassword.js";
+import generateToken from "../utils/generateToken.js";
 import hashPassword from "../utils/hashPassword.js";
 import checkEmail from "../utils/testEmail.js";
 
@@ -42,9 +43,11 @@ export async function signupUser(req, res) {
       message: "Sign up successfully",
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: `Error: ${error.message}` });
+    return res.status(500).json({
+      success: false,
+      message: "Failed to sign-up",
+      error: error.message,
+    });
   }
 }
 
@@ -79,14 +82,25 @@ export async function loginUser(req, res) {
         .json({ success: false, message: "Incorrect password" });
     }
 
+    generateToken(user.rows[0].id, user.rows[0].role, res);
+
     return res
       .status(200)
       .json({ success: false, message: "Login successfully" });
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: "Failed to login",
+      error: error.message,
+    });
   }
 }
 
 export async function logoutUser(req, res) {
+  res.clearCookie("token", {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: "strict",
+  });
   return res.status(200).json({ message: "Logout successfully" });
 }

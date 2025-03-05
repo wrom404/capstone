@@ -200,3 +200,7 @@ export async function deleteEvent(req, res) {
     });
   }
 }
+
+export async function cancelEvent(req, res) {
+  
+}

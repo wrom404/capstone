@@ -6,8 +6,11 @@ import {
   updateEvent,
   deleteEvent,
 } from "../controllers/event.controller.js";
+import verifyUser from "../middleware/verifyUser.js";
 
 const routes = express.Router();
+
+routes.use(verifyUser);
 
 routes.post("/create-event", createEvent);
 
