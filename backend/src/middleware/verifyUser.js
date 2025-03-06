@@ -1,8 +1,14 @@
 import jwt from "jsonwebtoken";
 
 function verifyUser(req, res, next) {
-  const { token } = req.cookies;
   const SECRET_KEY = process.env.SECRET_KEY;
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Unauthorized user" });
+  }
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
