@@ -57,7 +57,7 @@ export async function loginUser(req, res) {
   if (!email || !password) {
     return res
       .status(401)
-      .json({ success: false, message: "All fields are required" });
+      .json({ success: false, error: "All fields are required" });
   }
 
   try {
@@ -68,7 +68,7 @@ export async function loginUser(req, res) {
     if (user.rows.length === 0) {
       return res
         .status(401)
-        .json({ success: false, message: "Incorrect email" });
+        .json({ success: false, error: "Incorrect email" });
     }
 
     const isPasswordCorrect = await comparePassword(
@@ -79,7 +79,7 @@ export async function loginUser(req, res) {
     if (!isPasswordCorrect) {
       return res
         .status(401)
-        .json({ success: false, message: "Incorrect password" });
+        .json({ success: false, error: "Incorrect password" });
     }
 
     generateToken(user.rows[0].id, user.rows[0].role, res);

@@ -4,21 +4,23 @@ import { type LoginValue } from "../types/types";
 import parishLogo from "../assets/images/parish-logo.png";
 import { EyeOff, Eye, Clock, Calendar } from "lucide-react";
 import { useLoginUser } from "../hooks/useLoginUser";
+import { useNavigate } from "react-router";
 
 const LoginPage = () => {
-  const { mutate, error, isPending } = useLoginUser();
+  const mutation = useLoginUser();
   const [formValue, setFormValue] = useState<LoginValue>({
     email: "",
     password: "",
   });
   const [isPasswordOpen, setIsPasswordOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(formValue);
+    mutation.mutate(formValue);
   };
 
-  if (error) {
+  if (mutation.error) {
     return (
       <div className="min-h-screen h-screen flex justify-center items-center">
         <span className="text-red-600 text-lg">Something went wrong</span>
@@ -26,12 +28,13 @@ const LoginPage = () => {
     );
   }
 
+  if (mutation.isSuccess) {
+    navigate("/");
+  }
+
   return (
     <div className="bg-white min-h-screen border border-red-300 flex">
-      <div
-        onSubmit={() => handleSubmit}
-        className="flex-1 flex flex-col gap-2 items-center"
-      >
+      <div className="flex-1 flex flex-col gap-2 items-center">
         <div className="mt-18">
           <div className="flex items-center gap-2">
             <img src={parishLogo} className="h-20" alt="img" />
@@ -53,6 +56,7 @@ const LoginPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          onSubmit={handleSubmit}
         >
           <h2 className="mb-6 text-2xl font-bold text-center text-gray-900">
             Login
@@ -75,7 +79,7 @@ const LoginPage = () => {
               Password
             </label>
             <input
-              type={isPasswordOpen ? "password" : "text"}
+              type={isPasswordOpen ? "text" : "password"}
               value={formValue.password}
               onChange={(e) =>
                 setFormValue({ ...formValue, password: e.target.value })
@@ -84,15 +88,15 @@ const LoginPage = () => {
             />
 
             {isPasswordOpen ? (
-              <Eye
+              <EyeOff
                 className="text-gray-800 absolute right-6 bottom-3 cursor-pointer"
-                onClick={() => setIsPasswordOpen(!isPasswordOpen)}
+                onClick={() => setIsPasswordOpen(false)}
                 size={16}
               />
             ) : (
-              <EyeOff
+              <Eye
                 className="text-gray-800 absolute right-6 bottom-3 cursor-pointer"
-                onClick={() => setIsPasswordOpen(!isPasswordOpen)}
+                onClick={() => setIsPasswordOpen(true)}
                 size={16}
               />
             )}
@@ -100,9 +104,13 @@ const LoginPage = () => {
           <div className="my-6 flex justify-end w-full">
             <button
               type="submit"
-              className="btn-login border w-fit px-6 py-2 font-semibold text-gray-800 bg-primary rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+              className="w-fit px-6 py-2 font-semibold text-white bg-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
             >
-              {isPending ? <span className="loader"></span> : "Login"}
+              {mutation.isPending ? (
+                <div className="w-5 h-5 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </motion.form>

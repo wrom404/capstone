@@ -1,27 +1,26 @@
-import { useQuery } from "@tanstack/react-query";
-import useFetchEvents from "../hooks/useFetchEvents";
-// import { Event as event } from "./types/types";
+
 
 const Page = () => {
-  const { isPending, data, error } = useQuery(useFetchEvents());
 
-  if (isPending) {
-    return (
-      <div className="min-h-screen h-screen flex justify-center items-center">
-        <span className="text-gray-800 text-2xl">Loading...</span>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="min-h-screen h-screen flex justify-center items-center">
-        <span className="text-red-600 text-2xl">Error while fetching</span>
-      </div>
-    );
-  }
+  // const events = data ?? []; // Ensure `events` is always an array
 
-  console.log(data);
-  return <div>Page</div>;
+  return (
+    <div className="p-4">
+      {/* {events.length > 0 ? (
+        events.map((event) => (
+          <div key={event.id} className="p-2 border-b">
+            {event.title}
+          </div>
+        ))
+      ) : (
+        <div className="min-h-screen flex justify-center items-center">
+          <span className="text-gray-800 text-2xl">No events found</span>
+        </div>
+      )}
+      <Button className="cursor-pointer">Click me</Button> */}
+      
+    </div>
+  );
 };
 
 export default Page;

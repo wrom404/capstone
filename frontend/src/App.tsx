@@ -1,7 +1,11 @@
 import RoutePage from "./routes/Route";
 
 const App = () => {
-  return <RoutePage />;
+  return (
+    <div>
+      <RoutePage />
+    </div>
+  );
 };
 
 export default App;
