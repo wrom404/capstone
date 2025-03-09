@@ -1,4 +1,5 @@
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { useCallback, useState } from "react";
+import { Calendar, momentLocalizer, Views, View } from "react-big-calendar";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import fetchAllEvents from "@/hooks/useFetchEvents";
@@ -10,6 +11,14 @@ const localizer = momentLocalizer(moment);
 
 const CalendarEventPage = () => {
   const { isPending, data, error } = useQuery<Event[]>(fetchAllEvents);
+
+  // Fix: Explicitly type state
+  const [view, setView] = useState<View>(Views.MONTH);
+  const [date, setDate] = useState<Date>(new Date());
+
+  const handleSelectEvent = useCallback((event: Event) => {
+    alert(event);
+  }, []);
 
   if (isPending) {
     return (
@@ -31,8 +40,6 @@ const CalendarEventPage = () => {
 
   const myCalendarEvents: CalendarEvent[] = formatForCalendar(data);
 
-  console.log(myCalendarEvents);
-
   return (
     <div>
       <Calendar
@@ -41,6 +48,12 @@ const CalendarEventPage = () => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: "85dvh" }}
+        views={["month", "week", "day", "agenda"]} // Enable views
+        view={view} // Controlled view state
+        date={date} // Controlled date state
+        onView={(newView: View) => setView(newView)} // Ensure type safety
+        onNavigate={(newDate) => setDate(newDate)} // Handle navigation
+        onSelectEvent={handleSelectEvent}
       />
     </div>
   );
