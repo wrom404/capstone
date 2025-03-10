@@ -1,37 +1,64 @@
+import CustomModal from "@/components/CustomModal";
 import TableEvent from "@/components/TableEvent";
+import useDeleteEvent from "@/hooks/useDeleteEvent";
 import fetchAllEvents from "@/hooks/useFetchEvents";
 import { type Event } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const EventPage = () => {
-  const { data, error, isPending } = useQuery<Event[]>(fetchAllEvents);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [events, setEvents] = useState<Event[] | undefined>([]);
+  const {
+    mutate: deleteEvent,
+    error: deleteError,
+    isPending: isDeleting,
+  } = useDeleteEvent();
+  const {
+    data,
+    error: fetchError,
+    isPending: isFetching,
+  } = useQuery<Event[]>(fetchAllEvents);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredEvents, setFilteredEvents] = useState<Event[] | undefined>([]);
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [eventId, setEventId] = useState<number | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (data) {
-      setEvents(() =>
-        data.filter((event) =>
-          selectedCategory === "all"
-            ? true
-            : event.event_type === selectedCategory
-        )
+    let events = data;
+
+    if (searchQuery) {
+      events = events?.filter((event) =>
+        event.title.toLocaleLowerCase().includes(searchQuery)
       );
     }
-  }, [selectedCategory, data]);
+
+    if (selectedCategory) {
+      events = events?.filter(
+        (event) =>
+          event.event_type.toLocaleLowerCase() ===
+          selectedCategory.toLocaleLowerCase()
+      );
+    }
+
+    setFilteredEvents(events);
+  }, [setFilteredEvents, data, searchQuery, selectedCategory]);
 
   // Pagination logic
-  const paginatedEvents = events?.slice(
+  const paginatedEvents = filteredEvents?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  const totalPages = events ? Math.ceil(events.length / itemsPerPage) : 0;
+  const totalPages = filteredEvents
+    ? Math.ceil(filteredEvents.length / itemsPerPage)
+    : 0;
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
@@ -46,7 +73,23 @@ const EventPage = () => {
     setSearchQuery(e.target.value);
   };
 
-  if (isPending) {
+  const handleClickEvent = (id: number) => {
+    navigate(`/event/${id}`);
+  };
+
+  const handleClickDelete = (id: number) => {
+    setIsModalOpen(true);
+    setEventId(id);
+  };
+
+  const handleDelete = () => {
+    if (eventId !== null) {
+      deleteEvent(eventId);
+      setIsModalOpen(false);
+    }
+  };
+
+  if (isFetching || isDeleting) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <span className="text-gray-800 text-2xl">Loading...</span>
@@ -54,7 +97,7 @@ const EventPage = () => {
     );
   }
 
-  if (error) {
+  if (fetchError || deleteError) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <span className="text-red-600 text-2xl">
@@ -84,17 +127,17 @@ const EventPage = () => {
             value={selectedCategory}
             className="border px-3 py-1 mb-4 ml-4"
           >
-            <option value="all">All</option>
+            <option value="">All</option>
             <option value="others">Others</option>
             <option value="gaming">Gaming</option>
           </select>
         </div>
       </div>
 
-      <TableEvent events={paginatedEvents || []} />
+      <TableEvent events={paginatedEvents || []} handleClickEvent={handleClickEvent} handleClickDelete={handleClickDelete} />
 
       {/* Pagination Controls */}
-      <div className="flex justify-between items-center mt-4 text-gray-800 text-sm">
+      <div className="flex justify-between items-center mt-6 text-gray-800 text-sm">
         <div>
           <span>Items per page:</span>
           <select
@@ -102,7 +145,7 @@ const EventPage = () => {
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
             className="border px-2 py-1 ml-2 cursor-pointer"
           >
-            {[5, 10, 15].map((size) => (
+            {[10, 20, 30].map((size) => (
               <option key={size} value={size}>
                 {size}
               </option>
@@ -129,6 +172,14 @@ const EventPage = () => {
           </button>
         </div>
       </div>
+
+      <CustomModal
+        isOpen={isModalOpen}
+        title="Delete Event"
+        message="Proceed to delete? This action cannot be undone."
+        onConfirm={handleDelete}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

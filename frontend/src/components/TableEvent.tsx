@@ -11,15 +11,14 @@ import formatDate from "@/utils/formatDate";
 import formatTime from "@/utils/formatTime";
 import { Pencil, Trash } from "lucide-react";
 
-const TableEvent = ({ events }: TableEventProps) => {
-
-  function handleClickEvent(id: number) {
-    window.alert(`ID is ${id}`);
-  }
-
+const TableEvent = ({
+  events,
+  handleClickEvent,
+  handleClickDelete,
+}: TableEventProps) => {
   return (
-    <Table>
-      <TableHeader>
+    <Table className="border">
+      <TableHeader className="bg-gray-50">
         <TableRow>
           <TableHead>Event Name</TableHead>
           <TableHead>Category</TableHead>
@@ -34,8 +33,11 @@ const TableEvent = ({ events }: TableEventProps) => {
           events?.map((event, index) => (
             <TableRow
               className="cursor-pointer"
-              onClick={() => handleClickEvent(event.id)}
               key={index}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClickEvent(event.id);
+              }}
             >
               <TableCell className="font-medium">{event.title}</TableCell>
               <TableCell className="">{event.event_type}</TableCell>
@@ -49,7 +51,13 @@ const TableEvent = ({ events }: TableEventProps) => {
                   <Pencil className="inline" size={16} />{" "}
                   <span className="text-sm">Edit</span>
                 </button>
-                <button className="cursor-pointer hover:text-red-800">
+                <button
+                  className="cursor-pointer hover:text-red-800"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClickDelete(event.id);
+                  }}
+                >
                   <Trash className="inline" size={16} />
                   <span className="text-sm">Delete</span>
                 </button>

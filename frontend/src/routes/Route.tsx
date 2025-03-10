@@ -6,6 +6,7 @@ import CalendarPage from "@/pages/CalendarEventPage";
 import EventPage from "@/pages/EventPage";
 import ArchivePage from "@/pages/ArchivePage";
 import ScheduleEventPage from "@/pages/ScheduleEventPage";
+import CurrentEventPage from "@/pages/CurrentEventPage";
 
 const RoutePage = () => {
   return (
@@ -23,6 +24,7 @@ const RoutePage = () => {
                 <Route path="/" element={<Page />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/event" element={<EventPage />} />
+                <Route path="/event/:id" element={<CurrentEventPage />} />
                 <Route path="/archive" element={<ArchivePage />} />
                 <Route path="/schedule" element={<ScheduleEventPage />} />
                 {/* <Route path="/logout" element={} /> */}

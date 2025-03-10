@@ -16,6 +16,18 @@ const CalendarEventPage = () => {
   const [view, setView] = useState<View>(Views.MONTH);
   const [date, setDate] = useState<Date>(new Date());
 
+  const eventStyleGetter = () => {
+    const style = {
+      backgroundColor: "#1A1A1A", 
+      color: "white",
+      borderRadius: "5px",
+      border: "none",
+      display: "block",
+      fontSize: "14px"
+    };
+    return { style };
+  };
+
   const handleSelectEvent = useCallback((event: Event) => {
     alert(event);
   }, []);
@@ -54,6 +66,7 @@ const CalendarEventPage = () => {
         onView={(newView: View) => setView(newView)} // Ensure type safety
         onNavigate={(newDate) => setDate(newDate)} // Handle navigation
         onSelectEvent={handleSelectEvent}
+        eventPropGetter={eventStyleGetter}
       />
     </div>
   );

@@ -167,24 +167,35 @@ export async function updateEvent(req, res) {
 export async function deleteEvent(req, res) {
   const { id } = req.params;
 
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "ID parameter is missing",
+    });
+  }
+
+  console.log(`ID received: ${id}`);
+
   try {
-    const eventCheck = await pool.query("SELECT id FROM events WHERE id = $1", [
+    // Check if the event exists
+    const eventCheck = await pool.query("SELECT * FROM events WHERE id = $1", [
       id,
     ]);
 
-    if (eventCheck.rowCount === 0) {
+    if (eventCheck.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: "Event not found",
       });
     }
 
+    // Delete the event
     const result = await pool.query(
       "DELETE FROM events WHERE id = $1 RETURNING *",
       [id]
     );
 
-    if (result.rowCount > 0) {
+    if (result.rows.length > 0) {
       return res.json({ success: true, message: "Event deleted successfully" });
     } else {
       return res.status(500).json({
@@ -193,6 +204,7 @@ export async function deleteEvent(req, res) {
       });
     }
   } catch (error) {
+    console.error("Error deleting event:", error);
     return res.status(500).json({
       success: false,
       message: "An error occurred while deleting the event",
@@ -201,6 +213,5 @@ export async function deleteEvent(req, res) {
   }
 }
 
-export async function cancelEvent(req, res) {
-  
-}
+
+export async function cancelEvent(req, res) {}

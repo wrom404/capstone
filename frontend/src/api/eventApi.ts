@@ -11,4 +11,15 @@ export const getAllEvents = async (): Promise<Event[]> => {
   throw new Error("Failed to fetch events");
 };
 
+export const deleteEvent = async (id: number) => {
+  const response = await axios.delete(`http://localhost:4000/api/${id}`);
+
+  if (response.data.success) {
+    return response.data.data;
+  }
+
+  throw new Error("Failed to delete event");
+}
+
+
 

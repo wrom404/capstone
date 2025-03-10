@@ -1,3 +1,4 @@
+
 export type Event = {
   id: number;
   title: string;
@@ -51,4 +52,21 @@ export type LoginValue = {
 
 export type TableEventProps = {
   events: Event[];
+  handleClickEvent: (id: number) => void;
+  handleClickDelete: (id: number) => void;
 };
+
+export type ModalProps = {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+export type MyEvent = {
+  title: string;
+  start: Date;
+  end: Date;
+  allDay?: boolean;
+}
