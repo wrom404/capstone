@@ -18,6 +18,7 @@ function verifyUser(req, res, next) {
     }
 
     req.id = decoded.userId;
+    console.log(`Token: ${token}`);
     next();
   } catch (error) {
     console.log("Error:", error.message);

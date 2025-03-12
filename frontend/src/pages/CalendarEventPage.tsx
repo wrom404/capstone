@@ -3,7 +3,7 @@ import { Calendar, momentLocalizer, Views, View } from "react-big-calendar";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import fetchAllEvents from "@/hooks/useFetchEvents";
-import { type Event, type CalendarEvent } from "@/types/types";
+import { type Event } from "@/types/types";
 import formatForCalendar from "@/utils/formatForCalendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
@@ -11,19 +11,17 @@ const localizer = momentLocalizer(moment);
 
 const CalendarEventPage = () => {
   const { isPending, data, error } = useQuery<Event[]>(fetchAllEvents);
-
-  // Fix: Explicitly type state
   const [view, setView] = useState<View>(Views.MONTH);
   const [date, setDate] = useState<Date>(new Date());
 
   const eventStyleGetter = () => {
     const style = {
-      backgroundColor: "#1A1A1A", 
+      backgroundColor: "#1A1A1A",
       color: "white",
       borderRadius: "5px",
       border: "none",
       display: "block",
-      fontSize: "14px"
+      fontSize: "14px",
     };
     return { style };
   };
@@ -35,7 +33,7 @@ const CalendarEventPage = () => {
   if (isPending) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <span className="text-gray-800 text-2xl">Loading...</span>
+        <div className="w-8 h-8 border-4 border-gray-700 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -50,7 +48,8 @@ const CalendarEventPage = () => {
     );
   }
 
-  const myCalendarEvents: CalendarEvent[] = formatForCalendar(data);
+  const myCalendarEvents = formatForCalendar(data);
+  console.log(myCalendarEvents);
 
   return (
     <div>
@@ -59,12 +58,12 @@ const CalendarEventPage = () => {
         events={myCalendarEvents}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: "85dvh" }}
-        views={["month", "week", "day", "agenda"]} // Enable views
-        view={view} // Controlled view state
-        date={date} // Controlled date state
-        onView={(newView: View) => setView(newView)} // Ensure type safety
-        onNavigate={(newDate) => setDate(newDate)} // Handle navigation
+        style={{ height: "85vh" }}
+        views={["month", "week", "day", "agenda"]}
+        view={view}
+        date={date}
+        onView={(newView: View) => setView(newView)}
+        onNavigate={(newDate) => setDate(newDate)}
         onSelectEvent={handleSelectEvent}
         eventPropGetter={eventStyleGetter}
       />

@@ -1,5 +1,11 @@
+import FormEvent from "@/components/FormEvent";
+
 const ScheduleEventPage = () => {
-  return <div>ScheduleEventPage</div>;
+  return (
+    <div>
+      <FormEvent />
+    </div>
+  );
 };
 
 export default ScheduleEventPage;

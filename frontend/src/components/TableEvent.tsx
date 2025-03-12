@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { type TableEventProps } from "@/types/types";
-import formatDate from "@/utils/formatDate";
+import formatDateTable from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
 import { Pencil, Trash } from "lucide-react";
 
@@ -41,7 +41,7 @@ const TableEvent = ({
             >
               <TableCell className="font-medium">{event.title}</TableCell>
               <TableCell className="">{event.event_type}</TableCell>
-              <TableCell className="">{formatDate(event.date)}</TableCell>
+              <TableCell className="">{formatDateTable(event.date)}</TableCell>
               <TableCell className="">{`${formatTime(
                 event.start_time
               )} - ${formatTime(event.end_time)}`}</TableCell>
