@@ -17,9 +17,9 @@ const TableEvent = ({
   handleClickDelete,
 }: TableEventProps) => {
   return (
-    <Table className="border">
+    <Table className="border border-gray-300">
       <TableHeader className="bg-gray-50">
-        <TableRow>
+        <TableRow className="border border-gray-300">
           <TableHead>Event Name</TableHead>
           <TableHead>Category</TableHead>
           <TableHead>Date</TableHead>
@@ -36,15 +36,15 @@ const TableEvent = ({
               key={index}
               onClick={(e) => {
                 e.stopPropagation();
-                handleClickEvent(event.id);
+                handleClickEvent(event.id || 0);
               }}
             >
               <TableCell className="font-medium">{event.title}</TableCell>
               <TableCell className="">{event.event_type}</TableCell>
-              <TableCell className="">{formatDateTable(event.date)}</TableCell>
+              <TableCell className="">{formatDateTable(event.date || "")}</TableCell>
               <TableCell className="">{`${formatTime(
-                event.start_time
-              )} - ${formatTime(event.end_time)}`}</TableCell>
+                event.start_time || ""
+              )} - ${formatTime(event.end_time || "")}`}</TableCell>
               <TableCell className="">{event.status}</TableCell>
               <TableCell className="flex gap-6">
                 <button className="cursor-pointer hover:text-green-800">
@@ -55,7 +55,7 @@ const TableEvent = ({
                   className="cursor-pointer hover:text-red-800"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleClickDelete(event.id);
+                    handleClickDelete(event.id || 0);
                   }}
                 >
                   <Trash className="inline" size={16} />

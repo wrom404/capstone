@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 import {
-  Select as ShadCnSelect,
+  Select as CustomSelect,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -13,16 +13,10 @@ import { Checkbox } from "@/src/components/ui/checkbox";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import React, { useState } from "react";
-import Select, { MultiValue, ActionMeta } from "react-select";
-import makeAnimated from "react-select/animated";
 import { FormDataProps } from "@/types/types";
 import useCreateEvent from "@/hooks/useCreateEvent";
 import formatDateTimeForm from "@/utils/formatDateTimeForm";
-
-type OptionsProps = {
-  value: string;
-  label: string;
-};
+import Select from "react-select"; // Import react-select component
 
 const FormEvent = () => {
   const { mutate: createEvent, isPending, error } = useCreateEvent();
@@ -42,8 +36,6 @@ const FormEvent = () => {
     endDate: "",
   });
 
-  const animatedComponents = makeAnimated();
-
   const options = [
     { value: "Monday", label: "Monday" },
     { value: "Tuesday", label: "Tuesday" },
@@ -53,17 +45,6 @@ const FormEvent = () => {
     { value: "Saturday", label: "Saturday" },
     { value: "Sunday", label: "Sunday" },
   ];
-
-  const handleDaySelection = (
-    selectedDays: MultiValue<OptionsProps>,
-    _actionMeta: ActionMeta<OptionsProps>
-  ) => {
-    const days = selectedDays.map(
-      (day) =>
-        day.value.charAt(0).toUpperCase() + day.value.slice(1).toLowerCase()
-    );
-    setFormEvent({ ...formEvent, recurringDays: days });
-  };
 
   const handleOnCheckChange = (e: boolean) => {
     if (!formEvent.hasEndDate) {
@@ -91,6 +72,7 @@ const FormEvent = () => {
       startTime: formattedStartTime,
       endTime: formattedEndTime,
     });
+
     setFormEvent({
       title: "",
       description: "",
@@ -111,7 +93,7 @@ const FormEvent = () => {
   if (isPending) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-white">
-        <div className="w-12 h-12 border-4 border-gray-700 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -146,7 +128,7 @@ const FormEvent = () => {
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Category</Label>
-            <ShadCnSelect
+            <CustomSelect
               value={formEvent.eventType || ""}
               onValueChange={(e) =>
                 setFormEvent({ ...formEvent, eventType: e })
@@ -164,7 +146,7 @@ const FormEvent = () => {
                 <SelectItem value="meeting">Meeting</SelectItem>
                 <SelectItem value="others">Others</SelectItem>
               </SelectContent>
-            </ShadCnSelect>
+            </CustomSelect>
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Priest Name</Label>
@@ -202,7 +184,10 @@ const FormEvent = () => {
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Client Number</Label>
+            <Label>
+              Client Number{" "}
+              <span className="text-xs text-gray-600">(Optional)</span>
+            </Label>
             <Input
               value={formEvent.clientNumber || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -262,7 +247,7 @@ const FormEvent = () => {
               checked={formEvent.isRecurring}
               onCheckedChange={handleOnCheckChange}
               id="terms"
-              className="cursor-pointer shadow"
+              className="cursor-pointer shadow border-1 border-gray-400"
             />
             <label
               htmlFor="terms"
@@ -276,13 +261,23 @@ const FormEvent = () => {
               <div className="grid w-full items-center gap-1.5 py-2.5">
                 <Label>Select Recurring Days</Label>
                 <Select
-                  className="text-gray-700"
-                  onChange={handleDaySelection}
-                  closeMenuOnSelect={false}
-                  components={animatedComponents}
-                  placeholder=""
                   isMulti
+                  placeholder=""
+                  className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
                   options={options}
+                  value={options.filter((option) =>
+                    formEvent.recurringDays
+                      ? formEvent.recurringDays.includes(option.value)
+                      : []
+                  )}
+                  onChange={(selectedOptions) =>
+                    setFormEvent({
+                      ...formEvent,
+                      recurringDays: selectedOptions
+                        ? selectedOptions.map((option) => option.value)
+                        : [],
+                    })
+                  }
                 />
               </div>
               <div className="flex items-center space-x-2 py-6">
@@ -292,7 +287,7 @@ const FormEvent = () => {
                     setFormEvent({ ...formEvent, hasEndDate: e })
                   }
                   id="terms"
-                  className="shadow cursor-pointer"
+                  className="shadow cursor-pointer border-1 border-gray-400"
                 />
                 <label
                   htmlFor="terms"
@@ -309,31 +304,21 @@ const FormEvent = () => {
                 End Date{" "}
                 <span className="text-xs text-gray-600">(YYY/MM/DD)</span>
               </Label>
-              {/* <DatePicker
-                id="endDate"
-                selected={formEvent.date ? new Date(formEvent.date) : null}
-                onChange={(date: Date | null) =>
-                  setFormEvent({
-                    ...formEvent,
-                    date: date ? date.toISOString() : null,
-                  })
-                }
-                minDate={new Date()}
-                isClearable
-                dateFormat="yyyy/MM/dd"
-                className="text-sm border border-gray-400 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
-              /> */}
               <DatePicker
                 id="endDate"
+                minDate={new Date()}
+                dateFormat="yyyy/MM/dd"
+                className="text-sm border border-gray-400 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
                 selected={
                   formEvent.endDate ? new Date(formEvent.endDate) : null
                 }
                 onChange={(date: Date | null) =>
                   setFormEvent({
                     ...formEvent,
-                    endDate: date ? date.toISOString() : null, // set it as null if no end date
+                    endDate: date ? date.toISOString() : null,
                   })
                 }
+                isClearable
               />
             </div>
           )}

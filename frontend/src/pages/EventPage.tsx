@@ -35,15 +35,17 @@ const EventPage = () => {
 
     if (searchQuery) {
       events = events?.filter((event) =>
-        event.title.toLocaleLowerCase().includes(searchQuery)
+        event.title
+          ? event.title.toLowerCase().includes(searchQuery.toLowerCase())
+          : false
       );
     }
 
     if (selectedCategory) {
-      events = events?.filter(
-        (event) =>
-          event.event_type.toLocaleLowerCase() ===
-          selectedCategory.toLocaleLowerCase()
+      events = events?.filter((event) =>
+        event.event_type
+          ? event.event_type.toLowerCase() === selectedCategory
+          : false
       );
     }
 
@@ -134,7 +136,11 @@ const EventPage = () => {
         </div>
       </div>
 
-      <TableEvent events={paginatedEvents || []} handleClickEvent={handleClickEvent} handleClickDelete={handleClickDelete} />
+      <TableEvent
+        events={paginatedEvents || []}
+        handleClickEvent={handleClickEvent}
+        handleClickDelete={handleClickDelete}
+      />
 
       {/* Pagination Controls */}
       <div className="flex justify-between items-center mt-6 text-gray-800 text-sm">
