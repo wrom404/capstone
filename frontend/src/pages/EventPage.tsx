@@ -15,6 +15,7 @@ const EventPage = () => {
     isPending: isDeleting,
     isSuccess: deleteSuccess,
   } = useDeleteEvent();
+  
   const {
     data,
     error: fetchError,

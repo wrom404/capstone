@@ -21,6 +21,25 @@ export const getAllEvents = async (): Promise<Event[]> => {
   }
 };
 
+export const getEventById = async (id: string) => {
+  try {
+    const response = await axios.get(`http://localhost:4000/api/${id}`);
+
+    if (!response.data.success) {
+      return response.data.error;
+    }
+    return response.data.data;
+  } catch (error) {
+    // handle different error case
+    if (axios.isAxiosError(error)) {
+      console.error("Axios Error:", error.message);
+    } else {
+      console.error("Unexpected Error:", error);
+    }
+    return [];
+  }
+}
+
 export const deleteEvent = async (id: number): Promise<Event | string> => {
 
   try {

@@ -1,8 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Calendar, momentLocalizer, Views, View } from "react-big-calendar";
 import moment from "moment";
 import useFetchAllEvents from "@/hooks/useFetchEvents";
 import { type Event } from "@/types/types";
+import generateRecurringEvents from "@/utils/generateRecurringEvents"; // Import your recurring logic
 import formatForCalendar from "@/utils/formatForCalendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
@@ -12,21 +13,69 @@ const CalendarEventPage = () => {
   const { isPending, data, error } = useFetchAllEvents();
   const [view, setView] = useState<View>(Views.MONTH);
   const [date, setDate] = useState<Date>(new Date());
+  const [events, setEvents] = useState<Event[]>([]); // State to store all events
 
-  const eventStyleGetter = () => {
-    const style = {
-      backgroundColor: "#1A1A1A",
-      color: "white",
-      borderRadius: "5px",
-      border: "none",
-      display: "block",
-      fontSize: "14px",
+  // Fetch and generate recurring events when data is available
+  useEffect(() => {
+    if (data) {
+      const allEvents = generateRecurringEvents(data); // Generate all events including recurring ones
+      setEvents(allEvents); // Store the events, including recurring ones
+    }
+  }, [data]);
+
+  // Format the events for the calendar
+  const myCalendarEvents = formatForCalendar(events);
+
+  const eventPropGetter = (event: Event) => {
+    let backgroundColor = "#ffffff";
+    let color = "#000000";
+
+    switch (event.event_type) {
+      case "mass":
+        backgroundColor = "#d4edda";
+        color = "#155724";
+        break;
+      case "wedding":
+        backgroundColor = "#fcd5ce";
+        color = "#842029";
+        break;
+      case "baptism":
+        backgroundColor = "#cfe2f3";
+        color = "#084298";
+        break;
+      case "funeral":
+        backgroundColor = "#f8f9fa";
+        color = "#495057";
+        break;
+      case "confession":
+        backgroundColor = "#e2d3f3";
+        color = "#5f378d";
+        break;
+      case "meeting":
+        backgroundColor = "#ffe5b4";
+        color = "#7f4300";
+        break;
+      case "others":
+        backgroundColor = "#f7f7e9";
+        color = "#495057";
+        break;
+      default:
+        backgroundColor = "#ffffff";
+        color = "#212529";
+    }
+
+    return {
+      style: {
+        backgroundColor,
+        color,
+        padding: "2px",
+        border: "1px solid #ddd",
+      },
     };
-    return { style };
   };
 
   const handleSelectEvent = useCallback((event: Event) => {
-    alert(event);
+    alert(event.title); // Show the title when an event is selected
   }, []);
 
   if (isPending) {
@@ -47,9 +96,6 @@ const CalendarEventPage = () => {
     );
   }
 
-  const myCalendarEvents = formatForCalendar(data);
-  console.log(myCalendarEvents);
-
   return (
     <div>
       <Calendar
@@ -64,7 +110,7 @@ const CalendarEventPage = () => {
         onView={(newView: View) => setView(newView)}
         onNavigate={(newDate) => setDate(newDate)}
         onSelectEvent={handleSelectEvent}
-        eventPropGetter={eventStyleGetter}
+        eventPropGetter={eventPropGetter}
       />
     </div>
   );

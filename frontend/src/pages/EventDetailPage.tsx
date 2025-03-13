@@ -1,7 +1,30 @@
+import useFetchAllEvent from "@/hooks/useFetchEvent";
 import { useParams } from "react-router-dom";
 
 const EventDetailPage = () => {
   const { id } = useParams();
+  const { data, isPending, error } = useFetchAllEvent(id || "");
+
+  if (isPending) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <span className="text-red-600 text-2xl">
+          Error while fetching events
+        </span>
+      </div>
+    );
+  }
+
+  console.log(data[0]);
+
   return (
     <div>
       EventDetailPage
