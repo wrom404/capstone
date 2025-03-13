@@ -3,6 +3,7 @@ import comparePassword from "../utils/comparePassword.js";
 import generateToken from "../utils/generateToken.js";
 import hashPassword from "../utils/hashPassword.js";
 import checkEmail from "../utils/testEmail.js";
+import jwt from "jsonwebtoken";
 
 export async function signupUser(req, res) {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
@@ -66,9 +67,7 @@ export async function loginUser(req, res) {
     ]);
 
     if (user.rows.length === 0) {
-      return res
-        .status(401)
-        .json({ success: false, error: "Incorrect email" });
+      return res.status(401).json({ success: false, error: "Incorrect email" });
     }
 
     const isPasswordCorrect = await comparePassword(
@@ -93,6 +92,36 @@ export async function loginUser(req, res) {
       message: "Failed to login",
       error: error.message,
     });
+  }
+}
+
+export async function currentUser(req, res) {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Unauthorized user" });
+  }
+
+  try {
+    const decoded = jwt.decode(token, process.env.SECRET_KEY);
+    const userId = decoded.userId;
+
+    const result = await pool.query("SELECT * FROM users WHERE id = $1", [
+      userId,
+    ]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, message: "No user found" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, user: { ...result.rows[0], password: "" } });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error });
   }
 }
 

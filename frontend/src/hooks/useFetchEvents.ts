@@ -1,9 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
 import { getAllEvents } from "../api/eventApi";
 
-const fetchAllEvents = {
-  queryKey: ["events"],
-  queryFn: getAllEvents,
+const useFetchAllEvents = () => {
+  return useQuery({
+    queryKey: ["events"],
+    queryFn: getAllEvents,
+  })
 };
 
-export default fetchAllEvents;
-
+export default useFetchAllEvents;

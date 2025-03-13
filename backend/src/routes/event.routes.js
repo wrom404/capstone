@@ -12,7 +12,6 @@ const routes = express.Router();
 
 routes.use(verifyUser);
 
-console.log("Before ni sud sa create event");
 routes.post("/create-event", createEvent);
 
 routes.get("/", getEvents);

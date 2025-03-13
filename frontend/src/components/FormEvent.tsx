@@ -12,18 +12,26 @@ import { Button } from "@/src/components/ui/button";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormDataProps } from "@/types/types";
 import useCreateEvent from "@/hooks/useCreateEvent";
 import formatDateTimeForm from "@/utils/formatDateTimeForm";
 import Select from "react-select"; // Import react-select component
+import toast from "react-hot-toast";
 
 const FormEvent = () => {
-  const { mutate: createEvent, isPending, error } = useCreateEvent();
+  const {
+    mutate: createEvent,
+    isPending,
+    error,
+    isSuccess,
+    data,
+  } = useCreateEvent();
   const [formEvent, setFormEvent] = useState<FormDataProps>({
     title: "",
     description: "",
     venue: "",
+    expectedAttendance: "",
     eventType: "",
     priestName: "",
     clientNumber: "",
@@ -45,6 +53,13 @@ const FormEvent = () => {
     { value: "Saturday", label: "Saturday" },
     { value: "Sunday", label: "Sunday" },
   ];
+
+  useEffect(() => {
+    if (data || isSuccess) {
+      console.log(data);
+      toast.success("Event created successfully");
+    }
+  }, [isSuccess, data]);
 
   const handleOnCheckChange = (e: boolean) => {
     if (!formEvent.hasEndDate) {
@@ -77,6 +92,7 @@ const FormEvent = () => {
       title: "",
       description: "",
       venue: "",
+      expectedAttendance: "",
       eventType: "",
       priestName: "",
       clientNumber: "",
@@ -148,18 +164,24 @@ const FormEvent = () => {
               </SelectContent>
             </CustomSelect>
           </div>
-          <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Priest Name</Label>
-            <Input
-              type="text"
-              id="text"
-              value={formEvent.priestName || ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, priestName: e.target.value })
-              }
-              className="shadow-none border border-gray-400 focus:ring-1 w-full"
-            />
-          </div>
+          {(formEvent.eventType == "mass" ||
+            formEvent.eventType == "wedding" ||
+            formEvent.eventType == "baptism" ||
+            formEvent.eventType == "funeral" ||
+            formEvent.eventType == "confession") && (
+            <div className="grid w-full items-center gap-1.5 py-2.5">
+              <Label>Priest Name</Label>
+              <Input
+                type="text"
+                id="text"
+                value={formEvent.priestName || ""}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFormEvent({ ...formEvent, priestName: e.target.value })
+                }
+                className="shadow-none border border-gray-400 focus:ring-1 w-full"
+              />
+            </div>
+          )}
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label htmlFor="message">Description</Label>
             <Textarea
@@ -183,6 +205,27 @@ const FormEvent = () => {
               className="shadow-none border border-gray-400 focus:ring-1 w-full"
             />
           </div>
+
+          <div className="grid w-full items-center gap-1.5 py-2.5">
+            <Label>Expected attendance</Label>
+            <CustomSelect
+              value={formEvent.expectedAttendance || ""}
+              onValueChange={(e) =>
+                setFormEvent({ ...formEvent, expectedAttendance: e })
+              }
+            >
+              <SelectTrigger className="w-full border border-gray-400 shadow-none">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+                <SelectItem value="500">500</SelectItem>
+              </SelectContent>
+            </CustomSelect>
+          </div>
+
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>
               Client Number{" "}
@@ -203,7 +246,7 @@ const FormEvent = () => {
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label htmlFor="message">
-              Date <span className="text-xs text-gray-600">(YYY/MM/DD)</span>
+              Date <span className="text-xs text-gray-500">(YYY/MM/DD)</span>
             </Label>
             <DatePicker
               selected={formEvent.date ? new Date(formEvent.date) : null}
@@ -302,7 +345,7 @@ const FormEvent = () => {
             <div className="grid w-full items-center gap-1.5 py-2.5">
               <Label htmlFor="endDate">
                 End Date{" "}
-                <span className="text-xs text-gray-600">(YYY/MM/DD)</span>
+                <span className="text-xs text-gray-500">(YYY/MM/DD)</span>
               </Label>
               <DatePicker
                 id="endDate"

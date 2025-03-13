@@ -12,6 +12,11 @@
   --fourth-color: #939499;
   --fifth-color: #f9f8fc;
   --hover-color: #1f204a; /* Darker shade */
+  --background-color: #f5f7fb;
+  --blue-color: #007bff;
+  --light-blue-color: #e9f2ff;
+  --yellow-color: #ffc107;
+  --gray-color: #6c757d;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

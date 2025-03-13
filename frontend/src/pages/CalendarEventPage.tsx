@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
 import { Calendar, momentLocalizer, Views, View } from "react-big-calendar";
 import moment from "moment";
-import { useQuery } from "@tanstack/react-query";
-import fetchAllEvents from "@/hooks/useFetchEvents";
+import useFetchAllEvents from "@/hooks/useFetchEvents";
 import { type Event } from "@/types/types";
 import formatForCalendar from "@/utils/formatForCalendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -10,7 +9,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
 
 const CalendarEventPage = () => {
-  const { isPending, data, error } = useQuery<Event[]>(fetchAllEvents);
+  const { isPending, data, error } = useFetchAllEvents();
   const [view, setView] = useState<View>(Views.MONTH);
   const [date, setDate] = useState<Date>(new Date());
 
@@ -33,7 +32,7 @@ const CalendarEventPage = () => {
   if (isPending) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-gray-700 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }

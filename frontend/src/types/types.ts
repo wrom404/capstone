@@ -55,6 +55,7 @@ export type TableEventProps = {
   events: Event[];
   handleClickEvent: (id: number) => void;
   handleClickDelete: (id: number) => void;
+  handleClickEdit: (id: number) => void;
 };
 
 export type ModalProps = {
@@ -77,28 +78,13 @@ export type FormProps = {
   setStartDate: React.Dispatch<SetStateAction<Date>>
 }
 
-// export type FormDataProps = {
-//   title: string;
-//   eventType: string;
-//   priestName?: string;
-//   description: string;
-//   venue: string;
-//   clientNumber?: string;
-//   date: string | null;
-//   startTime: string | null;
-//   endTime: string | null;
-//   isRecurring?: boolean;
-//   recurringDays?: string[];
-//   hasEndDate?: boolean;
-//   endDate?: string | null;
-// }
-
 export type FormDataProps = {
   title: string;
   eventType: string;
   priestName?: string;
   description: string;
   venue: string;
+  expectedAttendance: string;
   clientNumber?: string;
   date: string | null; // You will store the date as a string (ISO 8601 formatted)
   startTime: string | null; // You store the time in HH:mm format as a string
@@ -108,3 +94,13 @@ export type FormDataProps = {
   hasEndDate?: boolean;
   endDate?: string | null; // You store the endDate as ISO 8601 formatted string or null
 };
+
+export type UserProps = {
+  id:         number;
+  first_name: string;
+  last_name:  string;
+  email:      string;
+  password:   string;
+  role:       string;
+  create_at:  Date;
+}

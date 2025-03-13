@@ -15,6 +15,7 @@ const TableEvent = ({
   events,
   handleClickEvent,
   handleClickDelete,
+  handleClickEdit,
 }: TableEventProps) => {
   return (
     <Table className="border border-gray-300">
@@ -41,18 +42,26 @@ const TableEvent = ({
             >
               <TableCell className="font-medium">{event.title}</TableCell>
               <TableCell className="">{event.event_type}</TableCell>
-              <TableCell className="">{formatDateTable(event.date || "")}</TableCell>
+              <TableCell className="">
+                {formatDateTable(event.date || "")}
+              </TableCell>
               <TableCell className="">{`${formatTime(
                 event.start_time || ""
               )} - ${formatTime(event.end_time || "")}`}</TableCell>
               <TableCell className="">{event.status}</TableCell>
-              <TableCell className="flex gap-6">
-                <button className="cursor-pointer hover:text-green-800">
+              <TableCell className="flex gap-4">
+                <button
+                  className="cursor-pointer text-green-800 bg-green-100 hover:text-green-900 py-1 px-2 rounded-md flex items-center gap-0.5"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClickEdit(event.id || 0);
+                  }}
+                >
                   <Pencil className="inline" size={16} />{" "}
                   <span className="text-sm">Edit</span>
                 </button>
                 <button
-                  className="cursor-pointer hover:text-red-800"
+                  className="cursor-pointer text-red-800 hover:text-red-900 bg-red-100 py-1 px-2 rounded-md flex items-center gap-0.5"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleClickDelete(event.id || 0);

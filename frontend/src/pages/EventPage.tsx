@@ -1,10 +1,10 @@
 import CustomModal from "@/components/CustomModal";
 import TableEvent from "@/components/TableEvent";
 import useDeleteEvent from "@/hooks/useDeleteEvent";
-import fetchAllEvents from "@/hooks/useFetchEvents";
+import useFetchAllEvents from "@/hooks/useFetchEvents";
 import { type Event } from "@/types/types";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
@@ -13,12 +13,13 @@ const EventPage = () => {
     mutate: deleteEvent,
     error: deleteError,
     isPending: isDeleting,
+    isSuccess: deleteSuccess,
   } = useDeleteEvent();
   const {
     data,
     error: fetchError,
     isPending: isFetching,
-  } = useQuery<Event[]>(fetchAllEvents);
+  } = useFetchAllEvents();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
@@ -52,6 +53,12 @@ const EventPage = () => {
     setFilteredEvents(events);
   }, [setFilteredEvents, data, searchQuery, selectedCategory]);
 
+  useEffect(() => {
+    if (deleteSuccess) {
+      toast.success("Event deleted successfully");
+    }
+  }, [deleteSuccess]);
+
   // Pagination logic
   const paginatedEvents = filteredEvents?.slice(
     (currentPage - 1) * itemsPerPage,
@@ -84,6 +91,10 @@ const EventPage = () => {
     setEventId(id);
   };
 
+  const handleClickEdit = (id: number) => {
+    navigate(`/edit-event/${id}`);
+  };
+
   const handleDelete = () => {
     if (eventId !== null) {
       deleteEvent(eventId);
@@ -93,15 +104,15 @@ const EventPage = () => {
 
   if (isFetching || isDeleting) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        <span className="text-gray-800 text-2xl">Loading...</span>
+      <div className="min-h-full flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (fetchError || deleteError) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="min-h-full flex justify-center items-center">
         <span className="text-red-600 text-2xl">
           Error while fetching events
         </span>
@@ -113,7 +124,7 @@ const EventPage = () => {
     <div className="p-4">
       <div className="flex justify-between">
         <div className="">
-          <h2 className="text-xl text-gray-800 font-bold">Events</h2>
+          <h2 className="text-2xl text-gray-800 font-bold">Events</h2>
         </div>
         <div className="">
           <input
@@ -129,9 +140,14 @@ const EventPage = () => {
             value={selectedCategory}
             className="border px-3 py-1 mb-4 ml-4"
           >
-            <option value="">All</option>
+            <option value="">Filter</option>
+            <option value="mass">Mass</option>
+            <option value="wedding">Wedding</option>
+            <option value="baptism">Baptism</option>
+            <option value="funeral">Funeral</option>
+            <option value="confession">Confession</option>
+            <option value="meeting">Meeting</option>
             <option value="others">Others</option>
-            <option value="gaming">Gaming</option>
           </select>
         </div>
       </div>
@@ -140,6 +156,7 @@ const EventPage = () => {
         events={paginatedEvents || []}
         handleClickEvent={handleClickEvent}
         handleClickDelete={handleClickDelete}
+        handleClickEdit={handleClickEdit}
       />
 
       {/* Pagination Controls */}

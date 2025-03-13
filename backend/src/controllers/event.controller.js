@@ -8,6 +8,7 @@ export async function createEvent(req, res) {
     priestName,
     description,
     venue,
+    expectedAttendance,
     clientNumber,
     date, //YY-MM-DD
     startTime, //HH:MI:SS
@@ -19,7 +20,7 @@ export async function createEvent(req, res) {
   } = req.body;
 
   console.log(
-    `title: ${title}, startTime: ${startTime}, endTime: ${endTime}, description: ${description}, venue: ${venue}, clientNumber: ${clientNumber}, eventType: ${eventType}, priestName ${priestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
+    `title: ${title}, startTime: ${startTime}, endTime: ${endTime}, description: ${description}, venue: ${venue}, expectedAttendance: ${expectedAttendance}, clientNumber: ${clientNumber}, eventType: ${eventType}, priestName ${priestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
   );
 
   if (!title || !startTime || !endTime || !eventType || !date || !venue) {
@@ -35,18 +36,19 @@ export async function createEvent(req, res) {
   const trimmedClientNumber = clientNumber && trimValue(clientNumber);
 
   console.log(
-    `TRIMMED VALUES = title: ${trimmedTitle}, startTime: ${startTime}, endTime: ${endTime}, description: ${trimmedDescription}, venue: ${trimmedVenue}, clientNumber: ${trimmedClientNumber}, eventType: ${eventType}, priestName ${trimmedPriestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
+    `TRIMMED VALUES = title: ${trimmedTitle}, startTime: ${startTime}, endTime: ${endTime}, description: ${trimmedDescription}, venue: ${trimmedVenue}, expectedAttendance: ${expectedAttendance}, clientNumber: ${trimmedClientNumber}, eventType: ${eventType}, priestName ${trimmedPriestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
   );
 
   try {
     const result = await pool.query(
-      "INSERT INTO events (title, event_type, priest_name, description, venue, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *",
+      "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
       [
         trimmedTitle,
         eventType,
         trimmedPriestName,
         trimmedDescription,
         trimmedVenue,
+        expectedAttendance,
         trimmedClientNumber,
         date,
         startTime,
