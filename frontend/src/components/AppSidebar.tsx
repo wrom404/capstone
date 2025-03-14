@@ -40,7 +40,7 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/overview"
-              ? "bg-white border border-[#e9e2ff] text-[#21618c]"
+              ? "bg-white border border-[#21618c] text-[#21618c]"
               : ""
           } hover:bg-white hover:text-gray-950 rounded-lg flex items-center gap-2`}
         >
@@ -52,7 +52,7 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/calendar"
-              ? "bg-white border border-[#e9e2ff] text-[#21618c]"
+              ? "bg-white border border-[#21618c] text-[#21618c]"
               : ""
           } hover:bg-white hover:text-gray-950 rounded-lg flex items-center gap-2`}
         >
@@ -64,7 +64,7 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/event"
-              ? "bg-white border border-[#e9e2ff]  text-[#21618c]"
+              ? "bg-white border border-[#21618c]  text-[#21618c]"
               : ""
           } hover:bg-white hover:text-gray-950 rounded-lg flex items-center gap-2`}
         >
@@ -76,7 +76,7 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/archive"
-              ? "bg-white border border-[#e9e2ff] text-[#21618c]"
+              ? "bg-white border border-[#21618c] text-[#21618c]"
               : ""
           } hover:bg-white hover:text-gray-950 rounded-lg flex items-center gap-2`}
         >
@@ -88,7 +88,7 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/schedule"
-              ? "bg-white border border-[#e9e2ff] text-[#21618c]"
+              ? "bg-white border border-[#21618c] text-[#21618c]"
               : ""
           } hover:bg-white hover:text-gray-950 rounded-lg flex items-center gap-2`}
         >
@@ -98,7 +98,7 @@ export const AppSidebar = () => {
           </Link>
         </li>
         <li
-          className={`py-2 px-2 cursor-pointer hover:bg-white hover:border hover:border-[#E9E2FF] hover:text-gray-950 rounded-lg flex items-center gap-2`}
+          className={`py-2 px-2 cursor-pointer hover:bg-white hover:border hover:border-[#21618c] hover:text-gray-950 rounded-lg flex items-center gap-2`}
         >
           <LogOut size={20} />
           <Link to={"/logout"} className="font-semibold">
@@ -107,7 +107,7 @@ export const AppSidebar = () => {
         </li>
       </ul>
       <div className="flex items-center bg-(--background-color)">
-        <div className="bg-white w-fit py-2 px-4 rounded-full text-2xl font-bold border border-[#e9e2ff] text-[#21618c]">
+        <div className="bg-white w-fit py-2 px-4 rounded-full text-2xl font-bold border border-[#21618c] text-[#21618c]">
           {user?.first_name.slice(0, 1)}
         </div>
         <div className="flex flex-col text-sm ml-2">

@@ -2,26 +2,69 @@ import { useCallback, useState, useEffect } from "react";
 import { Calendar, momentLocalizer, Views, View } from "react-big-calendar";
 import moment from "moment";
 import useFetchAllEvents from "@/hooks/useFetchEvents";
-import { type Event } from "@/types/types";
+import { type UnAvailableDateProps, type Event } from "@/types/types";
 import generateRecurringEvents from "@/utils/generateRecurringEvents"; // Import your recurring logic
 import formatForCalendar from "@/utils/formatForCalendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import useFetchUnAvailableDate from "@/hooks/useFetchCountEvent";
+import filterUnAvailableDate from "@/utils/filterUnAvailableDate";
 
 const localizer = momentLocalizer(moment);
 
 const CalendarEventPage = () => {
-  const { isPending, data, error } = useFetchAllEvents();
+  const {
+    isPending: isFetchingEvents,
+    data: fetchedEvents,
+    error: fetchEventsError,
+  } = useFetchAllEvents();
+  const {
+    isPending: isUnAvailableDate,
+    data: unAvailableDate,
+    error: fetchUnAvailableError,
+  } = useFetchUnAvailableDate();
   const [view, setView] = useState<View>(Views.MONTH);
   const [date, setDate] = useState<Date>(new Date());
   const [events, setEvents] = useState<Event[]>([]); // State to store all events
+  const [eventCount, setEventCount] = useState<UnAvailableDateProps[]>([]);
 
   // Fetch and generate recurring events when data is available
   useEffect(() => {
-    if (data) {
-      const allEvents = generateRecurringEvents(data); // Generate all events including recurring ones
+    if (fetchedEvents) {
+      const allEvents = generateRecurringEvents(fetchedEvents); // Generate all events including recurring ones
       setEvents(allEvents); // Store the events, including recurring ones
     }
-  }, [data]);
+  }, [fetchedEvents]);
+
+  useEffect(() => {
+    if (unAvailableDate) {
+      const datesArray = Array.isArray(unAvailableDate)
+        ? unAvailableDate
+        : [unAvailableDate];
+      const filteredDate = filterUnAvailableDate(datesArray);
+      if (filteredDate && filteredDate.length > 0) {
+        setEventCount(filteredDate);
+      }
+    }
+  }, [unAvailableDate]);
+
+  const dayPropGetter = (date: Date) => {
+    const dateString = moment(date).format("YYYY-MM-DD");
+    // Find the matching object in eventCount
+    const matchingEvent = eventCount.find(
+      (event) => moment(event.date).format("YYYY-MM-DD") === dateString
+    );
+
+    const count = matchingEvent ? parseInt(matchingEvent.count, 10) : 0;
+    const isLimitReached = count >= 2;
+
+    return {
+      style: {
+        backgroundColor: isLimitReached ? "#f0f0f0" : "white",
+        color: isLimitReached ? "white" : "black",
+        cursor: isLimitReached ? "not-allowed" : "pointer",
+      },
+    };
+  };
 
   // Format the events for the calendar
   const myCalendarEvents = formatForCalendar(events);
@@ -69,7 +112,9 @@ const CalendarEventPage = () => {
         backgroundColor,
         color,
         padding: "2px",
+        fontSize: "14px",
         border: "1px solid #ddd",
+        fontWeight: "600",
       },
     };
   };
@@ -78,7 +123,7 @@ const CalendarEventPage = () => {
     alert(event.title); // Show the title when an event is selected
   }, []);
 
-  if (isPending) {
+  if (isFetchingEvents || isUnAvailableDate) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
@@ -86,7 +131,7 @@ const CalendarEventPage = () => {
     );
   }
 
-  if (error) {
+  if (fetchEventsError || fetchUnAvailableError) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <span className="text-red-600 text-2xl">
@@ -111,6 +156,7 @@ const CalendarEventPage = () => {
         onNavigate={(newDate) => setDate(newDate)}
         onSelectEvent={handleSelectEvent}
         eventPropGetter={eventPropGetter}
+        dayPropGetter={dayPropGetter}
       />
     </div>
   );

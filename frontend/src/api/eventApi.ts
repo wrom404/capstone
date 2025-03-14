@@ -1,5 +1,5 @@
 import axios from "axios";
-import { type Event, type FormDataProps } from "../types/types";
+import { type UnAvailableDateProps, type Event, type FormDataProps, type UserProps } from "../types/types";
 
 export const getAllEvents = async (): Promise<Event[]> => {
 
@@ -21,7 +21,7 @@ export const getAllEvents = async (): Promise<Event[]> => {
   }
 };
 
-export const getEventById = async (id: string) => {
+export const getEventById = async (id: string): Promise<UserProps | []> => {
   try {
     const response = await axios.get(`http://localhost:4000/api/${id}`);
 
@@ -36,6 +36,25 @@ export const getEventById = async (id: string) => {
     } else {
       console.error("Unexpected Error:", error);
     }
+    return [];
+  }
+}
+
+export const getUnavailableDate = async (): Promise<UnAvailableDateProps | []> => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/unavailable-date');
+
+    if (!response.data.success) {
+      return response.data.error;
+    }
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected error: ", error)
+    }
+
     return [];
   }
 }

@@ -5,6 +5,7 @@ import {
   getEventById,
   updateEvent,
   deleteEvent,
+  getUnavailableDates,
 } from "../controllers/event.controller.js";
 import verifyUser from "../middleware/verifyUser.js";
 
@@ -15,6 +16,8 @@ routes.use(verifyUser);
 routes.post("/create-event", createEvent);
 
 routes.get("/", getEvents);
+
+routes.get('/unavailable-date', getUnavailableDates)
 
 routes.get("/:id", getEventById);
 

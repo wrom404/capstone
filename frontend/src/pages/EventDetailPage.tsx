@@ -13,6 +13,8 @@ const EventDetailPage = () => {
     );
   }
 
+  console.log(data)
+
   if (error) {
     return (
       <div className="min-h-screen flex justify-center items-center">
@@ -22,8 +24,6 @@ const EventDetailPage = () => {
       </div>
     );
   }
-
-  console.log(data[0]);
 
   return (
     <div>

@@ -77,7 +77,7 @@ export async function createEvent(req, res) {
 export async function getEvents(req, res) {
   try {
     const result = await pool.query("SELECT * FROM events ORDER BY id ASC");
-    console.log(result.rows) // the date that displays in here is not the same from the database
+    // console.log(result.rows) // the date that displays in here is not the same from the database
     return res.status(200).json({ success: true, data: result.rows });
   } catch (error) {
     return res.status(500).json({
@@ -102,6 +102,28 @@ export async function getEventById(req, res) {
     return res.status(500).json({
       success: false,
       message: "Failed to fetch event",
+      error: error.message,
+    });
+  }
+}
+
+export async function getUnavailableDates(req, res) {
+  try {
+    const result = await pool.query(
+      "SELECT COUNT(id), date FROM events GROUP BY date"
+    );
+
+    if (result.rows.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No events found" });
+    }
+
+    return res.status(200).json({ success: true, data: result.rows });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch unavailable events.",
       error: error.message,
     });
   }
