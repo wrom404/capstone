@@ -35,7 +35,7 @@ export const AppSidebar = () => {
   }
   return (
     <Sidebar className="w-64 bg-(--background-color) text-gray-800 h-screen p-4">
-      <h2 className="text-lg font-bold px-2 text-gray-800">Dashboard</h2>
+      <h2 className="text-lg font-bold px-2 text-gray-800 bg-(--background-color)">Dashboard</h2>
       <ul className="mt-4 bg-(--background-color) h-full">
         <li
           className={`py-2 px-2 cursor-pointer ${

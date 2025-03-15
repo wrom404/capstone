@@ -1,6 +1,7 @@
 import { SetStateAction } from "react";
 
 export type Event = {
+  success?: boolean;
   id?: number;
   title?: string;
   description?: string;

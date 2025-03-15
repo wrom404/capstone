@@ -40,6 +40,23 @@ export async function createEvent(req, res) {
   );
 
   try {
+    const countResult = await pool.query(
+      "SELECT COUNT(id) FROM events WHERE date = $1",
+      [date]
+    );
+
+    if (countResult.rows[0].count >= 3) {
+      const errorResponse = {
+        success: false,
+        count: countResult.rows[0],
+        message: "Date is fully booked. Please choose another date.",
+      };
+
+      console.log("Error Response:", errorResponse); // Add console.log here
+
+      return res.status(400).json(errorResponse);
+    }
+
     const result = await pool.query(
       "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
       [
@@ -64,6 +81,7 @@ export async function createEvent(req, res) {
       success: true,
       data: result.rows[0],
       message: "Event created successfully",
+      count: countResult.rows,
     });
   } catch (error) {
     return res.status(500).json({
@@ -76,7 +94,7 @@ export async function createEvent(req, res) {
 
 export async function getEvents(req, res) {
   try {
-    const result = await pool.query("SELECT * FROM events ORDER BY id ASC");
+    const result = await pool.query("SELECT * FROM events ORDER BY id DESC");
     // console.log(result.rows) // the date that displays in here is not the same from the database
     return res.status(200).json({ success: true, data: result.rows });
   } catch (error) {

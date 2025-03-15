@@ -18,11 +18,15 @@ import useCreateEvent from "@/hooks/useCreateEvent";
 import formatDateTimeForm from "@/utils/formatDateTimeForm";
 import Select from "react-select"; // Import react-select component
 import toast from "react-hot-toast";
+import validateEventTime from "@/utils/validateEventTime";
+import { type Event } from "@/types/types";
+import axios from "axios";
 
 const FormEvent = () => {
   const {
     mutate: createEvent,
     isPending,
+    isError,
     error,
     isSuccess,
     data,
@@ -43,6 +47,9 @@ const FormEvent = () => {
     hasEndDate: false,
     endDate: "",
   });
+  const [timeError, setTimeError] = useState<string>("");
+  const [textFieldError, setTextFieldError] = useState<string>("");
+  const [countError, setCountError] = useState<string>("");
 
   const options = [
     { value: "Monday", label: "Monday" },
@@ -55,11 +62,20 @@ const FormEvent = () => {
   ];
 
   useEffect(() => {
-    if (data || isSuccess) {
+    if (isSuccess && data && (data as Event)?.success) {
       console.log(data);
       toast.success("Event created successfully");
+    } else if (isError && error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred"; // Default message if no message is found
+        setCountError(errorMessage);
+        toast.error(errorMessage); // Optionally show toast with error message
+      } else {
+        toast.error(error.message); // this will appear if the date is fully booked
+      }
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, error, isError]);
 
   const handleOnCheckChange = (e: boolean) => {
     if (!formEvent.hasEndDate) {
@@ -71,6 +87,35 @@ const FormEvent = () => {
 
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (
+      !formEvent.title ||
+      !formEvent.eventType ||
+      !formEvent.description ||
+      !formEvent.venue ||
+      !formEvent.date ||
+      !formEvent.startTime ||
+      !formEvent.endTime
+    ) {
+      console.log("Please input the field");
+      setTextFieldError("Please fill out the field");
+      return;
+    }
+
+    if (formEvent.startTime && formEvent.endTime && formEvent.date) {
+      // Validate the times before submitting the form
+      console.log("test");
+      const timeValidationError = validateEventTime(
+        formEvent.startTime,
+        formEvent.endTime,
+        formEvent.date
+      );
+
+      if (timeValidationError) {
+        setTimeError(timeValidationError);
+        return; // Prevent form submission if time is invalid
+      }
+    }
 
     // Combine date and time into a full ISO string with timezone for startTime and endTime
     const formattedStartTime = formatDateTimeForm(
@@ -114,12 +159,20 @@ const FormEvent = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen h-screen flex justify-center items-center">
-        <span className="text-red-600 text-lg">Something went wrong</span>
-      </div>
-    );
+  if (timeError) {
+    toast.error(timeError);
+    setTimeError("");
+  }
+
+  if (textFieldError) {
+    toast.error(textFieldError);
+    setTextFieldError("");
+  }
+
+  if (countError) {
+    console.log("qwew");
+    toast.error(countError);
+    setCountError("");
   }
 
   return (
@@ -170,7 +223,9 @@ const FormEvent = () => {
             formEvent.eventType == "funeral" ||
             formEvent.eventType == "confession") && (
             <div className="grid w-full items-center gap-1.5 py-2.5">
-              <Label>Priest Name</Label>
+              <Label>
+                Priest Name<span className="text-gray-500">*</span>
+              </Label>
               <Input
                 type="text"
                 id="text"
@@ -228,8 +283,7 @@ const FormEvent = () => {
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>
-              Client Number{" "}
-              <span className="text-xs text-gray-600">(Optional)</span>
+              Client Number <span className="text-gray-500">*</span>
             </Label>
             <Input
               value={formEvent.clientNumber || ""}

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { type UnAvailableDateProps, type Event, type FormDataProps, type UserProps } from "../types/types";
 
 export const getAllEvents = async (): Promise<Event[]> => {
@@ -80,22 +80,39 @@ export const deleteEvent = async (id: number): Promise<Event | string> => {
 }
 
 export const createEvent = async (events: FormDataProps): Promise<Event | string> => {
-  console.log(events)
   try {
     const response = await axios.post('http://localhost:4000/api/create-event', events);
 
-    if (response.data.success) {
-      return response.data.data;
+    if (!response.data.success) {
+      console.log("may error");
+      throw new Error("Date is fully booked. Please choose another date.");
     }
-    return response.data?.error;
+    return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.log("Axios error: ", error.message)
+    if (axios.isAxiosError(error)) { //This correctly checks if the error is an axios error.
+      console.log("Axios error: ", error.message);
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response && axiosError.response.data) { // This checks if the error response has data.
+        console.log("axiosError.response.data:", axiosError.response.data);
+        const responseData = axiosError.response.data as {
+          success?: boolean;
+          count?: string;
+          message?: string;
+        };
+
+        if (responseData && responseData.message) { //Check: If responseData.message exists, it throws a new Error with the message.
+          console.log("Error message:", responseData.message);
+          throw new Error(responseData.message);
+        } else {
+          throw new Error(axiosError.message);
+        }
+      } else {
+        throw new Error(axiosError.message); // This line catches the backend "fully booked" message
+      }
     } else {
-      console.log("Unexpected error: ", error)
+      console.log("Unexpected error: ", error);
+      throw new Error("An unknown error occurred.");
     }
-
-    return "An unknown error occurred.";
   }
-}
-
+};
