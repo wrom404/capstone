@@ -1,4 +1,4 @@
-import FormEvent from "@/components/FormEvent";
+import FormEvent from "@/components/FormCreateEvent";
 
 const ScheduleEventPage = () => {
   return (

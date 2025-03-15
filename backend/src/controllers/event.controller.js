@@ -75,7 +75,7 @@ export async function createEvent(req, res) {
         hasEndDate,
         endDate,
       ]
-    );
+    ); 
 
     return res.status(201).json({
       success: true,
@@ -155,6 +155,7 @@ export async function updateEvent(req, res) {
     priestName,
     description,
     venue,
+    expectedAttendance,
     clientNumber,
     date, //YY-MM-DD
     startTime, //HH:MI:SS
@@ -178,7 +179,7 @@ export async function updateEvent(req, res) {
 
   try {
     const result = await pool.query(
-      "UPDATE events SET title = $1, event_type = $2, priest_name = $3, description = $4, venue = $5, client_number = $6, date = $7, start_time = $8, end_time = $9, is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13 WHERE id = $14 RETURNING *",
+      "UPDATE events SET title = $1, event_type = $2, priest_name = $3, description = $4, venue = $5, client_number = $6, date = $7, start_time = $8, end_time = $9, is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13 expected_attendance = $14 WHERE id = $15 RETURNING *",
       [
         trimmedTitle,
         eventType,
@@ -193,6 +194,7 @@ export async function updateEvent(req, res) {
         recurringDays,
         hasEndDate,
         endDate,
+        expectedAttendance,
         id,
       ]
     );

@@ -26,16 +26,18 @@ export const AppSidebar = () => {
     console.log(error);
   }
 
-  if (isPending) {
-    return (
-      <div className="min-h-full flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  // if (isPending) {
+  //   return (
+  //     <div className="min-h-full flex justify-center items-center">
+  //       <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+  //     </div>
+  //   );
+  // }
   return (
     <Sidebar className="w-64 bg-(--background-color) text-gray-800 h-screen p-4">
-      <h2 className="text-lg font-bold px-2 text-gray-800 bg-(--background-color)">Dashboard</h2>
+      <h2 className="text-lg font-bold px-2 text-gray-800 bg-(--background-color)">
+        Dashboard
+      </h2>
       <ul className="mt-4 bg-(--background-color) h-full">
         <li
           className={`py-2 px-2 cursor-pointer ${
@@ -106,16 +108,24 @@ export const AppSidebar = () => {
           </Link>
         </li>
       </ul>
-      <div className="flex items-center bg-(--background-color)">
-        <div className="bg-white w-fit py-2 px-4 rounded-full text-2xl font-bold border border-[#21618c] text-[#21618c]">
-          {user?.first_name.slice(0, 1)}
-        </div>
-        <div className="flex flex-col text-sm ml-2">
-          <div className="font-semibold text-gray-700">
-            {user?.first_name} {user?.last_name}
+      <div>
+        {isPending ? (
+          <div className="flex justify-center w-full">
+            <div className="w-6 h-6 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <div className="text-gray-600">{user?.email}</div>
-        </div>
+        ) : (
+          <div className="flex items-center bg-(--background-color)">
+            <div className="bg-white w-fit py-2 px-4 rounded-full text-2xl font-bold border border-[#21618c] text-[#21618c]">
+              {user?.first_name.slice(0, 1)}
+            </div>
+            <div className="flex flex-col text-sm ml-2">
+              <div className="font-semibold text-gray-700">
+                {user?.first_name} {user?.last_name}
+              </div>
+              <div className="text-gray-600">{user?.email}</div>
+            </div>
+          </div>
+        )}
       </div>
     </Sidebar>
   );

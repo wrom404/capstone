@@ -116,3 +116,27 @@ export const createEvent = async (events: FormDataProps): Promise<Event | string
     }
   }
 };
+
+export const editEvent = async (id: string) => {
+  if (!id) {
+    console.log("No id");
+  }
+
+  try {
+    const response = await axios.put(`http://localhost:4000/api/${id}`)
+
+    if (!response.data.success) {
+      console.log(response.data?.message)
+      throw new Error(response.data.message);
+    }
+
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.message)
+      throw new Error(error.message);
+    }
+    console.log("An unknown error occurred.")
+    throw new Error("An unknown error occurred.")
+  }
+}

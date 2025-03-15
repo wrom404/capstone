@@ -12,26 +12,21 @@ import { Button } from "@/src/components/ui/button";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { type FormDataProps } from "@/types/types";
 import React, { useEffect, useState } from "react";
-import { FormDataProps } from "@/types/types";
-import useCreateEvent from "@/hooks/useCreateEvent";
-import formatDateTimeForm from "@/utils/formatDateTimeForm";
-import Select from "react-select"; // Import react-select component
-import toast from "react-hot-toast";
-import validateEventTime from "@/utils/validateEventTime";
-import { type Event } from "@/types/types";
-import axios from "axios";
+// import { FormDataProps } from "@/types/types";
+// import useCreateEvent from "@/hooks/useCreateEvent";
+// import formatDateTimeForm from "@/utils/formatDateTimeForm";
+// import Select from "react-select"; // Import react-select component
+// import toast from "react-hot-toast";
+// import validateEventTime from "@/utils/validateEventTime";
+// import { type Event } from "@/types/types";
+// import axios from "axios";
+import useFetchAllEvent from "@/hooks/useFetchEvent";
 
-const FormEvent = () => {
-  const {
-    mutate: createEvent,
-    isPending,
-    isError,
-    error,
-    isSuccess,
-    data,
-  } = useCreateEvent();
-  const [formEvent, setFormEvent] = useState<FormDataProps>({
+const FormEditEvent = ({ id }: { id: string | undefined }) => {
+  const { data, error, isPending } = useFetchAllEvent(id || "");
+  const [events, setEvents] = useState<FormDataProps>({
     title: "",
     description: "",
     venue: "",
@@ -47,132 +42,45 @@ const FormEvent = () => {
     hasEndDate: false,
     endDate: "",
   });
-  const [timeError, setTimeError] = useState<string>("");
-  const [textFieldError, setTextFieldError] = useState<string>("");
-  const [countError, setCountError] = useState<string>("");
-
-  const options = [
-    { value: "Monday", label: "Monday" },
-    { value: "Tuesday", label: "Tuesday" },
-    { value: "Wednesday", label: "Wednesday" },
-    { value: "Thursday", label: "Thursday" },
-    { value: "Friday", label: "Friday" },
-    { value: "Saturday", label: "Saturday" },
-    { value: "Sunday", label: "Sunday" },
-  ];
 
   useEffect(() => {
-    if (isSuccess && data && (data as Event)?.success) {
-      console.log(data);
-      toast.success("Event created successfully");
-    } else if (isError && error) {
-      if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred"; // Default message if no message is found
-        setCountError(errorMessage);
-        toast.error(errorMessage); // Optionally show toast with error message
-      } else {
-        toast.error(error.message); // this will appear if the date is fully booked
-      }
+    if (data) {
+      console.log(data)
+      // setEvents({
+      //   title: data,
+      //   description: "",
+      //   venue: "",
+      //   expectedAttendance: "",
+      //   eventType: "",
+      //   priestName: "",
+      //   clientNumber: "",
+      //   date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
+      //   startTime: "", // "HH:MM:SS" format
+      //   endTime: "", // "HH:MM:SS" format
+      //   isRecurring: false,
+      //   recurringDays: [],
+      //   hasEndDate: false,
+      //   endDate: "",
+      // });
     }
-  }, [isSuccess, data, error, isError]);
-
-  const handleOnCheckChange = (e: boolean) => {
-    if (!formEvent.hasEndDate) {
-      setFormEvent({ ...formEvent, isRecurring: e });
-    } else {
-      return;
-    }
-  };
-
-  const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (
-      !formEvent.title ||
-      !formEvent.eventType ||
-      !formEvent.description ||
-      !formEvent.venue ||
-      !formEvent.date ||
-      !formEvent.startTime ||
-      !formEvent.endTime
-    ) {
-      console.log("Please input the field");
-      setTextFieldError("Please fill out the field");
-      return;
-    }
-
-    if (formEvent.startTime && formEvent.endTime && formEvent.date) {
-      // Validate the times before submitting the form
-      console.log("test");
-      const timeValidationError = validateEventTime(
-        formEvent.startTime,
-        formEvent.endTime,
-        formEvent.date
-      );
-
-      if (timeValidationError) {
-        setTimeError(timeValidationError);
-        return; // Prevent form submission if time is invalid
-      }
-    }
-
-    // Combine date and time into a full ISO string with timezone for startTime and endTime
-    const formattedStartTime = formatDateTimeForm(
-      formEvent.date,
-      formEvent.startTime
-    );
-    const formattedEndTime = formatDateTimeForm(
-      formEvent.date,
-      formEvent.endTime
-    );
-    createEvent({
-      ...formEvent,
-      endDate: formEvent.hasEndDate ? formEvent.endDate : null,
-      startTime: formattedStartTime,
-      endTime: formattedEndTime,
-    });
-
-    setFormEvent({
-      title: "",
-      description: "",
-      venue: "",
-      expectedAttendance: "",
-      eventType: "",
-      priestName: "",
-      clientNumber: "",
-      date: "",
-      startTime: "",
-      endTime: "",
-      isRecurring: false,
-      recurringDays: [],
-      hasEndDate: false,
-      endDate: "",
-    });
-  };
+  }, [data]);
 
   if (isPending) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-white">
-        <div className="w-10 h-10 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
-  if (timeError) {
-    toast.error(timeError);
-    setTimeError("");
-  }
-
-  if (textFieldError) {
-    toast.error(textFieldError);
-    setTextFieldError("");
-  }
-
-  if (countError) {
-    console.log("qwew");
-    toast.error(countError);
-    setCountError("");
+  if (error) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <span className="text-red-600 text-2xl">
+          Error while fetching events
+        </span>
+      </div>
+    );
   }
 
   return (
@@ -430,4 +338,4 @@ const FormEvent = () => {
   );
 };
 
-export default FormEvent;
+export default FormEditEvent;
