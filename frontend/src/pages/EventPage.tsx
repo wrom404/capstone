@@ -54,6 +54,9 @@ const EventPage = () => {
     setFilteredEvents(events);
   }, [setFilteredEvents, data, searchQuery, selectedCategory]);
 
+  console.log(filteredEvents)
+  console.log(data)
+
   useEffect(() => {
     if (deleteSuccess) {
       toast.success("Event deleted successfully");

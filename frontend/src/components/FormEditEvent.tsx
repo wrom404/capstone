@@ -14,19 +14,22 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { type FormDataProps } from "@/types/types";
 import React, { useEffect, useState } from "react";
-// import { FormDataProps } from "@/types/types";
-// import useCreateEvent from "@/hooks/useCreateEvent";
-// import formatDateTimeForm from "@/utils/formatDateTimeForm";
-// import Select from "react-select"; // Import react-select component
-// import toast from "react-hot-toast";
-// import validateEventTime from "@/utils/validateEventTime";
-// import { type Event } from "@/types/types";
-// import axios from "axios";
 import useFetchAllEvent from "@/hooks/useFetchEvent";
+import Select from "react-select"; // Import react-select component
+
+const options = [
+  { value: "monday", label: "Monday" },
+  { value: "tuesday", label: "Tuesday" },
+  { value: "wednesday", label: "Wednesday" },
+  { value: "thursday", label: "Thursday" },
+  { value: "friday", label: "Friday" },
+  { value: "saturday", label: "Saturday" },
+  { value: "sunday", label: "Sunday" },
+];
 
 const FormEditEvent = ({ id }: { id: string | undefined }) => {
   const { data, error, isPending } = useFetchAllEvent(id || "");
-  const [events, setEvents] = useState<FormDataProps>({
+  const [formEvent, setFormEvent] = useState<FormDataProps>({
     title: "",
     description: "",
     venue: "",
@@ -34,36 +37,60 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     eventType: "",
     priestName: "",
     clientNumber: "",
-    date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
-    startTime: "", // "HH:MM:SS" format
-    endTime: "", // "HH:MM:SS" format
+    date: "",
+    startTime: "",
+    endTime: "",
     isRecurring: false,
     recurringDays: [],
     hasEndDate: false,
     endDate: "",
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (data) {
-      console.log(data)
-      // setEvents({
-      //   title: data,
-      //   description: "",
-      //   venue: "",
-      //   expectedAttendance: "",
-      //   eventType: "",
-      //   priestName: "",
-      //   clientNumber: "",
-      //   date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
-      //   startTime: "", // "HH:MM:SS" format
-      //   endTime: "", // "HH:MM:SS" format
-      //   isRecurring: false,
-      //   recurringDays: [],
-      //   hasEndDate: false,
-      //   endDate: "",
-      // });
+    if (data && data.length > 0) {
+      console.log("Fetched Data:", data); // Debugging log
+  
+      const eventData = data[0];
+  
+      setFormEvent({
+        title: eventData.title || "",
+        description: eventData.description || "",
+        venue: eventData.venue || "",
+        expectedAttendance: eventData.expected_attendance || "",
+        eventType: eventData.event_type || "",
+        priestName: eventData.priest_name || "",
+        clientNumber: eventData.client_number || "",
+        date: eventData.date || "",
+        startTime: eventData.start_time || "",
+        endTime: eventData.end_time || "",
+        isRecurring: eventData.is_recurring || false,
+        recurringDays: eventData.recurring_days || [],
+        hasEndDate: eventData.has_end_date || false,
+        endDate: eventData.end_date || "",
+      });
+      setLoading(false);
     }
   }, [data]);
+
+  console.log("start time: ", formEvent.startTime)
+  console.log("end time: ", formEvent.endTime)
+
+  const handleSubmitForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Implement your form submission logic here
+    console.log("Form submitted:", formEvent);
+  };
+
+  const handleOnCheckChange = (checked: boolean) => {
+    setFormEvent({
+      ...formEvent,
+      isRecurring: checked,
+      recurringDays: checked ? formEvent.recurringDays : [],
+      hasEndDate: checked ? formEvent.hasEndDate : false,
+      endDate: checked && formEvent.hasEndDate ? formEvent.endDate : "",
+    });
+  };
 
   if (isPending) {
     return (
@@ -73,6 +100,13 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   if (error) {
     return (
       <div className="min-h-screen flex justify-center items-center">
@@ -88,7 +122,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       onSubmit={handleSubmitForm}
       className="border border-gray-300 rounded-lg p-6 w-full"
     >
-      <h2 className="text-2xl font-bold mt-2 mb-3">Create Event</h2>
+      <h2 className="text-2xl font-bold mt-2 mb-3">Edit Event</h2>
       <div className="flex gap-8">
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -96,7 +130,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
             <Input
               type="text"
               id="text"
-              value={formEvent.title}
+              value={formEvent.title || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, title: e.target.value })
               }
@@ -125,11 +159,11 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               </SelectContent>
             </CustomSelect>
           </div>
-          {(formEvent.eventType == "mass" ||
-            formEvent.eventType == "wedding" ||
-            formEvent.eventType == "baptism" ||
-            formEvent.eventType == "funeral" ||
-            formEvent.eventType == "confession") && (
+          {(formEvent.eventType === "mass" ||
+            formEvent.eventType === "wedding" ||
+            formEvent.eventType === "baptism" ||
+            formEvent.eventType === "funeral" ||
+            formEvent.eventType === "confession") && (
             <div className="grid w-full items-center gap-1.5 py-2.5">
               <Label>
                 Priest Name<span className="text-gray-500">*</span>
@@ -191,7 +225,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>
-              Client Number <span className="text-gray-500">*</span>
+              Client Number <span className="text-gray-50">*</span>
             </Label>
             <Input
               value={formEvent.clientNumber || ""}
@@ -215,7 +249,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               onChange={(date: Date | null) =>
                 setFormEvent({
                   ...formEvent,
-                  date: date ? date.toISOString() : null,
+                  date: date ? date.toISOString().split("T")[0] : "",
                 })
               }
               minDate={new Date()}

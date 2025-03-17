@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { type UnAvailableDateProps, type Event, type FormDataProps, type UserProps } from "../types/types";
+import { type UnAvailableDateProps, type Event, type FormDataProps } from "../types/types";
 
 export const getAllEvents = async (): Promise<Event[]> => {
 
@@ -21,7 +21,7 @@ export const getAllEvents = async (): Promise<Event[]> => {
   }
 };
 
-export const getEventById = async (id: string): Promise<UserProps | []> => {
+export const getEventById = async (id: string): Promise<Event[] | []> => {
   try {
     const response = await axios.get(`http://localhost:4000/api/${id}`);
 

@@ -13,7 +13,7 @@ const EventDetailPage = () => {
     );
   }
 
-  console.log(data)
+console.log(data)
 
   if (error) {
     return (

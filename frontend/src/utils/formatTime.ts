@@ -1,13 +1,13 @@
 function formatTime(timeString: string) {
-  // Split the input string into hours, minutes, and seconds
-  const [hours, minutes] = timeString.split(":");
+  const date = new Date(timeString);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const period = hours >= 12 ? "PM" : "AM";
+  const hour = hours % 12 || 12;
 
-  // Convert the hours to a 12-hour format and determine AM/PM
-  const hour = parseInt(hours) % 12 || 12; // Convert 0 to 12 for midnight
-  const period = parseInt(hours) >= 12 ? "PM" : "AM";
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes; // Add leading zero for minutes
 
-  // Return the formatted time
-  return `${hour}:${minutes} ${period}`;
+  return `${hour}:${formattedMinutes} ${period}`;
 }
 
-export default formatTime
+export default formatTime;

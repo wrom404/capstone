@@ -7,6 +7,7 @@ export type Event = {
   description?: string;
   venue?: string;
   event_type?: string;
+  expected_attendance?: string | null;
   priest_name?: string | null;
   client_number?: string | null;
   date?: string; // ISO string (e.g., "2025-04-04T16:00:00.000Z")

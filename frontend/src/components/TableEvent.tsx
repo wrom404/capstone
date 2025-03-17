@@ -17,6 +17,7 @@ const TableEvent = ({
   handleClickDelete,
   handleClickEdit,
 }: TableEventProps) => {
+  console.log(events)
   return (
     <Table className="border border-gray-300">
       <TableHeader className="bg-gray-50">

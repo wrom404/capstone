@@ -1,5 +1,6 @@
 import pool from "../config/db.js";
 import trimValue from "../utils/trim.js";
+import moment from "moment-timezone";
 
 export async function createEvent(req, res) {
   const {
@@ -75,7 +76,7 @@ export async function createEvent(req, res) {
         hasEndDate,
         endDate,
       ]
-    ); 
+    );
 
     return res.status(201).json({
       success: true,
@@ -95,8 +96,21 @@ export async function createEvent(req, res) {
 export async function getEvents(req, res) {
   try {
     const result = await pool.query("SELECT * FROM events ORDER BY id DESC");
-    // console.log(result.rows) // the date that displays in here is not the same from the database
-    return res.status(200).json({ success: true, data: result.rows });
+    const events = result.rows.map((event) => {
+      if (event.start_time) {
+        event.start_time = moment
+          .utc(event.start_time)
+          .tz("Asia/Manila")
+          .format();
+      }
+      if (event.end_time) {
+        event.end_time = moment.utc(event.end_time).tz("Asia/Manila").format();
+      }
+      return event;
+    });
+
+    console.log(events); // Now shows the correct time in PH timezone
+    return res.status(200).json({ success: true, data: events });
   } catch (error) {
     return res.status(500).json({
       success: false,
