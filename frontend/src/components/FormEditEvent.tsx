@@ -16,6 +16,7 @@ import { type FormDataProps } from "@/types/types";
 import React, { useEffect, useState } from "react";
 import useFetchAllEvent from "@/hooks/useFetchEvent";
 import Select from "react-select"; // Import react-select component
+import formatTimeEditForm from "@/utils/formatTimeEditForm";
 
 const options = [
   { value: "monday", label: "Monday" },
@@ -75,6 +76,8 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
 
   console.log("start time: ", formEvent.startTime)
   console.log("end time: ", formEvent.endTime)
+  console.log("formatted start time: ", formatTimeEditForm(formEvent.startTime || ""))
+  console.log("formatted end time: ", formatTimeEditForm(formEvent.endTime || ""))
 
   const handleSubmitForm = (e: React.FormEvent) => {
     e.preventDefault();
@@ -267,7 +270,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, startTime: e.target.value })
                 }
-                value={formEvent.startTime || ""}
+                value={formatTimeEditForm(formEvent.startTime || "")}
               />
               <span className="flex items-center">to</span>
               <input
@@ -276,7 +279,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, endTime: e.target.value })
                 }
-                value={formEvent.endTime || ""}
+                value={formatTimeEditForm(formEvent.endTime || "")}
               />
             </div>
           </div>

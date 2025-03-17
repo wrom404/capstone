@@ -1,7 +1,7 @@
-import moment from "moment";
 import { type Event } from "@/types/types";
+import moment from "moment";
 
-const dayNameToNumber = {
+const dayNameToNumber: Record<string, number> = {
   Monday: 1,
   Tuesday: 2,
   Wednesday: 3,
@@ -15,70 +15,49 @@ const generateRecurringEvents = (events: Event[]): Event[] => {
   const updatedEvents: Event[] = [];
 
   events.forEach((event) => {
-    // Check if the event is recurring
     if (event?.recurring_days && event?.recurring_days.length > 0) {
-      const startDate = moment(event.date); // Use event.date as the start
-      const end_date = event.has_end_date ? moment(event.end_date) : null; // Handle optional end date
+      const startDate = moment(event.date); 
+      const end_date = event.has_end_date ? moment(event.end_date) : null;
 
-      let i = 0; // Counter for recurring event dates
-      const firstOccurrence = moment(startDate); // Initialize the first occurrence of the event
-
-      // Adjust the start date to match the recurring day (e.g., Wednesday, Monday, etc.)
-      const firstValidDay = event.recurring_days
+      // Get sorted day numbers for the recurring days
+      const recurringDayNumbers = event.recurring_days
         .map((day) => dayNameToNumber[day as keyof typeof dayNameToNumber])
-        .sort((a, b) => a - b)[0]; // Find the first recurring day of the week
+        .sort((a, b) => a - b);
 
-      // Align the startDate to the first valid recurring day
-      if (firstOccurrence.isoWeekday() !== firstValidDay) {
-        // If the first occurrence is not on the recurring day, move the date forward until it aligns
-        while (firstOccurrence.isoWeekday() !== firstValidDay) {
-          firstOccurrence.add(1, "day");
-        }
-      }
+      const currentDate = moment(startDate); 
 
-      // Infinite loop for events with no end date
-      while (true) {
-        const currentDate = moment(firstOccurrence).add(i, "weeks"); // Add weeks instead of days
+      // Generate occurrences
+      while (!end_date || currentDate.isBefore(end_date, "day")) {
+        recurringDayNumbers.forEach((dayNumber) => {
+          const eventDate = moment(currentDate).isoWeekday(dayNumber); // Set to recurring day
 
-        // If there is an end date, stop when current date exceeds the end date
-        if (end_date && currentDate.isAfter(end_date)) break;
+          if (eventDate.isSameOrAfter(startDate, "day") && (!end_date || eventDate.isBefore(end_date, "day"))) {
+            updatedEvents.push({
+              ...event,
+              start: moment
+                .utc(event.start_time)
+                .set({
+                  year: eventDate.year(),
+                  month: eventDate.month(),
+                  date: eventDate.date(),
+                })
+                .toDate(),
+              end: moment
+                .utc(event.end_time)
+                .set({
+                  year: eventDate.year(),
+                  month: eventDate.month(),
+                  date: eventDate.date(),
+                })
+                .toDate(),
+            });
+          }
+        });
 
-        // Include only specified recurring days
-        const currentDayNumber = currentDate.isoWeekday();
-        if (
-          event.recurring_days.some(
-            (day) => dayNameToNumber[day as keyof typeof dayNameToNumber] === currentDayNumber
-          )
-        ) {
-          updatedEvents.push({
-            ...event,
-            start: moment
-              .utc(event.start_time)
-              .set({
-                year: currentDate.year(),
-                month: currentDate.month(),
-                date: currentDate.date(),
-              })
-              .toDate(),
-            end: moment
-              .utc(event.end_time)
-              .set({
-                year: currentDate.year(),
-                month: currentDate.month(),
-                date: currentDate.date(),
-              })
-              .toDate(),
-          });
-        }
-
-        // Increase by 1 week to generate the next instance
-        i++;
-
-        // If no end date, continue indefinitely but limit the number of weeks
-        if (!end_date && i > 520) break; // Optional limit of 10 years (520 weeks)
+        currentDate.add(1, "week"); // Move to the next week
+        if (!end_date && updatedEvents.length > 520) break; // Stop infinite loop
       }
     } else {
-      // Single event (not recurring)
       updatedEvents.push({
         ...event,
         start: moment(event.start_time).toDate(),
@@ -90,4 +69,4 @@ const generateRecurringEvents = (events: Event[]): Event[] => {
   return updatedEvents;
 };
 
-export default generateRecurringEvents;
+export default generateRecurringEvents

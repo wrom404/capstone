@@ -47,6 +47,8 @@ const CalendarEventPage = () => {
     }
   }, [unAvailableDate]);
 
+  console.log("fetchedEvents: ", fetchedEvents)
+
   const dayPropGetter = (date: Date) => {
     const dateString = moment(date).format("YYYY-MM-DD");
     // Find the matching object in eventCount

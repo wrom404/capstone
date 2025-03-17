@@ -129,6 +129,18 @@ export async function getEventById(req, res) {
       return res.status(401).json({ success: false, message: "Invalid id" });
     }
 
+    const events = result.rows.map((event) => {
+      if (event.start_time) {
+        event.start_time = moment
+          .utc(event.start_time)
+          .tz("Asia/Manila")
+          .format();
+      }
+      if (event.end_time) {
+        event.end_time = moment.utc(event.end_time).tz("Asia/Manila").format();
+      }
+    });
+
     return res.status(200).json({ success: true, data: result.rows });
   } catch (error) {
     return res.status(500).json({
