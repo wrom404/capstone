@@ -309,7 +309,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   options={options}
                   value={options.filter((option) =>
                     formEvent.recurringDays
-                      ? formEvent.recurringDays.includes(option.value)
+                      ? formEvent.recurringDays.includes(`${option.value[0].toLocaleUpperCase()}${option.value.slice(1)}`)
                       : []
                   )}
                   onChange={(selectedOptions) =>
