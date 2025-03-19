@@ -32,7 +32,7 @@ const updateEventStatus = async () => {
           -- Recurring events that have an end date and the end date has passed
           (recurring_days IS NOT NULL AND end_date IS NOT NULL AND end_date < $1)
         )
-      RETURNING id;
+      RETURNING *;
     `;
     const completedResult = await pool.query(completedQuery, [now]);
     console.log(`Updated ${completedResult.rowCount} events to "completed".`);

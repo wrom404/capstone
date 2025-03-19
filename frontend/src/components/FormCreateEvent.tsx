@@ -428,7 +428,7 @@ const FormEvent = () => {
         </div>
       </div>
       <div className="flex justify-end my-2 mt-4">
-        <Button type="submit" className="bg-[#1a1a1a] cursor-pointer">
+        <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer">
           Create
         </Button>
       </div>

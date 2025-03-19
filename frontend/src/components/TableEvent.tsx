@@ -34,7 +34,7 @@ const TableEvent = ({
         {events &&
           events?.map((event, index) => (
             <TableRow
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-indigo-50"
               key={index}
               onClick={(e) => {
                 e.stopPropagation();

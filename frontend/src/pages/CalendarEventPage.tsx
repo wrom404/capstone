@@ -8,6 +8,7 @@ import formatForCalendar from "@/utils/formatForCalendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import useFetchUnAvailableDate from "@/hooks/useFetchCountEvent";
 import filterUnAvailableDate from "@/utils/filterUnAvailableDate";
+import { useNavigate } from "react-router-dom";
 
 const localizer = momentLocalizer(moment);
 
@@ -26,7 +27,7 @@ const CalendarEventPage = () => {
   const [date, setDate] = useState<Date>(new Date());
   const [events, setEvents] = useState<Event[]>([]); // State to store all events
   const [eventCount, setEventCount] = useState<UnAvailableDateProps[]>([]);
-
+  const navigate = useNavigate();
   // Fetch and generate recurring events when data is available
   useEffect(() => {
     if (fetchedEvents) {
@@ -47,10 +48,12 @@ const CalendarEventPage = () => {
     }
   }, [unAvailableDate]);
 
-  console.log("fetchedEvents: ", fetchedEvents)
+  console.log("fetchedEvents: ", fetchedEvents);
 
   const dayPropGetter = (date: Date) => {
     const dateString = moment(date).format("YYYY-MM-DD");
+    const todayString = moment().format("YYYY-MM-DD");
+
     // Find the matching object in eventCount
     const matchingEvent = eventCount.find(
       (event) => moment(event.date).format("YYYY-MM-DD") === dateString
@@ -61,8 +64,19 @@ const CalendarEventPage = () => {
 
     return {
       style: {
-        backgroundColor: isLimitReached ? "#f0f0f0" : "white",
-        color: isLimitReached ? "white" : "black",
+        backgroundColor:
+          dateString === todayString
+            ? "#EEF2FF"
+            : isLimitReached
+            ? "#f0f0f0"
+            : "white",
+        color:
+          dateString === todayString
+            ? "#000000"
+            : isLimitReached
+            ? "white"
+            : "black",
+        fontWeight: dateString === todayString ? "bold" : "normal",
         cursor: isLimitReached ? "not-allowed" : "pointer",
       },
     };
@@ -122,8 +136,9 @@ const CalendarEventPage = () => {
   };
 
   const handleSelectEvent = useCallback((event: Event) => {
-    alert(event.title); // Show the title when an event is selected
-  }, []);
+    //
+    navigate(`/event/${event.id}`);
+  }, [navigate]);
 
   if (isFetchingEvents || isUnAvailableDate) {
     return (
