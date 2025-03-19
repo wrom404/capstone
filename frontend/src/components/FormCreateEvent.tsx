@@ -31,7 +31,7 @@ const FormEvent = () => {
     isSuccess,
     data,
   } = useCreateEvent();
-  
+
   const [formEvent, setFormEvent] = useState<FormDataProps>({
     title: "",
     description: "",
@@ -421,6 +421,7 @@ const FormEvent = () => {
                   })
                 }
                 isClearable
+                autoComplete="off"
               />
             </div>
           )}

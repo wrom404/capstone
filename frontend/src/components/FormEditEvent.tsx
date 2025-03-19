@@ -21,13 +21,13 @@ import useUpdateEvent from "@/hooks/useUpdateEvent";
 import toast from "react-hot-toast";
 
 const options = [
-  { value: "monday", label: "Monday" },
-  { value: "tuesday", label: "Tuesday" },
-  { value: "wednesday", label: "Wednesday" },
-  { value: "thursday", label: "Thursday" },
-  { value: "friday", label: "Friday" },
-  { value: "saturday", label: "Saturday" },
-  { value: "sunday", label: "Sunday" },
+  { value: "Monday", label: "Monday" },
+  { value: "Tuesday", label: "Tuesday" },
+  { value: "Wednesday", label: "Wednesday" },
+  { value: "Thursday", label: "Thursday" },
+  { value: "Friday", label: "Friday" },
+  { value: "Saturday", label: "Saturday" },
+  { value: "Sunday", label: "Sunday" },
 ];
 
 const FormEditEvent = ({ id }: { id: string | undefined }) => {
@@ -67,7 +67,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       console.log("Fetched Data:", data); // Debugging log
 
       const eventData = data[0];
-      console.log("eventDate: ", eventData)
+      console.log("eventDate: ", eventData);
       setFormEvent({
         title: eventData.title || "",
         description: eventData.description || "",
@@ -80,11 +80,13 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         startTime: eventData.start_time
           ? formatTimeEditForm(eventData.start_time)
           : "", // Format on load
-        endTime: eventData.end_time 
+        endTime: eventData.end_time
           ? formatTimeEditForm(eventData.end_time)
           : "", // Format on load
         isRecurring: eventData.is_recurring || false,
-        recurringDays: eventData.recurring_days || [],
+        recurringDays: eventData.recurring_days
+          ? eventData.recurring_days.map((day: string) => day.toLowerCase()) // Ensure lowercase
+          : [],
         hasEndDate: eventData.has_end_date || false,
         endDate: eventData.end_date || "",
       });
@@ -117,13 +119,17 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
   };
 
   const handleOnCheckChange = (checked: boolean) => {
-    setFormEvent({
-      ...formEvent,
-      isRecurring: checked,
-      recurringDays: checked ? formEvent.recurringDays : [],
-      hasEndDate: checked ? formEvent.hasEndDate : false,
-      endDate: checked && formEvent.hasEndDate ? formEvent.endDate : "",
-    });
+    if (!formEvent.hasEndDate) {
+      setFormEvent({
+        ...formEvent,
+        isRecurring: checked,
+        recurringDays: checked ? formEvent.recurringDays : [],
+        hasEndDate: checked ? formEvent.hasEndDate : false,
+        endDate: checked && formEvent.hasEndDate ? formEvent.endDate : "",
+      });
+    } else {
+      return;
+    }
   };
 
   if (isFetchingEvent || isUpdatingEvent) {
@@ -349,17 +355,17 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   placeholder=""
                   className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
                   options={options}
-                  value={options.filter((option) =>
-                    formEvent.recurringDays && formEvent.recurringDays.includes(option.value)
+                  value={options.filter(
+                    (option) => formEvent.recurringDays && formEvent.recurringDays.includes(option.value) // Matches lowercase values correctly
                   )}
-                  
                   onChange={(selectedOptions) =>
                     setFormEvent({
                       ...formEvent,
-                      recurringDays: selectedOptions.map((option) => option.value), // Store values correctly
+                      recurringDays: selectedOptions.map(
+                        (option) => option.value
+                      ), // Stores lowercase values correctly
                     })
                   }
-                  
                 />
               </div>
               <div className="flex items-center space-x-2 py-6">
@@ -401,6 +407,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   })
                 }
                 isClearable
+                autoComplete="off"
               />
             </div>
           )}

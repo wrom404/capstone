@@ -29,29 +29,31 @@ const generateRecurringEvents = (events: Event[]): Event[] => {
       // Generate occurrences
       while (!end_date || currentDate.isBefore(end_date, "day")) {
         recurringDayNumbers.forEach((dayNumber) => {
-          const eventDate = moment(currentDate).isoWeekday(dayNumber); // Set to recurring day
+          const eventDate = moment(currentDate).isoWeekday(dayNumber).clone(); // Ensure it's a moment object
 
-          if (eventDate.isSameOrAfter(startDate, "day") && (!end_date || eventDate.isBefore(end_date, "day"))) {
-            updatedEvents.push({
-              ...event,
-              start: moment
-                .utc(event.start_time)
-                .set({
-                  year: eventDate.year(),
-                  month: eventDate.month(),
-                  date: eventDate.date(),
-                })
-                .toDate(),
-              end: moment
-                .utc(event.end_time)
-                .set({
-                  year: eventDate.year(),
-                  month: eventDate.month(),
-                  date: eventDate.date(),
-                })
-                .toDate(),
-            });
-          }
+if (eventDate.isValid() && eventDate.isSameOrAfter(startDate, "day") && 
+    (!end_date || eventDate.isBefore(end_date, "day"))) {
+  updatedEvents.push({
+    ...event,
+    start: moment
+      .utc(event.start_time)
+      .set({
+        year: eventDate.year(),
+        month: eventDate.month(),
+        date: eventDate.date(),
+      })
+      .toDate(),
+    end: moment
+      .utc(event.end_time)
+      .set({
+        year: eventDate.year(),
+        month: eventDate.month(),
+        date: eventDate.date(),
+      })
+      .toDate(),
+  });
+}
+
         });
 
         currentDate.add(1, "week"); // Move to the next week
