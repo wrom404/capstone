@@ -14,9 +14,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { type FormDataProps } from "@/types/types";
 import React, { useEffect, useState } from "react";
-import useFetchAllEvent from "@/hooks/useFetchEvent";
+import useFetchEvent from "@/hooks/useFetchEvent";
 import Select from "react-select"; // Import react-select component
 import formatTimeEditForm from "@/utils/formatTimeEditForm";
+import useUpdateEvent from "@/hooks/useUpdateEvent";
+import toast from "react-hot-toast";
 
 const options = [
   { value: "monday", label: "Monday" },
@@ -29,7 +31,20 @@ const options = [
 ];
 
 const FormEditEvent = ({ id }: { id: string | undefined }) => {
-  const { data, error, isPending } = useFetchAllEvent(id || "");
+  const {
+    data,
+    error: fetchedError,
+    isPending: isFetchingEvent,
+  } = useFetchEvent(id || "");
+  const {
+    mutate: updateEvent,
+    isPending: isUpdatingEvent,
+    error: updateError,
+  } = useUpdateEvent(id || "");
+
+  const [loading, setLoading] = useState(true);
+  const [isSuccessMessage, setIsSuccessMessage] = useState<string>("");
+
   const [formEvent, setFormEvent] = useState<FormDataProps>({
     title: "",
     description: "",
@@ -46,14 +61,13 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     hasEndDate: false,
     endDate: "",
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (data && data.length > 0) {
       console.log("Fetched Data:", data); // Debugging log
-  
+
       const eventData = data[0];
-  
+      console.log("eventDate: ", eventData)
       setFormEvent({
         title: eventData.title || "",
         description: eventData.description || "",
@@ -63,8 +77,12 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         priestName: eventData.priest_name || "",
         clientNumber: eventData.client_number || "",
         date: eventData.date || "",
-        startTime: eventData.start_time || "",
-        endTime: eventData.end_time || "",
+        startTime: eventData.start_time
+          ? formatTimeEditForm(eventData.start_time)
+          : "", // Format on load
+        endTime: eventData.end_time 
+          ? formatTimeEditForm(eventData.end_time)
+          : "", // Format on load
         isRecurring: eventData.is_recurring || false,
         recurringDays: eventData.recurring_days || [],
         hasEndDate: eventData.has_end_date || false,
@@ -74,15 +92,28 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     }
   }, [data]);
 
-  console.log("start time: ", formEvent.startTime)
-  console.log("end time: ", formEvent.endTime)
-  console.log("formatted start time: ", formatTimeEditForm(formEvent.startTime || ""))
-  console.log("formatted end time: ", formatTimeEditForm(formEvent.endTime || ""))
-
-  const handleSubmitForm = (e: React.FormEvent) => {
+  const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Implement your form submission logic here
     console.log("Form submitted:", formEvent);
+    updateEvent({ formEvent, id: id || "" });
+    setIsSuccessMessage("edited successfully");
+    setFormEvent({
+      title: "",
+      description: "",
+      venue: "",
+      expectedAttendance: "",
+      eventType: "",
+      priestName: "",
+      clientNumber: "",
+      date: "",
+      startTime: "",
+      endTime: "",
+      isRecurring: false,
+      recurringDays: [],
+      hasEndDate: false,
+      endDate: "",
+    });
   };
 
   const handleOnCheckChange = (checked: boolean) => {
@@ -95,10 +126,10 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     });
   };
 
-  if (isPending) {
+  if (isFetchingEvent || isUpdatingEvent) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -106,11 +137,11 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
-  if (error) {
+  if (updateError || fetchedError) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <span className="text-red-600 text-2xl">
@@ -118,6 +149,10 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         </span>
       </div>
     );
+  }
+
+  if (isSuccessMessage) {
+    toast.success(isSuccessMessage);
   }
 
   return (
@@ -267,19 +302,26 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               <input
                 type="time"
                 className="border border-gray-400 py-1.5 px-3 w-full rounded-md text-sm"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormEvent({ ...formEvent, startTime: e.target.value })
+                onChange={(e) =>
+                  setFormEvent((prev) => ({
+                    ...prev,
+                    startTime: e.target.value,
+                  }))
                 }
-                value={formatTimeEditForm(formEvent.startTime || "")}
+                value={formEvent?.startTime ?? ""}
               />
+
               <span className="flex items-center">to</span>
               <input
                 type="time"
                 className="border border-gray-400 py-1.5 px-3 w-full rounded-md text-sm"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormEvent({ ...formEvent, endTime: e.target.value })
+                onChange={(e) =>
+                  setFormEvent((prev) => ({
+                    ...prev,
+                    endTime: e.target.value,
+                  }))
                 }
-                value={formatTimeEditForm(formEvent.endTime || "")}
+                value={formEvent?.endTime ?? ""}
               />
             </div>
           </div>
@@ -308,18 +350,16 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
                   options={options}
                   value={options.filter((option) =>
-                    formEvent.recurringDays
-                      ? formEvent.recurringDays.includes(`${option.value[0].toLocaleUpperCase()}${option.value.slice(1)}`)
-                      : []
+                    formEvent.recurringDays && formEvent.recurringDays.includes(option.value)
                   )}
+                  
                   onChange={(selectedOptions) =>
                     setFormEvent({
                       ...formEvent,
-                      recurringDays: selectedOptions
-                        ? selectedOptions.map((option) => option.value)
-                        : [],
+                      recurringDays: selectedOptions.map((option) => option.value), // Store values correctly
                     })
                   }
+                  
                 />
               </div>
               <div className="flex items-center space-x-2 py-6">

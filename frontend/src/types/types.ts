@@ -10,7 +10,7 @@ export type Event = {
   expected_attendance?: string | null;
   priest_name?: string | null;
   client_number?: string | null;
-  date?: string; // ISO string (e.g., "2025-04-04T16:00:00.000Z")
+  date?: string | null; // ISO string (e.g., "2025-04-04T16:00:00.000Z")
   start_time?: string; // "HH:MM:SS" format
   end_time?: string; // "HH:MM:SS" format
   status?: string;
@@ -43,8 +43,8 @@ export type CalendarEvent = {
   end_date: string | null;
   created_at?: string;
 
-  start: Date;
-  end: Date;
+  start?: Date;
+  end?: Date;
 };
 
 
@@ -95,6 +95,9 @@ export type FormDataProps = {
   recurringDays?: string[]; // Array of days like ["Monday", "Tuesday"]
   hasEndDate?: boolean;
   endDate?: string | null; // You store the endDate as ISO 8601 formatted string or null
+
+  start?: Date | null;
+  end?: Date | null;
 };
 
 export type UserProps = {

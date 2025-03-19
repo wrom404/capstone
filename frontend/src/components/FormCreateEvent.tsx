@@ -134,6 +134,10 @@ const FormEvent = () => {
       endTime: formattedEndTime,
     });
 
+    // console.log("form event: ", formEvent)
+    // console.log("start date: ", formattedStartTime)
+    // console.log("end event: ", formattedEndTime)
+
     setFormEvent({
       title: "",
       description: "",

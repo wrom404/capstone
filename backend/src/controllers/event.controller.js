@@ -58,29 +58,29 @@ export async function createEvent(req, res) {
       return res.status(400).json(errorResponse);
     }
 
-    const result = await pool.query(
-      "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
-      [
-        trimmedTitle,
-        eventType,
-        trimmedPriestName,
-        trimmedDescription,
-        trimmedVenue,
-        expectedAttendance,
-        trimmedClientNumber,
-        date,
-        startTime,
-        endTime,
-        isRecurring,
-        recurringDays,
-        hasEndDate,
-        endDate,
-      ]
-    );
+    // const result = await pool.query(
+    //   "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
+    //   [
+    //     trimmedTitle,
+    //     eventType,
+    //     trimmedPriestName,
+    //     trimmedDescription,
+    //     trimmedVenue,
+    //     expectedAttendance,
+    //     trimmedClientNumber,
+    //     date,
+    //     startTime,
+    //     endTime,
+    //     isRecurring,
+    //     recurringDays,
+    //     hasEndDate,
+    //     endDate,
+    //   ]
+    // );
 
     return res.status(201).json({
       success: true,
-      data: result.rows[0],
+      // data: result.rows[0],
       message: "Event created successfully",
       count: countResult.rows,
     });
@@ -109,7 +109,7 @@ export async function getEvents(req, res) {
       return event;
     });
 
-    console.log(events); // Now shows the correct time in PH timezone
+    // console.log(events); // Now shows the correct time in PH timezone
     return res.status(200).json({ success: true, data: events });
   } catch (error) {
     return res.status(500).json({
@@ -192,7 +192,12 @@ export async function updateEvent(req, res) {
     endDate,
   } = req.body;
 
+  console.log(
+    `title: ${title}, startTime: ${startTime}, endTime: ${endTime}, description: ${description}, venue: ${venue}, expectedAttendance: ${expectedAttendance}, clientNumber: ${clientNumber}, eventType: ${eventType}, priestName ${priestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
+  ); // it logs like this title: sample event, startTime: 2025-03-26T09:00:00.000Z, endTime: 2025-03-26T11:00:00.000Z, description: sample event, venue: ormoc, expectedAttendance: 100, clientNumber: , eventType: confession, priestName priest 1, date:2025-03-26T16:00:00.000Z, recurringDays:, isRecurring:false, hasEndDate:false, endDate: null
+
   if (!title || !startTime || !endTime || !eventType || !date || !venue) {
+    console.log("All required fields must be filled.");
     return res
       .status(400)
       .json({ success: false, message: "All required fields must be filled." });
@@ -205,7 +210,7 @@ export async function updateEvent(req, res) {
 
   try {
     const result = await pool.query(
-      "UPDATE events SET title = $1, event_type = $2, priest_name = $3, description = $4, venue = $5, client_number = $6, date = $7, start_time = $8, end_time = $9, is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13 expected_attendance = $14 WHERE id = $15 RETURNING *",
+      "UPDATE events SET title = $1, event_type = $2, priest_name = $3, description = $4, venue = $5, client_number = $6, date = $7, start_time = $8, end_time = $9, is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13, expected_attendance = $14 WHERE id = $15 RETURNING *",
       [
         trimmedTitle,
         eventType,
@@ -231,6 +236,7 @@ export async function updateEvent(req, res) {
       message: "Event updated successfully",
     });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       success: false,
       message: "Failed to update event",
