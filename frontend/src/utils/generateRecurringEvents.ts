@@ -67,6 +67,7 @@ if (eventDate.isValid() && eventDate.isSameOrAfter(startDate, "day") &&
       });
     }
   });
+  console.log("updatedEvents: ", updatedEvents)
 
   return updatedEvents;
 };

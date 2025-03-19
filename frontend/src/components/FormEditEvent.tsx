@@ -67,7 +67,6 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       console.log("Fetched Data:", data); // Debugging log
 
       const eventData = data[0];
-      console.log("eventDate: ", eventData);
       setFormEvent({
         title: eventData.title || "",
         description: eventData.description || "",
@@ -85,7 +84,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
           : "", // Format on load
         isRecurring: eventData.is_recurring || false,
         recurringDays: eventData.recurring_days
-          ? eventData.recurring_days.map((day: string) => day.toLowerCase()) // Ensure lowercase
+          ? eventData.recurring_days.map((day: string) => `${day.slice(0,1).toUpperCase()}${day.slice(1).toLowerCase()}`) // Ensure lowercase
           : [],
         hasEndDate: eventData.has_end_date || false,
         endDate: eventData.end_date || "",
@@ -93,6 +92,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       setLoading(false);
     }
   }, [data]);
+  console.log(formEvent)
 
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
