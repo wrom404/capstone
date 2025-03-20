@@ -1,9 +1,9 @@
-import FormEvent from "@/components/FormCreateEvent";
+import FormCreateEvent from "@/components/FormCreateEvent";
 
 const ScheduleEventPage = () => {
   return (
     <div>
-      <FormEvent />
+      <FormCreateEvent />
     </div>
   );
 };

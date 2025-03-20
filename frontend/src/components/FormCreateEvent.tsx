@@ -22,7 +22,7 @@ import validateEventTime from "@/utils/validateEventTime";
 import { type Event } from "@/types/types";
 import axios from "axios";
 
-const FormEvent = () => {
+const FormCreateEvent = () => {
   const {
     mutate: createEvent,
     isPending,
@@ -436,4 +436,4 @@ const FormEvent = () => {
   );
 };
 
-export default FormEvent;
+export default FormCreateEvent;

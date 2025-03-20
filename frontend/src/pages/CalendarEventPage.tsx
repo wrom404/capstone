@@ -53,34 +53,27 @@ const CalendarEventPage = () => {
   const dayPropGetter = (date: Date) => {
     const dateString = moment(date).format("YYYY-MM-DD");
     const todayString = moment().format("YYYY-MM-DD");
-
-    // Find the matching object in eventCount
+  
     const matchingEvent = eventCount.find(
       (event) => moment(event.date).format("YYYY-MM-DD") === dateString
     );
-
+  
     const count = matchingEvent ? parseInt(matchingEvent.count, 10) : 0;
     const isLimitReached = count >= 3;
-
+  
     return {
       style: {
-        backgroundColor:
-          dateString === todayString
-            ? "#EEF2FF"
-            : isLimitReached
-            ? "#f0f0f0"
-            : "white",
-        color:
-          dateString === todayString
-            ? "#000000"
-            : isLimitReached
-            ? "white"
-            : "black",
+        backgroundColor: isLimitReached ? "#f0f0f0" : "white",
+        color: isLimitReached ? "white" : "black",
         fontWeight: dateString === todayString ? "bold" : "normal",
         cursor: isLimitReached ? "not-allowed" : "pointer",
+        border: dateString === todayString ? "2px solid #1f2937" : undefined, // Fix: use undefined instead of false
+        borderLeft: dateString !== todayString ? "1px solid #ddd" : "2px solid #1f2937", // Fix: use undefined instead of false
       },
     };
   };
+  
+  
 
   // Format the events for the calendar
   const myCalendarEvents = formatForCalendar(events);
@@ -165,7 +158,7 @@ const CalendarEventPage = () => {
         events={myCalendarEvents}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: "85vh" }}
+        style={{ height: "90vh" }}
         views={["month", "week", "day", "agenda"]}
         view={view}
         date={date}

@@ -22,7 +22,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* Main Content */}
 
         <div className="flex-1 flex flex-col w-full">
-          <div className="border-b border-indigo-100 py-2 flex justify-between w-full bg-indigo-100 text-gray-800">
+          <div className="border-b border-gray-300 py-2 flex justify-between w-full  text-gray-800">
             <SidebarTrigger className="p-4 hover:bg-indigo-200" />
             {/* <div className="mr-8"><CircleUserRound size={32} className="text-gray-700 cursor-pointer hover:text-indigo-800"/></div> */}
             <div className="">
@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {user?.first_name.slice(0, 1)}
                   </div>
                   <div className="flex flex-col text-sm ml-2">
-                    <div className=" text-gray-700 font-black">
+                    <div className=" text-gray-900 font-semibold">
                       {user?.first_name} {user?.last_name}
                     </div>
                     <div className="text-gray-500 text-xs">{user?.email}</div>

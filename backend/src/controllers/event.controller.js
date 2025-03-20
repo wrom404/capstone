@@ -46,6 +46,9 @@ export async function createEvent(req, res) {
       [date]
     );
 
+    console.log("countResult: ", countResult);
+    console.log("date: ", date);
+
     if (countResult.rows[0].count >= 3) {
       const errorResponse = {
         success: false,
@@ -316,7 +319,7 @@ export async function cancelEvent(req, res) {
       FROM events WHERE id = $2;
     `;
     await pool.query(insertQuery, [cancelMessage, id]);
-    
+
     // Delete from events
     const deleteQuery = `DELETE FROM events WHERE id = $1;`;
     await pool.query(deleteQuery, [id]);
