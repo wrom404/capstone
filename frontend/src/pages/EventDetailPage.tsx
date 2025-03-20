@@ -12,10 +12,24 @@ import { useEffect, useState } from "react";
 import { Event } from "@/types/types";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
+import CustomCancelModal from "@/components/CustomCancelModal";
+import useCancelEvent from "@/hooks/useCancelEvent";
+import toast from "react-hot-toast";
 
 const EventDetailPage = () => {
   const { id } = useParams();
-  const { data, isPending, error } = useFetchAllEvent(id || "");
+  const {
+    data: fetchedEvents,
+    isPending: isFetchingEvents,
+    error: fetchedError,
+  } = useFetchAllEvent(id || "");
+  const {
+    mutate: cancelEvent,
+    data: canceledEvent,
+    isPending: isCancelingEvent,
+    error: canceledError,
+    isSuccess,
+  } = useCancelEvent(id || "");
   const [events, setEvents] = useState<Event>({
     title: "",
     description: "",
@@ -32,15 +46,43 @@ const EventDetailPage = () => {
     has_end_date: false,
     end_date: "",
   });
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [cancelMessage, setCancelMessage] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (data) {
-      setEvents(data[0]);
+    if (fetchedEvents) {
+      setEvents(fetchedEvents[0]);
     }
-  }, [data]);
+  }, [fetchedEvents]);
 
-  if (isPending) {
+  console.log("canceledEvent: ", canceledEvent);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Canceled event successfully.");
+      navigate(-1)
+    }
+  }, [isSuccess, navigate]);
+
+  const onConfirm = () => {
+    if (cancelMessage) {
+      console.log("Id: ", id);
+      console.log("Reason: ", cancelMessage);
+      cancelEvent({ cancelMessage, id: id || "" });
+      setIsModalOpen(false);
+    }
+  };
+
+  const onCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOnChange = (reason: string) => {
+    setCancelMessage(reason);
+  };
+
+  if (isFetchingEvents || isCancelingEvent) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -48,9 +90,7 @@ const EventDetailPage = () => {
     );
   }
 
-  console.log(data);
-
-  if (error) {
+  if (fetchedError || canceledError) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <span className="text-red-600 text-2xl">
@@ -62,9 +102,6 @@ const EventDetailPage = () => {
 
   return (
     <div className="h-full">
-      {/* Header */}
-
-      {/* Main Content */}
       <main className="container mx-auto px-4 pb-8">
         <button
           className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6 transition-colors cursor-pointer"
@@ -201,6 +238,7 @@ const EventDetailPage = () => {
                 <Button
                   type="submit"
                   className="bg-red-600 hover:bg-red-700 font-bold cursor-pointer ml-2.5"
+                  onClick={() => setIsModalOpen(true)}
                 >
                   Cancel Event
                 </Button>
@@ -209,6 +247,13 @@ const EventDetailPage = () => {
           </div>
         </div>
       </main>
+      <CustomCancelModal
+        isModalOpen={isModalOpen}
+        onCancel={onCancel}
+        onConfirm={onConfirm}
+        cancelMessage={cancelMessage}
+        handleOnChange={handleOnChange}
+      />
     </div>
   );
 };

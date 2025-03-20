@@ -1,7 +1,7 @@
 import { type ModalProps } from "@/types/types";
 import { TriangleAlert } from "lucide-react";
 
-const CustomModal = ({
+const CustomDeleteModal = ({
   isOpen,
   title,
   message,
@@ -38,4 +38,4 @@ const CustomModal = ({
   );
 };
 
-export default CustomModal;
+export default CustomDeleteModal;

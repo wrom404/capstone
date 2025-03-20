@@ -1,4 +1,4 @@
-import CustomModal from "@/components/CustomModal";
+import CustomDeleteModal from "@/components/CustomDeleteModal";
 import TableEvent from "@/components/TableEvent";
 import useDeleteEvent from "@/hooks/useDeleteEvent";
 import useFetchAllEvents from "@/hooks/useFetchEvents";
@@ -200,7 +200,7 @@ const EventPage = () => {
         </div>
       </div>
 
-      <CustomModal
+      <CustomDeleteModal
         isOpen={isModalOpen}
         title="Delete Event"
         message="Proceed to delete? This action cannot be undone."

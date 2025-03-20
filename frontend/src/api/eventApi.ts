@@ -124,15 +124,15 @@ export const updateEvent = async ({ formEvent, id }: { formEvent: FormDataProps,
     console.log("formEvent: ", formEvent)
     // Create Date objects for startTime and endTime
     // This converts the time from a simple string format like "08:00" into a full local DateTime (e.g., "2025-03-26T08:00:00" in local time)
-    const startDateTime = new Date(`${formEvent.date && formEvent.date.split('T')[0]}T${formEvent.startTime}:00`); 
-    const endDateTime = new Date(`${formEvent.date && formEvent.date.split('T')[0]}T${formEvent.endTime}:00`); 
+    const startDateTime = new Date(`${formEvent.date && formEvent.date.split('T')[0]}T${formEvent.startTime}:00`);
+    const endDateTime = new Date(`${formEvent.date && formEvent.date.split('T')[0]}T${formEvent.endTime}:00`);
 
     const formattedEvent = {
       ...formEvent,
       // Convert local time to UTC format (ISO 8601)
       // This ensures that the backend receives a properly formatted UTC timestamp (e.g., "2025-03-26T00:00:00.000Z")
       // and now convert startDateTime and endDateTime (which is in UTC+8) to UTC (Zulu time, Z). now the value is 2025-03-26T00:00:00.000Z  (UTC time) and The +08:00 offset is removed, and the time is converted to UTC (Z).
-      startTime: startDateTime.toISOString(),  
+      startTime: startDateTime.toISOString(),
       endTime: endDateTime.toISOString(),
       endDate: formEvent.endDate || null
     }
@@ -154,5 +154,23 @@ export const updateEvent = async ({ formEvent, id }: { formEvent: FormDataProps,
     console.log("An unknown error occurred.")
     console.log("error: ", error)
     throw new Error("An unknown error occurred.")
+  }
+}
+
+export const cancelEvent = async ({ cancelMessage, id }: { cancelMessage: string, id: string }): Promise<string | null> => {
+  if (!cancelMessage || !id) {
+    console.log("No message or id")
+    return null;
+  }
+  try {
+    const response = await axios.put(`http://localhost:4000/api/${id}/cancel`, { cancelMessage });
+    if (!response.data.success) {
+      console.log(response.data?.message);
+      throw new Error(response.data?.message)
+    }
+    return response.data.data;
+  } catch (error) {
+    console.log(error)
+    throw new Error("An unknown error occurred.");
   }
 }

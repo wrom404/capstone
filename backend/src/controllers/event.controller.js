@@ -58,29 +58,29 @@ export async function createEvent(req, res) {
       return res.status(400).json(errorResponse);
     }
 
-    // const result = await pool.query(
-    //   "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
-    //   [
-    //     trimmedTitle,
-    //     eventType,
-    //     trimmedPriestName,
-    //     trimmedDescription,
-    //     trimmedVenue,
-    //     expectedAttendance,
-    //     trimmedClientNumber,
-    //     date,
-    //     startTime,
-    //     endTime,
-    //     isRecurring,
-    //     recurringDays,
-    //     hasEndDate,
-    //     endDate,
-    //   ]
-    // );
+    const result = await pool.query(
+      "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
+      [
+        trimmedTitle,
+        eventType,
+        trimmedPriestName,
+        trimmedDescription,
+        trimmedVenue,
+        expectedAttendance,
+        trimmedClientNumber,
+        date,
+        startTime,
+        endTime,
+        isRecurring,
+        recurringDays,
+        hasEndDate,
+        endDate,
+      ]
+    );
 
     return res.status(201).json({
       success: true,
-      // data: result.rows[0],
+      data: result.rows[0],
       message: "Event created successfully",
       count: countResult.rows,
     });
@@ -236,7 +236,7 @@ export async function updateEvent(req, res) {
       message: "Event updated successfully",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Failed to update event",
@@ -277,7 +277,9 @@ export async function deleteEvent(req, res) {
     );
 
     if (result.rows.length > 0) {
-      return res.json({ success: true, message: "Event deleted successfully" });
+      return res
+        .status(200)
+        .json({ success: true, message: "Event deleted successfully" });
     } else {
       return res.status(500).json({
         success: false,
@@ -294,4 +296,43 @@ export async function deleteEvent(req, res) {
   }
 }
 
-export async function cancelEvent(req, res) {}
+export async function cancelEvent(req, res) {
+  const { id } = req.params;
+  const { cancelMessage } = req.body; // Extract from request body
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Event ID is required." });
+  }
+
+  try {
+    await pool.query("BEGIN");
+
+    // Move event to canceled_events
+    const insertQuery = `
+      INSERT INTO canceled_events (title, event_type, description, venue, date, start_time, end_time, recurring_days, end_date, status, canceled_at, reason)
+      SELECT title, event_type, description, venue, date, start_time, end_time, recurring_days, end_date, 'canceled', NOW(), $1
+      FROM events WHERE id = $2;
+    `;
+    await pool.query(insertQuery, [cancelMessage, id]);
+    
+    // Delete from events
+    const deleteQuery = `DELETE FROM events WHERE id = $1;`;
+    await pool.query(deleteQuery, [id]);
+
+    await pool.query("COMMIT");
+
+    console.log(`Event ID ${id} successfully canceled.`);
+    return res
+      .status(200)
+      .json({ success: true, message: "Event canceled successfully." });
+  } catch (error) {
+    await pool.query("ROLLBACK");
+    console.error("Error canceling event:", error);
+    console.error("Error message:", error?.message);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to cancel event." });
+  }
+}
