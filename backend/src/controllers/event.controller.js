@@ -339,3 +339,30 @@ export async function cancelEvent(req, res) {
       .json({ success: false, message: "Failed to cancel event." });
   }
 }
+
+export async function getCanceledEvents(req, res) {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM canceled_events ORDER BY id DESC"
+    );
+
+    if (result.rows.length === 0) {
+      console.log("No canceled events found in the database.");
+      return res
+        .status(204) // Or 204 (No Content)
+        .json({ success: true, message: "No canceled events found." });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: result.rows,
+      message: "Successfully fetched canceled events.",
+    });
+  } catch (error) {
+    console.error("Error fetching canceled events:", error); // More specific error log
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch canceled events: " + error.message, // Include error message
+    });
+  }
+}

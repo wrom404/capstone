@@ -114,3 +114,23 @@ export type UnAvailableDateProps = {
   count: string,
   date: string
 }
+
+export interface CanceledEvent {
+  id: number;
+  title: string;
+  event_type: string;
+  priest_name: null;
+  description: string;
+  venue: string;
+  client_number: null;
+  date: Date;
+  start_time: Date;
+  end_time: Date;
+  status: string;
+  is_recurring: boolean;
+  recurring_days: [];
+  has_end_date: boolean;
+  end_date: null;
+  canceled_at: Date;
+  reason: string;
+}

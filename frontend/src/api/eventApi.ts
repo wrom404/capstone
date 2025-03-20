@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { type UnAvailableDateProps, type Event, type FormDataProps } from "../types/types";
+import { type UnAvailableDateProps, type Event, type FormDataProps, type CanceledEvent } from "../types/types";
 
 export const getAllEvents = async (): Promise<Event[]> => {
 
@@ -172,5 +172,24 @@ export const cancelEvent = async ({ cancelMessage, id }: { cancelMessage: string
   } catch (error) {
     console.log(error)
     throw new Error("An unknown error occurred.");
+  }
+}
+
+export const getCanceledEvents = async (): Promise<CanceledEvent | []> => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/canceled/events');
+
+    if (!response.data.success) {
+      return response.data.error;
+    }
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected error: ", error)
+    }
+
+    return [];
   }
 }

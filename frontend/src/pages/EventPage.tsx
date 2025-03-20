@@ -125,7 +125,7 @@ const EventPage = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="">
       <div className="flex justify-between">
         <div className="">
           <h2 className="text-2xl text-gray-800 font-bold">Events</h2>
