@@ -1,7 +1,7 @@
 import { type ModalProps } from "@/types/types";
-import { TriangleAlert } from "lucide-react";
 
 const CustomDeleteModal = ({
+  icon: Icon,
   isOpen,
   title,
   message,
@@ -14,8 +14,14 @@ const CustomDeleteModal = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
       <div className="bg-white rounded-lg shadow-lg p-6 w-[28rem]">
-        <div className="flex gap-2 mb-4">
-          <TriangleAlert className="text-red-600" />
+        <div className="flex items-center gap-2 mb-4">
+          <Icon
+            className={`${
+              title && title == "Delete Event"
+                ? "text-red-600"
+                : "text-indigo-600"
+            }`}
+          />
           <h2 className="text-lg font-">{title}</h2>
         </div>
         <p className="mb-4 text-base text-gray-700">{message}</p>
@@ -27,10 +33,14 @@ const CustomDeleteModal = ({
             Cancel
           </button>
           <button
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-base"
+            className={`px-4 py-2 ${
+              title && title == "Delete Event"
+                ? "bg-red-600 text-white rounded hover:bg-red-700 text-base"
+                : "bg-indigo-600 text-white rounded hover:bg-indigo-700 text-base"
+            }`}
             onClick={onConfirm}
           >
-            Delete
+            {`${title && title == "Delete Event" ? "Delete" : "Restore"}`}
           </button>
         </div>
       </div>

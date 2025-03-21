@@ -6,98 +6,56 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CanceledEvent } from "@/types/types";
+import formatDate from "@/utils/formatDateTable";
+import formatTime from "@/utils/formatTime";
 import { RotateCcw } from "lucide-react";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-    DeletedOn: "$250.00",
-    Action: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-    DeletedOn: "$250.00",
-    Action: "Credit Card",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-    DeletedOn: "$250.00",
-    Action: "Credit Card",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-    DeletedOn: "$250.00",
-    Action: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-    DeletedOn: "$250.00",
-    Action: "Credit Card",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-    DeletedOn: "$250.00",
-    Action: "Credit Card",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-    DeletedOn: "$250.00",
-    Action: "Credit Card",
-  },
-];
-
-function TableArchive() {
+function TableArchive({
+  data,
+  handleClickRestoreEvent,
+}: {
+  data: CanceledEvent[];
+  handleClickRestoreEvent: (id: string) => void;
+}) {
   return (
     <Table className="border">
       <TableHeader className="bg-gray-50">
         <TableRow>
-          <TableHead>Event</TableHead>
+          <TableHead>Event Name</TableHead>
           <TableHead>Category</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Time</TableHead>
-          <TableHead>Deleted on</TableHead>
+          <TableHead>Canceled on</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell>{invoice.DeletedOn}</TableCell>
-            <TableCell>{invoice.Action}</TableCell>
-            <TableCell>Canceled</TableCell>
-            <TableCell>
-              <button className="cursor-pointer text-indigo-800 bg-indigo-100 hover:text-indigo-900 py-1 px-2 rounded-md flex items-center gap-1">
-                <RotateCcw size={16} />
-                Restore
-              </button>
-            </TableCell>
-          </TableRow>
-        ))}
+        {data &&
+          data.map((data) => (
+            <TableRow key={data.id} className="cursor-pointer hover:bg-indigo-50">
+              <TableCell className="font-medium">{data.title || ""}</TableCell>
+              <TableCell>{data.event_type || ""}</TableCell>
+              <TableCell>{formatDate(data?.date.toString() || "")}</TableCell>
+              <TableCell>{`${formatTime(
+                data.start_time.toString() || ""
+              )} - ${formatTime(data.end_time.toString() || "")}`}</TableCell>
+              <TableCell>
+                {formatDate(data?.canceled_at.toString() || "")}
+              </TableCell>
+              <TableCell>{data.status || ""}</TableCell>
+              <TableCell>
+                <button
+                  className="cursor-pointer text-indigo-800 bg-indigo-100 hover:text-indigo-900 py-1 px-2 rounded-md flex items-center gap-1"
+                  onClick={() => handleClickRestoreEvent(data.id.toString())}
+                >
+                  <RotateCcw size={16} />
+                  Restore
+                </button>
+              </TableCell>
+            </TableRow>
+          ))}
       </TableBody>
     </Table>
   );

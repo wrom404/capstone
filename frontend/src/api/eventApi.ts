@@ -175,12 +175,12 @@ export const cancelEvent = async ({ cancelMessage, id }: { cancelMessage: string
   }
 }
 
-export const getCanceledEvents = async (): Promise<CanceledEvent | []> => {
+export const getCanceledEvents = async (): Promise<CanceledEvent[] | []> => {
   try {
     const response = await axios.get('http://localhost:4000/api/canceled/events');
 
     if (!response.data.success) {
-      return response.data.error;
+      return response.data.message;
     }
     return response.data.data;
   } catch (error) {

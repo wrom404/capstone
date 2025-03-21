@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { TriangleAlert } from "lucide-react";
 
 const EventPage = () => {
   const {
@@ -15,7 +16,7 @@ const EventPage = () => {
     isPending: isDeleting,
     isSuccess: deleteSuccess,
   } = useDeleteEvent();
-  
+
   const {
     data,
     error: fetchError,
@@ -31,6 +32,8 @@ const EventPage = () => {
   const [eventId, setEventId] = useState<number | null>(null);
 
   const navigate = useNavigate();
+
+  console.log("Data: ", data);
 
   useEffect(() => {
     let events = data;
@@ -54,8 +57,6 @@ const EventPage = () => {
     setFilteredEvents(events);
   }, [setFilteredEvents, data, searchQuery, selectedCategory]);
 
-  console.log(filteredEvents)
-  console.log(data)
 
   useEffect(() => {
     if (deleteSuccess) {
@@ -201,6 +202,7 @@ const EventPage = () => {
       </div>
 
       <CustomDeleteModal
+        icon={TriangleAlert}
         isOpen={isModalOpen}
         title="Delete Event"
         message="Proceed to delete? This action cannot be undone."

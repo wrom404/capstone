@@ -19,6 +19,7 @@ export type Event = {
   has_end_date?: boolean | null;
   end_date?: string | null;
   created_at?: string;
+  canceled_at?: string | null;
 
   // Required for React Big Calendar
   start?: Date;
@@ -61,6 +62,7 @@ export type TableEventProps = {
 };
 
 export type ModalProps = {
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
   isOpen: boolean;
   title: string;
   message: string;
