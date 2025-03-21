@@ -5,13 +5,22 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useEffect, useState } from "react";
 import CustomDeleteModal from "@/components/CustomDeleteModal";
 import { RotateCcw } from "lucide-react";
+import useRestoreEvent from "@/hooks/useRestoreEvent";
+import toast from "react-hot-toast";
 
 const ArchivePage = () => {
+  const [eventId, setEventId] = useState<string | null>(null);
   const {
     data,
     isPending: isFetching,
     error: fetchError,
   } = useFetchCanceledEvent();
+  const {
+    mutate: restoreEvent,
+    isPending: isRestoring,
+    isSuccess,
+    error: restoreError,
+  } = useRestoreEvent(eventId || "");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
@@ -20,7 +29,6 @@ const ArchivePage = () => {
     CanceledEvent[] | undefined
   >([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [eventId, setEventId] = useState<string | null>(null);
 
   console.log("Data: ", data);
 
@@ -45,6 +53,12 @@ const ArchivePage = () => {
 
     setFilteredEvents(events);
   }, [setFilteredEvents, data, searchQuery, selectedCategory]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Restored successfully.");
+    }
+  }, [isSuccess]);
 
   const paginatedEvents = filteredEvents?.slice(
     (currentPage - 1) * itemsPerPage,
@@ -77,12 +91,12 @@ const ArchivePage = () => {
 
   const handleRestoreEvent = () => {
     if (eventId !== null) {
-      // deleteEvent(eventId);
+      restoreEvent(eventId);
       setIsModalOpen(false);
     }
   };
 
-  if (isFetching) {
+  if (isFetching || isRestoring) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -90,7 +104,7 @@ const ArchivePage = () => {
     );
   }
 
-  if (fetchError) {
+  if (fetchError || restoreError) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <span className="text-red-600 text-2xl">

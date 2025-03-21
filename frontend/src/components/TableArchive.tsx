@@ -32,9 +32,12 @@ function TableArchive({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data &&
+        {data && data.length > 0 ? (
           data.map((data) => (
-            <TableRow key={data.id} className="cursor-pointer hover:bg-indigo-50">
+            <TableRow
+              key={data.id}
+              className="cursor-pointer hover:bg-indigo-50"
+            >
               <TableCell className="font-medium">{data.title || ""}</TableCell>
               <TableCell>{data.event_type || ""}</TableCell>
               <TableCell>{formatDate(data?.date.toString() || "")}</TableCell>
@@ -55,7 +58,12 @@ function TableArchive({
                 </button>
               </TableCell>
             </TableRow>
-          ))}
+          ))
+        ) : (
+          <TableRow>
+            <TableCell>No Canceled Events.</TableCell>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   );

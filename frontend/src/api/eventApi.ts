@@ -1,15 +1,15 @@
 import axios, { AxiosError } from "axios";
 import { type UnAvailableDateProps, type Event, type FormDataProps, type CanceledEvent } from "../types/types";
 
-export const getAllEvents = async (): Promise<Event[]> => {
+export const getAllEvents = async (): Promise<Event[] | []> => {
 
   try {
     const response = await axios.get("http://localhost:4000/api");
 
-    if (response.data.success) {
-      return response.data.data;
+    if (!response.data.success || !Array.isArray(response.data.data)) {
+      return [];
     }
-    return response.data?.error;
+    return response.data.data;
   } catch (error) {
     // handle different error case
     if (axios.isAxiosError(error)) {
@@ -179,7 +179,27 @@ export const getCanceledEvents = async (): Promise<CanceledEvent[] | []> => {
   try {
     const response = await axios.get('http://localhost:4000/api/canceled/events');
 
+    if (!response.data.success || !Array.isArray(response.data.data)) {
+      return []; // ✅ Always return an array
+    }
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected error: ", error)
+    }
+
+    return [];
+  }
+}
+
+export const restoreCanceledEvent = async (id: string): Promise<{ success: boolean, message: string } | []> => {
+  try {
+    const response = await axios.put(`http://localhost:4000/api/${id}/restore`);
+
     if (!response.data.success) {
+      console.log(response.data.message)
       return response.data.message;
     }
     return response.data.data;

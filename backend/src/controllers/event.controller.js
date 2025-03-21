@@ -99,6 +99,10 @@ export async function createEvent(req, res) {
 export async function getEvents(req, res) {
   try {
     const result = await pool.query("SELECT * FROM events ORDER BY id DESC");
+
+    if (result.rows.length === 0) {
+      res.status(400).json({ success: false, message: "No Events Found." });
+    }
     const events = result.rows.map((event) => {
       if (event.start_time) {
         event.start_time = moment
@@ -129,7 +133,9 @@ export async function getEventById(req, res) {
     const result = await pool.query("SELECT * FROM events WHERE id = $1", [id]);
 
     if (result.rows.length === 0) {
-      return res.status(401).json({ success: false, message: "Invalid id" });
+      return res
+        .status(204)
+        .json({ success: true, message: "No Events Found." });
     }
 
     const events = result.rows.map((event) => {
@@ -384,9 +390,7 @@ export async function restoreCanceledEvent(req, res) {
     );
 
     if (selectEvents.rows.length === 0) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid event ID." });
+      return res.status(400).json({ success: false, message: "Invalid ID" });
     }
 
     const selectedEvent = selectEvents.rows[0];

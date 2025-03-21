@@ -32,6 +32,6 @@ routes.delete("/:id", deleteEvent);
 
 routes.put("/:id/cancel", cancelEvent);
 
-routes.get("/:id/restore", restoreCanceledEvent);
+routes.put("/:id/restore", restoreCanceledEvent);
 
 export default routes;

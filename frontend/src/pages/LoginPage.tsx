@@ -104,10 +104,10 @@ const LoginPage = () => {
           <div className="my-6 flex justify-end w-full">
             <button
               type="submit"
-              className="w-fit px-6 py-2 font-semibold text-white bg-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+              className="w-fit px-6 py-2 font-semibold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
             >
               {mutation.isPending ? (
-                <div className="w-5 h-5 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-3 h-3 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 "Login"
               )}
