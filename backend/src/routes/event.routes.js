@@ -8,6 +8,7 @@ import {
   getUnavailableDates,
   cancelEvent,
   getCanceledEvents,
+  restoreCanceledEvent,
 } from "../controllers/event.controller.js";
 import verifyUser from "../middleware/verifyUser.js";
 
@@ -30,5 +31,7 @@ routes.put("/:id", updateEvent);
 routes.delete("/:id", deleteEvent);
 
 routes.put("/:id/cancel", cancelEvent);
+
+routes.get("/:id/restore", restoreCanceledEvent);
 
 export default routes;

@@ -99,7 +99,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     // Implement your form submission logic here
     console.log("Form submitted:", formEvent);
     updateEvent({ formEvent, id: id || "" });
-    setIsSuccessMessage("edited successfully");
+    setIsSuccessMessage("Updated successfully");
     setFormEvent({
       title: "",
       description: "",

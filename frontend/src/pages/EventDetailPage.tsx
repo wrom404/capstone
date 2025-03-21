@@ -65,6 +65,10 @@ const EventDetailPage = () => {
     }
   }, [isSuccess, navigate]);
 
+  const handleClickEvent = (id: string) => {
+    navigate(`/edit-event/${id}`)
+  }
+
   const onConfirm = () => {
     if (cancelMessage) {
       console.log("Id: ", id);
@@ -232,6 +236,7 @@ const EventDetailPage = () => {
                 <Button
                   type="submit"
                   className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer"
+                  onClick={() => handleClickEvent(events.id?.toString() || "")}
                 >
                   Edit Event
                 </Button>

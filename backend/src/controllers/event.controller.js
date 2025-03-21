@@ -314,8 +314,8 @@ export async function cancelEvent(req, res) {
 
     // Move event to canceled_events
     const insertQuery = `
-      INSERT INTO canceled_events (title, event_type, description, venue, date, start_time, end_time, recurring_days, end_date, status, canceled_at, reason)
-      SELECT title, event_type, description, venue, date, start_time, end_time, recurring_days, end_date, 'canceled', NOW(), $1
+      INSERT INTO canceled_events (title, event_type, priest_name, description, venue, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, expected_attendance, status, canceled_at, reason)
+      SELECT title, event_type, priest_name, description, venue, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, expected_attendance, 'canceled', NOW(), $1
       FROM events WHERE id = $2;
     `;
     await pool.query(insertQuery, [cancelMessage, id]);
@@ -364,5 +364,84 @@ export async function getCanceledEvents(req, res) {
       success: false,
       message: "Failed to fetch canceled events: " + error.message, // Include error message
     });
+  }
+}
+
+export async function restoreCanceledEvent(req, res) {
+  const { id } = req.params;
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Event ID is required." });
+  }
+
+  try {
+    await pool.query("BEGIN");
+
+    const selectEvents = await pool.query(
+      "SELECT * FROM canceled_events WHERE id = $1",
+      [id]
+    );
+
+    if (selectEvents.rows.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid event ID." });
+    }
+
+    const selectedEvent = selectEvents.rows[0];
+    console.log("Selected event: ", selectedEvent);
+
+    // Move event from canceled_events to events
+    const insertQuery = `
+      INSERT INTO events (title, event_type, priest_name, description, venue, client_number, date, start_time, end_time, status, is_recurring, recurring_days, has_end_date, end_date, expected_attendance, restored_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`;
+
+    const insertQueryResult = await pool.query(insertQuery, [
+      selectedEvent.title,
+      selectedEvent.event_type,
+      selectedEvent.priest_name,
+      selectedEvent.description,
+      selectedEvent.venue,
+      selectedEvent.client_number,
+      selectedEvent.date,
+      selectedEvent.start_time,
+      selectedEvent.end_time,
+      "scheduled",
+      selectedEvent.is_recurring,
+      selectedEvent.recurring_days,
+      selectedEvent.has_end_date,
+      selectedEvent.end_date,
+      selectedEvent.expected_attendance,
+      "NOW()",
+    ]);
+
+    if (insertQueryResult.rows.length === 0) {
+      await pool.query("ROLLBACK");
+      console.error("Error: Failed to insert event into events table.");
+      return res.status(500).json({
+        success: false,
+        message: "Failed to restore event.",
+      });
+    }
+
+    // Delete from canceled_events
+    const deleteQuery = `DELETE FROM canceled_events WHERE id = $1;`;
+    await pool.query(deleteQuery, [id]);
+
+    await pool.query("COMMIT");
+
+    console.log(`Event ID ${id} successfully restored.`);
+
+    return res.status(200).json({
+      success: true,
+      message: "Event restored successfully.",
+    });
+  } catch (error) {
+    await pool.query("ROLLBACK");
+    console.error("Error restoring event:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to restore event." });
   }
 }
