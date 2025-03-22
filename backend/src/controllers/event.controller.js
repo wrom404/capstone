@@ -41,14 +41,13 @@ export async function createEvent(req, res) {
   );
 
   try {
+    // query for count event
     const countResult = await pool.query(
       "SELECT COUNT(id) FROM events WHERE date = $1",
       [date]
     );
 
-    console.log("countResult: ", countResult);
-    console.log("date: ", date);
-
+    // Check if the date already has 3 or more events
     if (countResult.rows[0].count >= 3) {
       const errorResponse = {
         success: false,
@@ -61,29 +60,58 @@ export async function createEvent(req, res) {
       return res.status(400).json(errorResponse);
     }
 
-    const result = await pool.query(
-      "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
-      [
-        trimmedTitle,
-        eventType,
-        trimmedPriestName,
-        trimmedDescription,
-        trimmedVenue,
-        expectedAttendance,
-        trimmedClientNumber,
-        date,
-        startTime,
-        endTime,
-        isRecurring,
-        recurringDays,
-        hasEndDate,
-        endDate,
-      ]
-    );
+    // query for specific date
+    const dateQuery = await pool.query("SELECT * FROM events WHERE date = $1", [
+      date,
+    ]);
+
+    const selectedDate = dateQuery.rows;
+
+    for (const selectDate of selectedDate) {
+      const clientStart = new Date(startTime).getTime(); // Convert to timestamp
+      const clientEnd = new Date(endTime).getTime();
+
+      const serverStart = new Date(selectDate.start_time).getTime();
+      const serverEnd = new Date(selectDate.end_time).getTime();
+
+      console.log("Comparing times:");
+      console.log("Client Start:", clientStart);
+      console.log("Client End:", clientEnd);
+      console.log("Server Start:", serverStart);
+      console.log("Server End:", serverEnd);
+
+      if (clientStart <= serverEnd && clientEnd >= serverStart) {
+        console.log("Time slot already occupied, please choose another time.");
+        return res.status(400).json({
+          success: false,
+          message: "Time slot already occupied, please choose another time.",
+        });
+      }
+    }
+
+    // const result = await pool.query(
+    //   "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
+    //   [
+    //     trimmedTitle,
+    //     eventType,
+    //     trimmedPriestName,
+    //     trimmedDescription,
+    //     trimmedVenue,
+    //     expectedAttendance,
+    //     trimmedClientNumber,
+    //     date,
+    //     startTime,
+    //     endTime,
+    //     isRecurring,
+    //     recurringDays,
+    //     hasEndDate,
+    //     endDate,
+    //   ]
+    // );
 
     return res.status(201).json({
       success: true,
-      data: result.rows[0],
+      // data: result.rows[0],
       message: "Event created successfully",
       count: countResult.rows,
     });

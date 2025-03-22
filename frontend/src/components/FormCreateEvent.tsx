@@ -68,12 +68,14 @@ const FormCreateEvent = () => {
       toast.success("Event created successfully");
     } else if (isError && error) {
       if (axios.isAxiosError(error)) {
+        console.log("error: ", error.response?.data?.message);
         const errorMessage =
           error.response?.data?.message || "An error occurred"; // Default message if no message is found
         setCountError(errorMessage);
         toast.error(errorMessage); // Optionally show toast with error message
       } else {
-        toast.error(error.message); // this will appear if the date is fully booked
+        console.log("error: ", error.message);
+        toast.error(error.message); // this will appear "Date is fully booked. Please choose another date." or "Time slot already occupied, please choose another time."
       }
     }
   }, [isSuccess, data, error, isError]);
@@ -105,7 +107,6 @@ const FormCreateEvent = () => {
 
     if (formEvent.startTime && formEvent.endTime && formEvent.date) {
       // Validate the times before submitting the form
-      console.log("test");
       const timeValidationError = validateEventTime(
         formEvent.startTime,
         formEvent.endTime,
@@ -165,6 +166,7 @@ const FormCreateEvent = () => {
   }
 
   if (timeError) {
+    console.log("timeError: ", timeError);
     toast.error(timeError);
     setTimeError("");
   }
@@ -428,7 +430,10 @@ const FormCreateEvent = () => {
         </div>
       </div>
       <div className="flex justify-end my-2 mt-4">
-        <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer">
+        <Button
+          type="submit"
+          className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer"
+        >
           Create
         </Button>
       </div>

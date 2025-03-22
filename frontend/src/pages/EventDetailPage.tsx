@@ -25,7 +25,6 @@ const EventDetailPage = () => {
   } = useFetchAllEvent(id || "");
   const {
     mutate: cancelEvent,
-    data: canceledEvent,
     isPending: isCancelingEvent,
     error: canceledError,
     isSuccess,
@@ -56,18 +55,16 @@ const EventDetailPage = () => {
     }
   }, [fetchedEvents]);
 
-  console.log("canceledEvent: ", canceledEvent);
-
   useEffect(() => {
     if (isSuccess) {
       toast.success("Canceled event successfully.");
-      navigate(-1)
+      navigate(-1);
     }
   }, [isSuccess, navigate]);
 
   const handleClickEvent = (id: string) => {
-    navigate(`/edit-event/${id}`)
-  }
+    navigate(`/edit-event/${id}`);
+  };
 
   const onConfirm = () => {
     if (cancelMessage) {

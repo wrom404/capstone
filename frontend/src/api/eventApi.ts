@@ -102,9 +102,10 @@ export const createEvent = async (events: FormDataProps): Promise<Event | string
         };
 
         if (responseData && responseData.message) { //Check: If responseData.message exists, it throws a new Error with the message.
-          console.log("Error message:", responseData.message);
+          console.log("Error message:", responseData.message); // will display "Time slot already occupied, please choose another time." or "Date is fully booked. Please choose another date."
           throw new Error(responseData.message);
         } else {
+          console.log("Error message:", axiosError.message);
           throw new Error(axiosError.message);
         }
       } else {
