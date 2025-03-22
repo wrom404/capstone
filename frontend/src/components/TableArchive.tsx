@@ -19,16 +19,16 @@ function TableArchive({
   handleClickRestoreEvent: (id: string) => void;
 }) {
   return (
-    <Table className="border">
-      <TableHeader className="bg-gray-50">
+    <Table className="border border-gray-300">
+      <TableHeader className="bg-indigo-50 hover:bg-indigo-50">
         <TableRow>
-          <TableHead>Event Name</TableHead>
-          <TableHead>Category</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead>Canceled on</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Category</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Event Name</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Date</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Time</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Canceled on</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Status</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -36,7 +36,7 @@ function TableArchive({
           data.map((data) => (
             <TableRow
               key={data.id}
-              className="cursor-pointer hover:bg-indigo-50"
+              className="cursor-pointer hover:bg-gray-50 border border-gray-30"
             >
               <TableCell className="font-medium">{data.title || ""}</TableCell>
               <TableCell>{data.event_type || ""}</TableCell>

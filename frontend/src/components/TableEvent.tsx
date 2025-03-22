@@ -17,24 +17,28 @@ const TableEvent = ({
   handleClickDelete,
   handleClickEdit,
 }: TableEventProps) => {
-  console.log(events)
+  console.log(events);
   return (
     <Table className="border border-gray-300">
-      <TableHeader className="bg-gray-50">
+      <TableHeader className="bg-indigo-50">
         <TableRow className="border border-gray-300">
-          <TableHead>Event Name</TableHead>
-          <TableHead>Category</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className="text-gray-800 font-semibold">
+            Event Name
+          </TableHead>
+          <TableHead className="text-gray-800 font-semibold">
+            Category
+          </TableHead>
+          <TableHead className="text-gray-800 font-semibold">Date</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Time</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Status</TableHead>
+          <TableHead className="text-gray-800 font-semibold">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {events &&
           events?.map((event, index) => (
             <TableRow
-              className="cursor-pointer hover:bg-indigo-50"
+              className="cursor-pointer hover:bg-gray-50 border border-gray-300"
               key={index}
               onClick={(e) => {
                 e.stopPropagation();

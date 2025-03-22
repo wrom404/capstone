@@ -116,10 +116,13 @@ const ArchivePage = () => {
   return (
     <div>
       <div className="flex justify-between">
-        <div className="">
+        <div className="mb-6">
           <h2 className="text-2xl text-gray-800 font-bold">Canceled Events</h2>
+          <p className="text-sm text-gray-700">
+            Manage and track canceled events with ease.
+          </p>
         </div>
-        <div className="">
+        <div className="mt-6">
           <input
             type="text"
             className="border border-gray-300 py-1 px-3"
@@ -187,7 +190,7 @@ const ArchivePage = () => {
         icon={RotateCcw}
         isOpen={isModalOpen}
         title="Restore Event"
-        message="Proceed to Restore? This action cannot be undone."
+        message="Proceed to Restore?"
         onConfirm={handleRestoreEvent}
         onCancel={() => setIsModalOpen(false)}
       />

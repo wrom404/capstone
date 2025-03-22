@@ -67,7 +67,7 @@ const CalendarEventPage = () => {
         color: isLimitReached ? "white" : "black",
         fontWeight: dateString === todayString ? "bold" : "normal",
         cursor: isLimitReached ? "not-allowed" : "pointer",
-        border: dateString === todayString ? "2px solid #1f2937" : undefined, // Fix: use undefined instead of false
+        border: dateString === todayString ? "1px solid indigo" : undefined, // Fix: use undefined instead of false
         borderLeft:
           dateString !== todayString ? "1px solid #ddd" : "2px solid #1f2937", // Fix: use undefined instead of false
       },

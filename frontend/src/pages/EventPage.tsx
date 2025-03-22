@@ -57,7 +57,6 @@ const EventPage = () => {
     setFilteredEvents(events);
   }, [setFilteredEvents, data, searchQuery, selectedCategory]);
 
-
   useEffect(() => {
     if (deleteSuccess) {
       toast.success("Event deleted successfully");
@@ -128,10 +127,14 @@ const EventPage = () => {
   return (
     <div className="">
       <div className="flex justify-between">
-        <div className="">
+        <div className="mb-6">
           <h2 className="text-2xl text-gray-800 font-bold">Events</h2>
+          <p className="text-sm text-gray-700">
+            Manage and track scheduled, upcoming, and completed events with
+            ease.
+          </p>
         </div>
-        <div className="">
+        <div className="mt-6">
           <input
             type="text"
             className="border border-gray-300 py-1 px-3"
@@ -143,7 +146,7 @@ const EventPage = () => {
             name="category"
             onChange={handleSelectChange}
             value={selectedCategory}
-            className="border px-3 py-1 mb-4 ml-4"
+            className="border border-gray-300 px-3 py-1 mb-4 ml-4"
           >
             <option value="">Filter</option>
             <option value="mass">Mass</option>
@@ -171,7 +174,7 @@ const EventPage = () => {
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="border px-2 py-1 ml-2 cursor-pointer"
+            className="border border-gray-300 px-2 py-1 ml-2 cursor-pointer"
           >
             {[10, 20, 30].map((size) => (
               <option key={size} value={size}>
@@ -184,7 +187,7 @@ const EventPage = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="border px-3 py-1 mr-2 cursor-pointer"
+            className="border border-gray-300 px-3 py-1 mr-2 cursor-pointer"
           >
             <IoIosArrowBack size={20} />
           </button>
@@ -194,7 +197,7 @@ const EventPage = () => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="border px-3 py-1 ml-2 cursor-pointer"
+            className="border border-gray-300 px-3 py-1 ml-2 cursor-pointer"
           >
             <IoIosArrowForward size={20} />
           </button>
