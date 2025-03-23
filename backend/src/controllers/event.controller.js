@@ -89,29 +89,29 @@ export async function createEvent(req, res) {
       }
     }
 
-    // const result = await pool.query(
-    //   "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
-    //   [
-    //     trimmedTitle,
-    //     eventType,
-    //     trimmedPriestName,
-    //     trimmedDescription,
-    //     trimmedVenue,
-    //     expectedAttendance,
-    //     trimmedClientNumber,
-    //     date,
-    //     startTime,
-    //     endTime,
-    //     isRecurring,
-    //     recurringDays,
-    //     hasEndDate,
-    //     endDate,
-    //   ]
-    // );
+    const result = await pool.query(
+      "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
+      [
+        trimmedTitle,
+        eventType,
+        trimmedPriestName,
+        trimmedDescription,
+        trimmedVenue,
+        expectedAttendance,
+        trimmedClientNumber,
+        date,
+        startTime,
+        endTime,
+        isRecurring,
+        recurringDays,
+        hasEndDate,
+        endDate,
+      ]
+    );
 
     return res.status(201).json({
       success: true,
-      // data: result.rows[0],
+      data: result.rows[0],
       message: "Event created successfully",
       count: countResult.rows,
     });
@@ -495,6 +495,21 @@ export async function getEventsStatusCount(req, res) {
     return res.status(200).json({ success: true, eventCounts });
   } catch (error) {
     console.error("Error fetching event counts:", error);
+    return res
+      .status(500)
+      .json({ success: false, error, message: "Internal Server Error" });
+  }
+}
+
+export async function getRecentEvents(req, res) {
+  try {
+    const { rows } = await pool.query(
+      "SELECT * FROM events WHERE date BETWEEN NOW() - INTERVAL '3 months' AND NOW()"
+    );
+
+    return res.status(200).json({ success: true, data: rows });
+  } catch (error) {
+    console.error("Error fetching recent events:", error);
     return res
       .status(500)
       .json({ success: false, error, message: "Internal Server Error" });
