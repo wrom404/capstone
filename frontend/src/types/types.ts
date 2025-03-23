@@ -136,3 +136,12 @@ export interface CanceledEvent {
   canceled_at: Date;
   reason: string;
 }
+
+export interface EventCountProps {
+  success: boolean;
+  eventCounts: {
+    upcoming: number | null;
+    completed: number | null;
+    scheduled: number | null;
+  };
+}

@@ -9,6 +9,7 @@ import {
   cancelEvent,
   getCanceledEvents,
   restoreCanceledEvent,
+  getEventsStatusCount,
 } from "../controllers/event.controller.js";
 import verifyUser from "../middleware/verifyUser.js";
 
@@ -23,6 +24,8 @@ routes.get("/", getEvents);
 routes.get("/unavailable-date", getUnavailableDates);
 
 routes.get("/canceled/events", getCanceledEvents);
+
+routes.get("/events/counts", getEventsStatusCount)
 
 routes.get("/:id", getEventById);
 

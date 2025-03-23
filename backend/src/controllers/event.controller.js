@@ -477,3 +477,26 @@ export async function restoreCanceledEvent(req, res) {
       .json({ success: false, message: "Failed to restore event." });
   }
 }
+
+export async function getEventsStatusCount(req, res) {
+  try {
+    const { rows } = await pool.query(
+      "SELECT status, count(*) AS count FROM events GROUP BY status"
+    );
+
+    const eventCounts = rows.reduce((acc, row) => {
+      acc[row.status] = parseInt(row.count, 10);
+      console.log("acc: ", acc);
+      return acc;
+    }, {});
+
+    console.log("rows: ", rows);
+    console.log("Event counts: ", eventCounts);
+    return res.status(200).json({ success: true, eventCounts });
+  } catch (error) {
+    console.error("Error fetching event counts:", error);
+    return res
+      .status(500)
+      .json({ success: false, error, message: "Internal Server Error" });
+  }
+}

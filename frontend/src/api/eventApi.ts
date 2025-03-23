@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { type UnAvailableDateProps, type Event, type FormDataProps, type CanceledEvent } from "../types/types";
+import { type UnAvailableDateProps, type Event, type FormDataProps, type CanceledEvent, EventCountProps } from "../types/types";
 
 export const getAllEvents = async (): Promise<Event[] | []> => {
 
@@ -211,6 +211,25 @@ export const restoreCanceledEvent = async (id: string): Promise<{ success: boole
       console.log("Unexpected error: ", error)
     }
 
+    return [];
+  }
+}
+
+export const getEventsStatusCounts = async (): Promise<EventCountProps | []> => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/events/counts');
+    if (!response.data.success) {
+      console.log(response.data.error);
+      return response.data.message
+    }
+    console.log("Data: ", response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected error: ", error)
+    }
     return [];
   }
 }
