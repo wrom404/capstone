@@ -2,9 +2,16 @@ import BarChartComponent from "@/components/BarChart";
 import EventCard from "@/components/EventCard";
 import LineChart from "@/components/LineChart";
 import PieChartComponent from "@/components/PieChartComponent";
+import useFetchRecentEvents from "@/hooks/useFetchRecentEvents";
 import useFetchStatusCount from "@/hooks/useFetchStatusCount";
+import { useEffect } from "react";
 
 const Page = () => {
+  const {
+    data: recentEvent,
+    isPending: isFetchingEvent,
+    error: fetchError,
+  } = useFetchRecentEvents();
   const {
     data: statusCount = {
       success: false,
@@ -25,10 +32,16 @@ const Page = () => {
     error: string | null;
   };
 
+  useEffect(() => {
+    if (recentEvent) {
+      console.log("recentEvent: ", recentEvent);
+    }
+  }, [recentEvent]);
+
   // Extract eventCounts from the response
   const { eventCounts } = statusCount;
 
-  if (isFetchingCount) {
+  if (isFetchingCount || isFetchingEvent) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -36,7 +49,7 @@ const Page = () => {
     );
   }
 
-  if (countError) {
+  if (countError || fetchError) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <span className="text-red-600 text-2xl">

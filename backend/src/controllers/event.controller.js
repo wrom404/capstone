@@ -486,12 +486,10 @@ export async function getEventsStatusCount(req, res) {
 
     const eventCounts = rows.reduce((acc, row) => {
       acc[row.status] = parseInt(row.count, 10);
-      console.log("acc: ", acc);
+      // console.log("acc: ", acc);
       return acc;
     }, {});
 
-    console.log("rows: ", rows);
-    console.log("Event counts: ", eventCounts);
     return res.status(200).json({ success: true, eventCounts });
   } catch (error) {
     console.error("Error fetching event counts:", error);

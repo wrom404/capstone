@@ -222,7 +222,6 @@ export const getEventsStatusCounts = async (): Promise<EventCountProps | []> => 
       console.log(response.data.error);
       return response.data.message
     }
-    console.log("Data: ", response.data)
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -230,6 +229,27 @@ export const getEventsStatusCounts = async (): Promise<EventCountProps | []> => 
     } else {
       console.log("Unexpected error: ", error)
     }
+    return [];
+  }
+}
+
+export const getRecentEvents = async (): Promise<Event[] | []> => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/events/recent');
+
+    if (!response.data.success) {
+      console.log(response.data.error);
+      return response.data.message;
+    }
+
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected error: ", error)
+    }
+
     return [];
   }
 }
