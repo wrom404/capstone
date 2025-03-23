@@ -23,14 +23,14 @@ export const AppSidebar = () => {
       <ul className="pt-4 bg-white h-full">
         <li
           className={`py-2 px-2 cursor-pointer ${
-            location.pathname === "/overview"
+            location.pathname === "/dashboard"
               ? "bg-indigo-50 text-indigo-600 rounded-lg"
               : "hover:bg-gray-50 text-gray-700"
           }  rounded-lg flex items-center gap-2`}
         >
           <LayoutDashboard size={20} />
-          <Link to={"/overview"} className="font-semibold">
-            Overview
+          <Link to={"/dashboard"} className="font-semibold">
+            Dashboard
           </Link>
         </li>
         <li

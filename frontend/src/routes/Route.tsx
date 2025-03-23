@@ -22,7 +22,7 @@ const RoutePage = () => {
           element={
             <Layout>
               <Routes>
-                <Route path="/overview" element={<Page />} />
+                <Route path="/dashboard" element={<Page />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/event" element={<EventPage />} />
                 <Route path="/edit-event/:id" element={<EditEventPage />} />
