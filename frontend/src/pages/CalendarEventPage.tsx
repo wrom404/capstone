@@ -59,7 +59,7 @@ const CalendarEventPage = () => {
     );
 
     const count = matchingEvent ? parseInt(matchingEvent.count, 10) : 0;
-    const isLimitReached = count >= 3;
+    const isLimitReached = count >= 10;
 
     return {
       style: {

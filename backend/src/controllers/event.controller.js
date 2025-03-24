@@ -48,7 +48,7 @@ export async function createEvent(req, res) {
     );
 
     // Check if the date already has 3 or more events
-    if (countResult.rows[0].count >= 3) {
+    if (countResult.rows[0].count >= 10) {
       const errorResponse = {
         success: false,
         count: countResult.rows[0],
@@ -513,3 +513,18 @@ export async function getRecentEvents(req, res) {
       .json({ success: false, error, message: "Internal Server Error" });
   }
 }
+
+export const getEventsFromLastMonth = async (req, res) => {
+  try {
+    const query = `
+      SELECT * FROM events
+      WHERE date BETWEEN NOW() - INTERVAL '1 month' AND NOW();
+    `;
+
+    const { rows } = await pool.query(query);
+    return res.status(200).json({ success: true, rows });
+  } catch (error) {
+    console.error("Error fetching events: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

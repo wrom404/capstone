@@ -1,6 +1,6 @@
 import BarChartComponent from "@/components/BarChart";
 import EventCard from "@/components/EventCard";
-import LineChart from "@/components/LineChart";
+import LineChartComponent from "@/components/LineChart";
 import PieChartComponent from "@/components/PieChartComponent";
 import useFetchRecentEvents from "@/hooks/useFetchRecentEvents";
 import useFetchStatusCount from "@/hooks/useFetchStatusCount";
@@ -23,7 +23,6 @@ const Page = () => {
       console.log("recentEvent: ", recentEvent);
     }
   }, [recentEvent]);
-
 
   if (isFetchingCount || isFetchingEvent) {
     return (
@@ -52,7 +51,7 @@ const Page = () => {
         </p>
       </div>
       <EventCard statusCount={statusCount} />
-      <LineChart />
+      <LineChartComponent />
       <div className="gap-6 flex mt-6">
         <BarChartComponent />
         <PieChartComponent />

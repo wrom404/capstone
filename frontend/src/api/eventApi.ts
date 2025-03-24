@@ -253,3 +253,18 @@ export const getRecentEvents = async (): Promise<Event[] | []> => {
     return [];
   }
 }
+
+export const getEventsFromLastMonth = async (): Promise<Event | []> => {
+  try {
+    const response = await axios.get("http://localhost:4000/api/event/last-month");
+    return response.data.rows; // Assuming your backend response structure is { success: true, rows: [...] }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected error: ", error)
+    }
+
+    return [];
+  }
+};
