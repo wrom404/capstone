@@ -13,24 +13,10 @@ const Page = () => {
     error: fetchError,
   } = useFetchRecentEvents();
   const {
-    data: statusCount = {
-      success: false,
-      eventCounts: { upcoming: 0, completed: 0, scheduled: 0 },
-    },
+    data: statusCount,
     isPending: isFetchingCount,
     error: countError,
-  } = useFetchStatusCount() as {
-    data: {
-      success: boolean;
-      eventCounts: {
-        upcoming: number | null;
-        completed: number | null;
-        scheduled: number | null;
-      };
-    };
-    isPending: boolean;
-    error: string | null;
-  };
+  } = useFetchStatusCount();
 
   useEffect(() => {
     if (recentEvent) {
@@ -38,8 +24,6 @@ const Page = () => {
     }
   }, [recentEvent]);
 
-  // Extract eventCounts from the response
-  const { eventCounts } = statusCount;
 
   if (isFetchingCount || isFetchingEvent) {
     return (
@@ -67,7 +51,7 @@ const Page = () => {
           Visualize data, monitor progress, and gain insights.
         </p>
       </div>
-      <EventCard eventCounts={eventCounts} />
+      <EventCard statusCount={statusCount} />
       <LineChart />
       <div className="gap-6 flex mt-6">
         <BarChartComponent />

@@ -138,10 +138,7 @@ export interface CanceledEvent {
 }
 
 export interface EventCountProps {
-  success: boolean;
-  eventCounts: {
-    upcoming: number | null;
-    completed: number | null;
-    scheduled: number | null;
-  };
+  upcoming: number | null;
+  completed: number | null;
+  scheduled: number | null;
 }

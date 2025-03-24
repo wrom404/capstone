@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,34 +11,23 @@ import {
   CalendarX,
   Calendar,
 } from "lucide-react";
+import { EventCountProps } from "@/types/types";
 
-type EventCountProps = {
-  eventCounts: {
-    upcoming: number | null;
-    completed: number | null;
-    scheduled: number | null;
-  };
-};
 
-const EventCard: React.FC<EventCountProps> = ({ eventCounts }) => {
+const EventCard = ({statusCount }: {statusCount : EventCountProps}) => {
   const [totalEvents, setTotalEvents] = useState<number | null>(null);
-  useEffect(() => {
-    if (eventCounts) {
-      console.log("eventCounts: ", eventCounts);
-    }
-  }, [eventCounts]);
 
   useEffect(() => {
     if (
-      eventCounts.upcoming &&
-      eventCounts.completed &&
-      eventCounts.scheduled
+      statusCount.upcoming &&
+      statusCount.completed &&
+      statusCount.scheduled
     ) {
       const totalEvents =
-        eventCounts.upcoming + eventCounts.completed + eventCounts.scheduled;
+        statusCount.upcoming + statusCount.completed + statusCount.scheduled;
       setTotalEvents(totalEvents);
     }
-  }, [eventCounts]);
+  }, [statusCount]);
 
   return (
     <div>
@@ -53,7 +42,7 @@ const EventCard: React.FC<EventCountProps> = ({ eventCounts }) => {
           </CardHeader>
           <CardContent className="mt-1">
             <p className="text-3xl font-bold leading-tight">
-              {eventCounts.upcoming ?? 0}
+              {statusCount.upcoming ?? 0}
             </p>
             <p className="text-xs text-gray-600 mt-1">Total upcoming events</p>
           </CardContent>
@@ -69,7 +58,7 @@ const EventCard: React.FC<EventCountProps> = ({ eventCounts }) => {
           </CardHeader>
           <CardContent className="mt-1">
             <p className="text-3xl font-bold leading-tight">
-              {eventCounts.scheduled ?? 0}
+              {statusCount.scheduled ?? 0}
             </p>
             <p className="text-xs text-gray-600 mt-1">Total scheduled events</p>
           </CardContent>
@@ -85,7 +74,7 @@ const EventCard: React.FC<EventCountProps> = ({ eventCounts }) => {
           </CardHeader>
           <CardContent className="mt-1">
             <p className="text-3xl font-bold leading-tight">
-              {eventCounts.completed ?? 0}
+              {statusCount.completed ?? 0}
             </p>
             <p className="text-xs text-gray-600 mt-1">Total completed events</p>
           </CardContent>

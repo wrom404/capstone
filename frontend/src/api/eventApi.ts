@@ -215,21 +215,21 @@ export const restoreCanceledEvent = async (id: string): Promise<{ success: boole
   }
 }
 
-export const getEventsStatusCounts = async (): Promise<EventCountProps | []> => {
+export const getEventsStatusCounts = async (): Promise<EventCountProps> => {
   try {
     const response = await axios.get('http://localhost:4000/api/events/counts');
     if (!response.data.success) {
       console.log(response.data.error);
-      return response.data.message
+      return { upcoming: 0, completed: 0, scheduled: 0 }; // Return a valid default object
     }
-    return response.data
+    return response.data.eventCounts; // Return the actual object, not an array
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log("Axios error: ", error.message)
     } else {
       console.log("Unexpected error: ", error)
     }
-    return [];
+    return { upcoming: 0, completed: 0, scheduled: 0 }; // Return a fallback object
   }
 }
 

@@ -29,7 +29,7 @@ const LoginPage = () => {
   }
 
   if (mutation.isSuccess) {
-    navigate("/overview");
+    navigate("/dashboard");
   }
 
   return (
