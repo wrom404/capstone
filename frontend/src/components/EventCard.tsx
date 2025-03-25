@@ -13,8 +13,7 @@ import {
 } from "lucide-react";
 import { EventCountProps } from "@/types/types";
 
-
-const EventCard = ({statusCount }: {statusCount : EventCountProps}) => {
+const EventCard = ({ statusCount }: { statusCount: EventCountProps }) => {
   const [totalEvents, setTotalEvents] = useState<number | null>(null);
 
   useEffect(() => {
@@ -38,7 +37,9 @@ const EventCard = ({statusCount }: {statusCount : EventCountProps}) => {
             <CardTitle className="text-base font-semibold text-gray-700">
               Upcoming Events
             </CardTitle>
-            <CalendarClock className="w-6 h-6 text-indigo-600" />
+            <div className="bg-indigo-50 p-1.5 rounded-md">
+              <CalendarClock className="w-6 h-6 text-indigo-600" />
+            </div>
           </CardHeader>
           <CardContent className="mt-1">
             <p className="text-3xl font-bold leading-tight">
@@ -54,7 +55,9 @@ const EventCard = ({statusCount }: {statusCount : EventCountProps}) => {
             <CardTitle className="text-base font-semibold text-gray-700">
               Scheduled Events
             </CardTitle>
-            <Calendar className="w-6 h-6 text-indigo-600" />
+            <div className="bg-indigo-50 p-1.5 rounded-md">
+              <Calendar className="w-6 h-6 text-indigo-600" />
+            </div>
           </CardHeader>
           <CardContent className="mt-1">
             <p className="text-3xl font-bold leading-tight">
@@ -70,7 +73,9 @@ const EventCard = ({statusCount }: {statusCount : EventCountProps}) => {
             <CardTitle className="text-base font-semibold text-gray-700">
               Completed Events
             </CardTitle>
-            <CalendarCheck className="w-6 h-6 text-indigo-600" />
+            <div className="bg-indigo-50 p-1.5 rounded-md">
+              <CalendarCheck className="w-6 h-6 text-indigo-600" />
+            </div>
           </CardHeader>
           <CardContent className="mt-1">
             <p className="text-3xl font-bold leading-tight">
@@ -82,11 +87,13 @@ const EventCard = ({statusCount }: {statusCount : EventCountProps}) => {
 
         {/* Total Events */}
         <Card className="w-full border rounded-lg shadow-xs p-4">
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-row items-center justify-between gap-x-0">
             <CardTitle className="text-base font-semibold text-gray-700">
               Total Events
             </CardTitle>
-            <CalendarX className="w-6 h-6 text-indigo-600" />
+            <div className="bg-indigo-50 p-1.5 rounded-md">
+              <CalendarX className="w-6 h-6 text-indigo-600" />
+            </div>
           </CardHeader>
           <CardContent className="mt-1">
             <p className="text-3xl font-bold leading-tight">

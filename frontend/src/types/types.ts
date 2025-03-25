@@ -6,7 +6,7 @@ export type Event = {
   title?: string;
   description?: string;
   venue?: string;
-  event_type?: string;
+  event_type?: string | null;
   expected_attendance?: string | null;
   priest_name?: string | null;
   client_number?: string | null;

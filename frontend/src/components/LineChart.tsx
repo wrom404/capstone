@@ -1,4 +1,3 @@
-import useFetchEventsLastMonth from "@/hooks/useFetchEventLastMonth";
 import { useMemo } from "react";
 import moment from "moment";
 import {
@@ -10,19 +9,21 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { type Event } from "@/types/types";
 
-interface Event {
-  id: number;
-  date: string;
-}
-
-const CustomTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
+const CustomTooltip = ({
+  active = false,
+  payload = [],
+}: {
+  active?: boolean;
+  payload?: { value: number }[];
+}) => {
+  if (active && payload?.length) {
     return (
       <div className="bg-white p-2 border rounded shadow">
         <p className="text-gray-700 text-sm">
           {`Events: `}
-          <span className="font-semibold">{payload[0].value}</span>
+          <span className="font-semibold">{payload[0]?.value ?? 0}</span>
         </p>
       </div>
     );
@@ -30,14 +31,14 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-export default function CalendarLineChart() {
-  const { data: fetchedEvents, isPending, error } = useFetchEventsLastMonth();
-
+const LineChartComponent = ({ fetchedEvents }: { fetchedEvents: Event[] }) => {
   const transformedData = useMemo(() => {
     if (!fetchedEvents || !Array.isArray(fetchedEvents)) return [];
 
     const eventCounts: Record<number, number> = {};
-    fetchedEvents.forEach((event: Event) => {
+    fetchedEvents.forEach((event) => {
+      if (!event.date) return; // Ensure date is valid
+
       const day = moment(event.date).date();
       eventCounts[day] = (eventCounts[day] || 0) + 1;
     });
@@ -48,29 +49,19 @@ export default function CalendarLineChart() {
     }));
   }, [fetchedEvents]);
 
-  if (isPending) {
-    return (
-      <div className="min-h-full flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-full flex justify-center items-center">
-        <span className="text-red-600 text-2xl">
-          Error while fetching events
-        </span>
-      </div>
-    );
-  }
+  console.log(
+    "Final transformedData for Recharts:",
+    JSON.stringify(transformedData, null, 2)
+  );
 
   const currentMonth = moment().format("MMM");
 
   return (
-    <ResponsiveContainer className={"mt-6 border p-4"} width="100%" height={300}>
-      <h3 className="font-semibold text-gray-800">Line Chart</h3>
+    <ResponsiveContainer
+      className="mt-2 border-none w-fit rounded-xl shadow-none flex items-center justify-center"
+      width="100%"
+      height={300}
+    >
       <LineChart
         data={transformedData}
         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
@@ -93,4 +84,6 @@ export default function CalendarLineChart() {
       </LineChart>
     </ResponsiveContainer>
   );
-}
+};
+
+export default LineChartComponent;

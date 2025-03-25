@@ -254,7 +254,7 @@ export const getRecentEvents = async (): Promise<Event[] | []> => {
   }
 }
 
-export const getEventsFromLastMonth = async (): Promise<Event | []> => {
+export const getEventsFromLastMonth = async (): Promise<Event[] | []> => {
   try {
     const response = await axios.get("http://localhost:4000/api/event/last-month");
     return response.data.rows; // Assuming your backend response structure is { success: true, rows: [...] }

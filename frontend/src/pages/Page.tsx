@@ -1,7 +1,7 @@
 import BarChartComponent from "@/components/BarChart";
 import EventCard from "@/components/EventCard";
 import LineChartComponent from "@/components/LineChart";
-import PieChartComponent from "@/components/PieChartComponent";
+import useFetchEventsLastMonth from "@/hooks/useFetchEventLastMonth";
 import useFetchRecentEvents from "@/hooks/useFetchRecentEvents";
 import useFetchStatusCount from "@/hooks/useFetchStatusCount";
 import { useEffect } from "react";
@@ -17,14 +17,20 @@ const Page = () => {
     isPending: isFetchingCount,
     error: countError,
   } = useFetchStatusCount();
+  const {
+    data: eventLastMonth,
+    isPending: isFetchingLastMonth,
+    error: lastMonthError,
+  } = useFetchEventsLastMonth();
 
   useEffect(() => {
-    if (recentEvent) {
+    if (recentEvent || eventLastMonth) {
       console.log("recentEvent: ", recentEvent);
+      console.log("eventLastMonth: ", eventLastMonth);
     }
-  }, [recentEvent]);
+  }, [recentEvent, eventLastMonth]);
 
-  if (isFetchingCount || isFetchingEvent) {
+  if (isFetchingCount || isFetchingEvent || isFetchingLastMonth) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -32,7 +38,7 @@ const Page = () => {
     );
   }
 
-  if (countError || fetchError) {
+  if (countError || fetchError || lastMonthError) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <span className="text-red-600 text-2xl">
@@ -41,9 +47,10 @@ const Page = () => {
       </div>
     );
   }
+  console.log("Props passed to LineChartComponent:", eventLastMonth);
 
   return (
-    <div className="min-h-full pb-6">
+    <div className="h-full pb-6">
       <div className="mb-6">
         <h2 className="text-gray-800 font-bold text-2xl">Dashboard</h2>
         <p className="text-sm text-gray-700">
@@ -51,10 +58,29 @@ const Page = () => {
         </p>
       </div>
       <EventCard statusCount={statusCount} />
-      <LineChartComponent />
-      <div className="gap-6 flex mt-6">
-        <BarChartComponent />
-        <PieChartComponent />
+      <div className="flex max-sm:flex-col gap-6 mt-10">
+        <div className="w-full h-full border rounded-xl shadow-xs">
+          <div className="">
+            <h2 className="text-gray-800 font-semibold text-base mt-6 mx-8">
+              Monthly Event Activity
+            </h2>
+            <p className="text-gray-600 text-sm mx-8">
+              Shows the number of events on specific dates from the this month.
+            </p>
+          </div>
+          <LineChartComponent fetchedEvents={eventLastMonth ?? []} />
+        </div>
+        <div className="w-full h-full border rounded-xl shadow-xs">
+          <div className="">
+            <h2 className="text-gray-800 font-semibold text-base mt-6 mx-8">
+              Event Type Distribution
+            </h2>
+            <p className="text-gray-600 text-sm mx-8">
+              Displays the number of events for each event type.
+            </p>
+          </div>
+          <BarChartComponent fetchedEvents={eventLastMonth ?? []} />
+        </div>
       </div>
     </div>
   );
