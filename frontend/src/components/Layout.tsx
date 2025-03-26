@@ -1,14 +1,25 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
+
+// import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+
+import { DropdownMenuCheckboxes } from "./DropDownComponent"; // Import the props type
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+// Define Checked type explicitly as boolean
+type Checked = boolean;
+
+const Layout = ({ children }: LayoutProps) => {
   const { isPending, data: user, error } = useCurrentUser();
+  const [showStatusBar, setShowStatusBar] = useState<Checked>(true);
+  const [showActivityBar, setShowActivityBar] = useState<Checked>(false);
+  const [showPanel, setShowPanel] = useState<Checked>(false);
 
   if (error) {
     console.log(error);
@@ -31,7 +42,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               ) : (
                 <div className="flex items-center-500 mr-6 my-0.5">
                   <div className="bg-indigo-600 h-10 w-10 rounded-full text-xl font-bold border text-white flex items-center justify-center">
-                    {user?.first_name.slice(0, 1)}
+                    {user?.first_name?.slice(0, 1)}
                   </div>
                   <div className="flex flex-col text-sm ml-2">
                     <div className=" text-gray-900 font-semibold">
@@ -39,7 +50,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </div>
                     <div className="text-gray-500 text-xs">{user?.email}</div>
                   </div>
-                  <ChevronDown className="text-gray-600 ml-1.5 cursor-pointer hover:bg-indigo-200 transition-transform ease-in-out rounded-2xl"/>
+                  <DropdownMenuCheckboxes
+                    showStatusBar={showStatusBar}
+                    setShowStatusBar={setShowStatusBar}
+                    showActivityBar={showActivityBar}
+                    setShowActivityBar={setShowActivityBar}
+                    showPanel={showPanel}
+                    setShowPanel={setShowPanel}
+                  />
                 </div>
               )}
             </div>
