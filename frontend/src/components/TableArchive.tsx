@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useUserStore from "@/store/useUserStore";
 import { CanceledEvent } from "@/types/types";
 import formatDate from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
@@ -18,17 +19,29 @@ function TableArchive({
   data: CanceledEvent[];
   handleClickRestoreEvent: (id: string) => void;
 }) {
+  const { userRole } = useUserStore();
+
   return (
     <Table className="border border-gray-300">
       <TableHeader className="bg-indigo-50 hover:bg-indigo-50">
         <TableRow>
-          <TableHead className="text-gray-800 font-semibold">Category</TableHead>
-          <TableHead className="text-gray-800 font-semibold">Event Name</TableHead>
+          <TableHead className="text-gray-800 font-semibold">
+            Category
+          </TableHead>
+          <TableHead className="text-gray-800 font-semibold">
+            Event Name
+          </TableHead>
           <TableHead className="text-gray-800 font-semibold">Date</TableHead>
           <TableHead className="text-gray-800 font-semibold">Time</TableHead>
-          <TableHead className="text-gray-800 font-semibold">Canceled on</TableHead>
+          <TableHead className="text-gray-800 font-semibold">
+            Canceled on
+          </TableHead>
           <TableHead className="text-gray-800 font-semibold">Status</TableHead>
-          <TableHead className="text-gray-800 font-semibold">Actions</TableHead>
+          {userRole && userRole === "admin" && (
+            <TableHead className="text-gray-800 font-semibold">
+              Actions
+            </TableHead>
+          )}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -48,15 +61,17 @@ function TableArchive({
                 {formatDate(data?.canceled_at.toString() || "")}
               </TableCell>
               <TableCell>{data.status || ""}</TableCell>
-              <TableCell>
-                <button
-                  className="cursor-pointer text-indigo-800 bg-indigo-100 hover:text-indigo-900 py-1 px-2 rounded-md flex items-center gap-1"
-                  onClick={() => handleClickRestoreEvent(data.id.toString())}
-                >
-                  <RotateCcw size={16} />
-                  Restore
-                </button>
-              </TableCell>
+              {userRole && userRole === "admin" && (
+                <TableCell>
+                  <button
+                    className="cursor-pointer text-indigo-800 bg-indigo-100 hover:text-indigo-900 py-1 px-2 rounded-md flex items-center gap-1"
+                    onClick={() => handleClickRestoreEvent(data.id.toString())}
+                  >
+                    <RotateCcw size={16} />
+                    Restore
+                  </button>
+                </TableCell>
+              )}
             </TableRow>
           ))
         ) : (

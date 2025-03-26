@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import CustomCancelModal from "@/components/CustomCancelModal";
 import useCancelEvent from "@/hooks/useCancelEvent";
 import toast from "react-hot-toast";
+import useUserStore from "@/store/useUserStore";
 
 const EventDetailPage = () => {
   const { id } = useParams();
@@ -29,6 +30,7 @@ const EventDetailPage = () => {
     error: canceledError,
     isSuccess,
   } = useCancelEvent(id || "");
+  const { userRole } = useUserStore();
   const [events, setEvents] = useState<Event>({
     title: "",
     description: "",
@@ -229,22 +231,26 @@ const EventDetailPage = () => {
               </div>
             )}
             <div className="border-t pt-6 flex justify-end">
-              <div className="">
-                <Button
-                  type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer"
-                  onClick={() => handleClickEvent(events.id?.toString() || "")}
-                >
-                  Edit Event
-                </Button>
-                <Button
-                  type="submit"
-                  className="bg-red-600 hover:bg-red-700 font-bold cursor-pointer ml-2.5"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  Cancel Event
-                </Button>
-              </div>
+              {userRole && userRole === "admin" && (
+                <div className="">
+                  <Button
+                    type="submit"
+                    className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer"
+                    onClick={() =>
+                      handleClickEvent(events.id?.toString() || "")
+                    }
+                  >
+                    Edit Event
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-red-600 hover:bg-red-700 font-bold cursor-pointer ml-2.5"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    Cancel Event
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
