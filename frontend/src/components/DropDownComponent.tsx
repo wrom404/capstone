@@ -6,31 +6,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
-import { ChevronDown, ChevronUp, LogOut, UserRound, UserRoundPlus  } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  LogOut,
+  UserRound,
+  UserRoundPlus,
+} from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
-
-export function DropdownMenuCheckboxes({
-  showStatusBar,
-  setShowStatusBar,
-  showActivityBar,
-  setShowActivityBar,
-  showPanel,
-  setShowPanel,
-}: {
-  showStatusBar: boolean; // Changed to boolean (no undefined)
-  setShowStatusBar: (isChecked: boolean) => void;
-  showActivityBar: boolean; // Changed to boolean (no undefined)
-  setShowActivityBar: (isChecked: boolean) => void;
-  showPanel: boolean; // Changed to boolean (no undefined)
-  setShowPanel: (isChecked: boolean) => void;
-}) {
+export function DropdownMenuCheckboxes() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-
-  console.log("showStatusBar: ", showStatusBar);
-  console.log("showActivityBar: ", showActivityBar);
-  console.log("showPanel: ", showPanel);
-
   return (
     <DropdownMenu open={isDropDownOpen} onOpenChange={setIsDropDownOpen}>
       <DropdownMenuTrigger asChild>
@@ -52,23 +39,18 @@ export function DropdownMenuCheckboxes({
         <DropdownMenuLabel>Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
-          // checked={showStatusBar}
-          onCheckedChange={setShowStatusBar}
+        // checked={showStatusBar}
         >
-          <UserRound className="text-indigo-600"/> Profile
+          <UserRound className="text-indigo-600" /> Profile
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
-          checked={showActivityBar}
-          onCheckedChange={setShowActivityBar}
-          // disabled
+        // disabled
         >
-          <UserRoundPlus className="text-indigo-600"/> Create User
+          <UserRoundPlus className="text-indigo-600" /> Create User
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          checked={showPanel}
-          onCheckedChange={setShowPanel}
-        >
-          <LogOut className="text-indigo-600"/> Logout
+        <DropdownMenuCheckboxItem>
+          <LogOut className="text-indigo-600" />{" "}
+          <Link to={"/logout"}>Logout</Link>
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

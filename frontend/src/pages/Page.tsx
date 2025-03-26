@@ -58,7 +58,7 @@ const Page = () => {
         </p>
       </div>
       <EventCard statusCount={statusCount} />
-      <div className="flex max-sm:flex-col gap-6 mt-10">
+      <div className="flex max-sm:flex-col gap-6 mt-6">
         <div className="w-full h-full border rounded-xl shadow-xs">
           <div className="">
             <h2 className="text-gray-800 font-semibold text-base mt-6 mx-8">
@@ -76,7 +76,7 @@ const Page = () => {
               Event Type Distribution
             </h2>
             <p className="text-gray-600 text-sm mx-8">
-              Displays the number of events for each event type.
+              Displays the number of events for each event type this month.
             </p>
           </div>
           <BarChartComponent fetchedEvents={eventLastMonth ?? []} />

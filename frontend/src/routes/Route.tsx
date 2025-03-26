@@ -10,6 +10,7 @@ import EventDetailPage from "@/pages/EventDetailPage";
 import EditEventPage from "@/pages/EditEventPage";
 import PageNotFound from "@/pages/PageNotFound";
 import LogOut from "@/pages/LogOut";
+import AdminPrivateRoute from "./AdminPrivateRoute";
 
 const RoutePage = () => {
   return (
@@ -30,9 +31,24 @@ const RoutePage = () => {
                 <Route path="/edit-event/:id" element={<EditEventPage />} />
                 <Route path="/event/:id" element={<EventDetailPage />} />
                 <Route path="/archive" element={<ArchivePage />} />
-                <Route path="/schedule" element={<ScheduleEventPage />} />
+                <Route
+                  path="/schedule"
+                  element={
+                    <AdminPrivateRoute role="admin">
+                      <ScheduleEventPage />
+                    </AdminPrivateRoute>
+                  }
+                />
                 <Route path="/logout" element={<LogOut />} />
                 <Route path="*" element={<PageNotFound />} />
+                <Route
+                  path="/unauthorized"
+                  element={
+                    <div className="min-h-screen h-screen flex justify-center items-center text-gray-800 bg-white text-2xl">
+                      Unauthorized User
+                    </div>
+                  }
+                />
                 {/* Don't add 404 inside Layout */}
               </Routes>
             </Layout>

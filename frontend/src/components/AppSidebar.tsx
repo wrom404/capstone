@@ -17,7 +17,9 @@ export const AppSidebar = () => {
   return (
     <Sidebar className="w-64 bg-white text-gray-800 h-screen p-4">
       <h2 className="text-lg font-bold px-2 text-gray-800 bg-white flex gap-2.5">
-        <PiChurch className="w-6 h-6 text-indigo-600" />
+        <div className=" border p-0.5 rounded-md bg-indigo-600">
+          <PiChurch className="w-6 h-6 text-white" />
+        </div>
         <span className="text-xl font-bold text-gray-800">Parish Events</span>
       </h2>
       <ul className="pt-4 bg-white h-full">
@@ -94,8 +96,7 @@ export const AppSidebar = () => {
           </Link>
         </li>
       </ul>
-      <div>
-      </div>
+      <div></div>
     </Sidebar>
   );
 };

@@ -1,25 +1,28 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
 
 // import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
 import { DropdownMenuCheckboxes } from "./DropDownComponent"; // Import the props type
+import { useEffect } from "react";
+import useUserStore from "@/store/useUserStore";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 // Define Checked type explicitly as boolean
-type Checked = boolean;
 
 const Layout = ({ children }: LayoutProps) => {
   const { isPending, data: user, error } = useCurrentUser();
-  const [showStatusBar, setShowStatusBar] = useState<Checked>(true);
-  const [showActivityBar, setShowActivityBar] = useState<Checked>(false);
-  const [showPanel, setShowPanel] = useState<Checked>(false);
+  const { setUserRole } = useUserStore();
+
+  useEffect(() => {
+    if (user?.role) {
+      setUserRole(user?.role);
+    }
+  }, [user, setUserRole]);
 
   if (error) {
     console.log(error);
@@ -50,14 +53,7 @@ const Layout = ({ children }: LayoutProps) => {
                     </div>
                     <div className="text-gray-500 text-xs">{user?.email}</div>
                   </div>
-                  <DropdownMenuCheckboxes
-                    showStatusBar={showStatusBar}
-                    setShowStatusBar={setShowStatusBar}
-                    showActivityBar={showActivityBar}
-                    setShowActivityBar={setShowActivityBar}
-                    showPanel={showPanel}
-                    setShowPanel={setShowPanel}
-                  />
+                  <DropdownMenuCheckboxes />
                 </div>
               )}
             </div>
