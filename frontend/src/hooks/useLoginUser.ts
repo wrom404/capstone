@@ -3,6 +3,7 @@ import { loginUser } from "../api/userApi"
 
 export const useLoginUser = () => {
   return useMutation({
-    mutationFn: loginUser
+    mutationKey: ["loginUser"],
+    mutationFn: loginUser,
   })
 }

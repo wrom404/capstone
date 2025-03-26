@@ -8,6 +8,8 @@ import ArchivePage from "@/pages/ArchivePage";
 import ScheduleEventPage from "@/pages/ScheduleEventPage";
 import EventDetailPage from "@/pages/EventDetailPage";
 import EditEventPage from "@/pages/EditEventPage";
+import PageNotFound from "@/pages/PageNotFound";
+import LogOut from "@/pages/LogOut";
 
 const RoutePage = () => {
   return (
@@ -29,11 +31,16 @@ const RoutePage = () => {
                 <Route path="/event/:id" element={<EventDetailPage />} />
                 <Route path="/archive" element={<ArchivePage />} />
                 <Route path="/schedule" element={<ScheduleEventPage />} />
-                {/* <Route path="/logout" element={} /> */}
+                <Route path="/logout" element={<LogOut />} />
+                <Route path="*" element={<PageNotFound />} />
+                {/* Don't add 404 inside Layout */}
               </Routes>
             </Layout>
           }
         />
+
+        {/* Catch-All 404 Page (Standalone) */}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
   );

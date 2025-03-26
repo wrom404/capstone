@@ -1,44 +1,52 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type LoginValue } from "../types/types";
 import parishLogo from "../assets/images/parish-logo.png";
 import { EyeOff, Eye, Clock, Calendar } from "lucide-react";
 import { useLoginUser } from "../hooks/useLoginUser";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
-  const mutation = useLoginUser();
+  const navigate = useNavigate();
+  const {
+    mutate: loginUser,
+    isPending,
+    error,
+    isSuccess,
+    data,
+  } = useLoginUser();
+
   const [formValue, setFormValue] = useState<LoginValue>({
     email: "",
     password: "",
   });
+
   const [isPasswordOpen, setIsPasswordOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isSuccess && data?.success) {
+      toast.success("Login successfully.");
+      navigate("/dashboard");
+    } else if (error) {
+      setErrorMessage(error.message);
+    }
+  }, [isSuccess, data, error, navigate]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutation.mutate(formValue);
+    setErrorMessage(null); // Clear previous errors
+    loginUser(formValue);
   };
-
-  if (mutation.error) {
-    return (
-      <div className="min-h-screen h-screen flex justify-center items-center">
-        <span className="text-red-600 text-lg">Something went wrong</span>
-      </div>
-    );
-  }
-
-  if (mutation.isSuccess) {
-    navigate("/dashboard");
-  }
 
   return (
     <div className="bg-white min-h-screen border border-red-300 flex">
       <div className="flex-1 flex flex-col gap-2 items-center">
         <div className="mt-18">
           <div className="flex items-center gap-2">
-            <img src={parishLogo} className="h-20" alt="img" />
-            <div className="">
+            <img src={parishLogo} className="h-20" alt="Parish Logo" />
+            <div>
               <h1 className="text-center text-2xl text-gray-800 font-bold tracking-wider">
                 St. Isidore The Laborer
               </h1>
@@ -52,7 +60,7 @@ const LoginPage = () => {
           </h2>
         </div>
         <motion.form
-          className="form-glass w-full sm:max-w-md xl:max-w-lg p-8 bg-white rounded sm:shadow-md "
+          className="form-glass w-full sm:max-w-md xl:max-w-lg p-8 bg-white rounded sm:shadow-md"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -61,6 +69,12 @@ const LoginPage = () => {
           <h2 className="mb-6 text-2xl font-bold text-center text-gray-900">
             Login
           </h2>
+
+          {/* Show error message */}
+          {errorMessage && (
+            <p className="text-red-600 text-center mb-4">{errorMessage}</p>
+          )}
+
           <div className="mb-4">
             <label className="block mb-1 text-sm font-medium text-gray-900">
               Email
@@ -86,7 +100,6 @@ const LoginPage = () => {
               }
               className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
-
             {isPasswordOpen ? (
               <EyeOff
                 className="text-gray-800 absolute right-6 bottom-3 cursor-pointer"
@@ -104,10 +117,10 @@ const LoginPage = () => {
           <div className="my-6 flex justify-end w-full">
             <button
               type="submit"
-              className="w-fit px-6 py-2 font-semibold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+              className="w-full px-6 py-2 font-semibold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer rounded-lg focus:outline-none focus:ring focus:ring-blue-200 flex justify-center"
             >
-              {mutation.isPending ? (
-                <div className="w-3 h-3 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
+              {isPending ? (
+                <div className="w-4 h-4 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 "Login"
               )}
@@ -116,7 +129,7 @@ const LoginPage = () => {
         </motion.form>
       </div>
       <div className="flex justify-center items-center flex-1 h-screen bg-blue-50">
-        <div className="">
+        <div>
           <div className="flex justify-center gap-4">
             <Calendar className="text-blue-600" size={80} />
             <Clock className="text-blue-600" size={80} />

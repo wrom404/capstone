@@ -81,11 +81,19 @@ export async function loginUser(req, res) {
         .json({ success: false, error: "Incorrect password" });
     }
 
-    generateToken(user.rows[0].id, user.rows[0].role, res);
+    const token = generateToken(user.rows[0].id, user.rows[0].role, res);
 
-    return res
-      .status(200)
-      .json({ success: false, message: "Login successfully" });
+    console.log("success");
+    return res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user.rows[0].id,
+        email: user.rows[0].email,
+        role: user.rows[0].role,
+      },
+      message: "Login successfully",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -126,10 +134,8 @@ export async function currentUser(req, res) {
 }
 
 export async function logoutUser(req, res) {
-  res.clearCookie("token", {
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    sameSite: "strict",
-  });
-  return res.status(200).json({ message: "Logout successfully" });
+  res.clearCookie("token");
+  return res
+    .status(200)
+    .json({ success: true, message: "Logout successfully" });
 }

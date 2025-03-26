@@ -166,7 +166,7 @@ export async function getEventById(req, res) {
         .json({ success: true, message: "No Events Found." });
     }
 
-    const events = result.rows.map((event) => {
+    result.rows.map((event) => {
       if (event.start_time) {
         event.start_time = moment
           .utc(event.start_time)
