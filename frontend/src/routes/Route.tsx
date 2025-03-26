@@ -11,6 +11,7 @@ import EditEventPage from "@/pages/EditEventPage";
 import PageNotFound from "@/pages/PageNotFound";
 import LogOut from "@/pages/LogOut";
 import AdminPrivateRoute from "./AdminPrivateRoute";
+import ProtectedRoute from "./ProtectedRoute";
 
 const RoutePage = () => {
   return (
@@ -25,11 +26,46 @@ const RoutePage = () => {
           element={
             <Layout>
               <Routes>
-                <Route path="/dashboard" element={<Page />} />
-                <Route path="/calendar" element={<CalendarPage />} />
-                <Route path="/event" element={<EventPage />} />
-                <Route path="/edit-event/:id" element={<EditEventPage />} />
-                <Route path="/event/:id" element={<EventDetailPage />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Page />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/calendar"
+                  element={
+                    <ProtectedRoute>
+                      <CalendarPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/event"
+                  element={
+                    <ProtectedRoute>
+                      <EventPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/edit-event/:id"
+                  element={
+                    <ProtectedRoute>
+                      <EditEventPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/event/:id"
+                  element={
+                    <ProtectedRoute>
+                      <EventDetailPage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="/archive" element={<ArchivePage />} />
                 <Route
                   path="/schedule"

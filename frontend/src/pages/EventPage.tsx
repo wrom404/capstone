@@ -22,6 +22,7 @@ const EventPage = () => {
     error: fetchError,
     isPending: isFetching,
   } = useFetchAllEvents();
+  
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
