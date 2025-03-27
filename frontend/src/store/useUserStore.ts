@@ -1,18 +1,24 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
 type UserRoleProps = {
   userRole: string | null;
-  setUserRole: (user: string | null) => void;
   isLoading: boolean;
-}
+  setUserRole: (user: string | null) => void;
+  initializeLoadingState: () => void;
+};
 
 const useUserStore = create<UserRoleProps>((set) => ({
-  userRole: "",
+  userRole: null,
   isLoading: true,
-  setUserRole: (user) => {
-    set({ userRole: user });
-    set({ isLoading: false });
-  }
-}))
 
-export default useUserStore
+  setUserRole: (user) => set({ userRole: user }),
+
+  initializeLoadingState: () => {
+    // Simulate fetching from backend (you can replace this with an API call)
+    setTimeout(() => {
+      set({ isLoading: false }); // Change "admin" dynamically based on API response
+    }, 100);
+  },
+}));
+
+export default useUserStore;
