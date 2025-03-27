@@ -2,12 +2,17 @@ import { create } from "zustand"
 
 type UserRoleProps = {
   userRole: string | null;
-  setUserRole: (user: string) => void;
+  setUserRole: (user: string | null) => void;
+  isLoading: boolean;
 }
 
 const useUserStore = create<UserRoleProps>((set) => ({
   userRole: "",
-  setUserRole: (user: string) => set({ userRole: user })
+  isLoading: true,
+  setUserRole: (user) => {
+    set({ userRole: user });
+    set({ isLoading: false });
+  }
 }))
 
 export default useUserStore

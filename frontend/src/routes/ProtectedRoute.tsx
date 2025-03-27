@@ -9,10 +9,14 @@ type ProtectedProps = {
 };
 
 const ProtectedRoute = ({ children }: ProtectedProps) => {
-  const { userRole } = useUserStore();
+  const { userRole, isLoading } = useUserStore(); // Ensure `isLoading` is implemented in the store
 
-  if (!userRole && userRole === "") {
-    toast.error("Unauthorized user. PLease login.");
+  if (isLoading) {
+    return <div>Loading...</div>; // Show a loading indicator while fetching user data
+  }
+
+  if (!userRole || userRole === "") {
+    toast.error("Unauthorized user. Please login.");
     return <Navigate to="/login" replace />;
   }
 

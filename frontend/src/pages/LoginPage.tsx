@@ -120,7 +120,7 @@ const LoginPage = () => {
               className="w-full px-6 py-2 font-semibold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer rounded-lg focus:outline-none focus:ring focus:ring-blue-200 flex justify-center"
             >
               {isPending ? (
-                <div className="w-4 h-4 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-6 h-6 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 "Login"
               )}
