@@ -5,7 +5,8 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 // import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
 import { DropdownMenuCheckboxes } from "./DropDownComponent"; // Import the props type
-
+import { useEffect } from "react";
+import useUserStore from "@/store/useUserStore";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,13 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const { isPending, data: user, error } = useCurrentUser();
+  const { setUserRole } = useUserStore();
+
+  useEffect(() => {
+    if (user?.role) {
+      setUserRole(user?.role);
+    }
+  }, [user, setUserRole]);
 
   if (error) {
     console.log(error);
