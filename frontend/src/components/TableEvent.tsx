@@ -1,5 +1,4 @@
 import {
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -11,6 +10,7 @@ import { type TableEventProps } from "@/types/types";
 import formatDateTable from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
 import { Pencil, Trash } from "lucide-react";
+import { motion } from "framer-motion";
 
 const TableEvent = ({
   events,
@@ -21,7 +21,12 @@ const TableEvent = ({
   const { userRole } = useUserStore();
   console.log(events);
   return (
-    <Table className="border border-gray-300">
+    <motion.table
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="border border-gray-300 w-full"
+    >
       <TableHeader className="bg-indigo-50">
         <TableRow className="border border-gray-300">
           <TableHead className="text-gray-800 font-semibold">
@@ -43,7 +48,10 @@ const TableEvent = ({
       <TableBody>
         {events &&
           events?.map((event, index) => (
-            <TableRow
+            <motion.tr
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               className="cursor-pointer hover:bg-gray-50 border border-gray-300"
               key={index}
               onClick={(e) => {
@@ -84,10 +92,10 @@ const TableEvent = ({
                   </button>
                 </TableCell>
               )}
-            </TableRow>
+            </motion.tr>
           ))}
       </TableBody>
-    </Table>
+    </motion.table>
   );
 };
 

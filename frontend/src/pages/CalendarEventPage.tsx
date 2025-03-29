@@ -9,6 +9,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import useFetchUnAvailableDate from "@/hooks/useFetchCountEvent";
 import filterUnAvailableDate from "@/utils/filterUnAvailableDate";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const localizer = momentLocalizer(moment);
 
@@ -130,7 +131,7 @@ const CalendarEventPage = () => {
   const handleSelectEvent = useCallback(
     (event: Event) => {
       //
-      navigate(`/event/${event.id}`); 
+      navigate(`/event/${event.id}`);
     },
     [navigate]
   );
@@ -154,7 +155,11 @@ const CalendarEventPage = () => {
   }
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Calendar
         localizer={localizer}
         events={myCalendarEvents}
@@ -170,7 +175,7 @@ const CalendarEventPage = () => {
         eventPropGetter={eventPropGetter}
         dayPropGetter={dayPropGetter}
       />
-    </div>
+    </motion.div>
   );
 };
 

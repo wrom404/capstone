@@ -19,6 +19,7 @@ import Select from "react-select"; // Import react-select component
 import formatTimeEditForm from "@/utils/formatTimeEditForm";
 import useUpdateEvent from "@/hooks/useUpdateEvent";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const options = [
   { value: "Monday", label: "Monday" },
@@ -84,7 +85,10 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
           : "", // Format on load
         isRecurring: eventData.is_recurring || false,
         recurringDays: eventData.recurring_days
-          ? eventData.recurring_days.map((day: string) => `${day.slice(0,1).toUpperCase()}${day.slice(1).toLowerCase()}`) // Ensure lowercase
+          ? eventData.recurring_days.map(
+              (day: string) =>
+                `${day.slice(0, 1).toUpperCase()}${day.slice(1).toLowerCase()}`
+            ) // Ensure lowercase
           : [],
         hasEndDate: eventData.has_end_date || false,
         endDate: eventData.end_date || "",
@@ -92,7 +96,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       setLoading(false);
     }
   }, [data]);
-  console.log(formEvent)
+  console.log(formEvent);
 
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -162,7 +166,10 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
   }
 
   return (
-    <form
+    <motion.form
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
       onSubmit={handleSubmitForm}
       className="border border-gray-300 rounded-lg p-6 w-full"
     >
@@ -356,7 +363,9 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
                   options={options}
                   value={options.filter(
-                    (option) => formEvent.recurringDays && formEvent.recurringDays.includes(option.value) // Matches lowercase values correctly
+                    (option) =>
+                      formEvent.recurringDays &&
+                      formEvent.recurringDays.includes(option.value) // Matches lowercase values correctly
                   )}
                   onChange={(selectedOptions) =>
                     setFormEvent({
@@ -414,11 +423,14 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         </div>
       </div>
       <div className="flex justify-end my-2 mt-4">
-        <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer">
+        <Button
+          type="submit"
+          className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer"
+        >
           Update
         </Button>
       </div>
-    </form>
+    </motion.form>
   );
 };
 

@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import validateEventTime from "@/utils/validateEventTime";
 import { type Event } from "@/types/types";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const FormCreateEvent = () => {
   const {
@@ -183,7 +184,10 @@ const FormCreateEvent = () => {
   }
 
   return (
-    <form
+    <motion.form
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: .5}}
       onSubmit={handleSubmitForm}
       className="border border-gray-300 rounded-lg p-6 w-full"
     >
@@ -437,7 +441,7 @@ const FormCreateEvent = () => {
           Create
         </Button>
       </div>
-    </form>
+    </motion.form>
   );
 };
 

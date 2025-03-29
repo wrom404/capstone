@@ -1,6 +1,7 @@
 import pool from "../config/db.js";
 import trimValue from "../utils/trim.js";
 import moment from "moment-timezone";
+import sendSms from "../utils/sendSms.js";
 
 export async function createEvent(req, res) {
   const {
@@ -47,7 +48,7 @@ export async function createEvent(req, res) {
       [date]
     );
 
-    // Check if the date already has 3 or more events
+    // Check if the date already has 10 or more events
     if (countResult.rows[0].count >= 10) {
       const errorResponse = {
         success: false,
@@ -60,7 +61,7 @@ export async function createEvent(req, res) {
       return res.status(400).json(errorResponse);
     }
 
-    // query for specific date
+    // query events for specific date
     const dateQuery = await pool.query("SELECT * FROM events WHERE date = $1", [
       date,
     ]);
@@ -87,6 +88,10 @@ export async function createEvent(req, res) {
           message: "Time slot already occupied, please choose another time.",
         });
       }
+    }
+
+    if (trimmedClientNumber) {
+      sendSms(trimmedClientNumber, date, startTime, endTime);
     }
 
     const result = await pool.query(

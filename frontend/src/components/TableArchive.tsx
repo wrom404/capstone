@@ -1,5 +1,4 @@
 import {
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -11,6 +10,7 @@ import { CanceledEvent } from "@/types/types";
 import formatDate from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
 import { RotateCcw } from "lucide-react";
+import { motion } from "framer-motion";
 
 function TableArchive({
   data,
@@ -22,7 +22,12 @@ function TableArchive({
   const { userRole } = useUserStore();
 
   return (
-    <Table className="border border-gray-300">
+    <motion.table
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="border border-gray-300 w-full"
+    >
       <TableHeader className="bg-indigo-50 hover:bg-indigo-50">
         <TableRow>
           <TableHead className="text-gray-800 font-semibold">
@@ -46,8 +51,11 @@ function TableArchive({
       </TableHeader>
       <TableBody>
         {data && data.length > 0 ? (
-          data.map((data) => (
-            <TableRow
+          data.map((data, index) => (
+            <motion.tr
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               key={data.id}
               className="cursor-pointer hover:bg-gray-50 border border-gray-30"
             >
@@ -72,7 +80,7 @@ function TableArchive({
                   </button>
                 </TableCell>
               )}
-            </TableRow>
+            </motion.tr>
           ))
         ) : (
           <TableRow>
@@ -80,7 +88,7 @@ function TableArchive({
           </TableRow>
         )}
       </TableBody>
-    </Table>
+    </motion.table>
   );
 }
 

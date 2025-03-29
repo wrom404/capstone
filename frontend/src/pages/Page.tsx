@@ -5,6 +5,7 @@ import useFetchEventsLastMonth from "@/hooks/useFetchEventLastMonth";
 import useFetchRecentEvents from "@/hooks/useFetchRecentEvents";
 import useFetchStatusCount from "@/hooks/useFetchStatusCount";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 const Page = () => {
   const {
@@ -59,7 +60,12 @@ const Page = () => {
       </div>
       <EventCard statusCount={statusCount} />
       <div className="flex max-sm:flex-col gap-6 mt-6">
-        <div className="w-full h-full border rounded-xl shadow-xs">
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: .3 }}
+          className="w-full h-full border rounded-xl shadow-xs"
+        >
           <div className="">
             <h2 className="text-gray-800 font-semibold text-base mt-6 mx-8">
               Monthly Event Activity
@@ -69,8 +75,13 @@ const Page = () => {
             </p>
           </div>
           <LineChartComponent fetchedEvents={eventLastMonth ?? []} />
-        </div>
-        <div className="w-full h-full border rounded-xl shadow-xs">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: .4 }}
+          className="w-full h-full border rounded-xl shadow-xs"
+        >
           <div className="">
             <h2 className="text-gray-800 font-semibold text-base mt-6 mx-8">
               Event Type Distribution
@@ -80,7 +91,7 @@ const Page = () => {
             </p>
           </div>
           <BarChartComponent fetchedEvents={eventLastMonth ?? []} />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

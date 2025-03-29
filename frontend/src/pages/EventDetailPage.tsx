@@ -16,6 +16,7 @@ import CustomCancelModal from "@/components/CustomCancelModal";
 import useCancelEvent from "@/hooks/useCancelEvent";
 import toast from "react-hot-toast";
 import useUserStore from "@/store/useUserStore";
+import { motion } from "framer-motion";
 
 const EventDetailPage = () => {
   const { id } = useParams();
@@ -104,7 +105,12 @@ const EventDetailPage = () => {
   }
 
   return (
-    <div className="h-full">
+    <motion.div
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="h-full"
+    >
       <main className="container mx-auto px-4 pb-8">
         <button
           className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6 transition-colors cursor-pointer"
@@ -262,7 +268,7 @@ const EventDetailPage = () => {
         cancelMessage={cancelMessage}
         handleOnChange={handleOnChange}
       />
-    </div>
+    </motion.div>
   );
 };
 
