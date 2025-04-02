@@ -1,18 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Fix import
-import LoginPage from "../pages/LoginPage";
-import Page from "../pages/Page";
+import LoginPage from "../pages/auth/LoginPage";
+import Page from "../pages/events/Page";
 import Layout from "../components/Layout";
-import CalendarPage from "@/pages/CalendarEventPage";
-import EventPage from "@/pages/EventPage";
-import ArchivePage from "@/pages/ArchivePage";
-import ScheduleEventPage from "@/pages/ScheduleEventPage";
-import EventDetailPage from "@/pages/EventDetailPage";
-import EditEventPage from "@/pages/EditEventPage";
-import PageNotFound from "@/pages/PageNotFound";
-import LogOut from "@/pages/LogOut";
+import CalendarPage from "@/pages/events/CalendarEventPage";
+import EventPage from "@/pages/events/EventPage";
+import ArchivePage from "@/pages/events/ArchivePage";
+import ScheduleEventPage from "@/pages/events/ScheduleEventPage";
+import EventDetailPage from "@/pages/events/EventDetailPage";
+import EditEventPage from "@/pages/events/EditEventPage";
+import PageNotFound from "@/pages/error/PageNotFound";
+import LogOut from "@/pages/auth/LogOut";
 import AdminPrivateRoute from "./AdminPrivateRoute";
 import ProtectedRoute from "./ProtectedRoute";
-import Signup from "@/pages/Signup";
+import Signup from "@/pages/auth/Signup";
 
 const RoutePage = () => {
   return (

@@ -1,9 +1,9 @@
 import BarChartComponent from "@/components/BarChart";
 import EventCard from "@/components/EventCard";
 import LineChartComponent from "@/components/LineChart";
-import useFetchEventsLastMonth from "@/hooks/useFetchEventLastMonth";
-import useFetchRecentEvents from "@/hooks/useFetchRecentEvents";
-import useFetchStatusCount from "@/hooks/useFetchStatusCount";
+import useFetchEventsLastMonth from "@/hooks/events/useFetchEventLastMonth";
+import useFetchRecentEvents from "@/hooks/events/useFetchRecentEvents";
+import useFetchStatusCount from "@/hooks/events/useFetchStatusCount";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 

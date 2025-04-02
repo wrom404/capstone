@@ -1,4 +1,4 @@
-import { updateEvent } from "@/api/eventApi"
+import { updateEvent } from "@/api/event/eventApi"
 import { type FormDataProps } from "@/types/types"
 import { useMutation } from "@tanstack/react-query"
 

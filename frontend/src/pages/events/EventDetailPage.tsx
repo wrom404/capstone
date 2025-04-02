@@ -1,4 +1,4 @@
-import useFetchAllEvent from "@/hooks/useFetchEvent";
+import useFetchAllEvent from "@/hooks/events/useFetchEvent";
 import { useParams } from "react-router-dom";
 import {
   Calendar,
@@ -13,7 +13,7 @@ import { Event } from "@/types/types";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import CustomCancelModal from "@/components/CustomCancelModal";
-import useCancelEvent from "@/hooks/useCancelEvent";
+import useCancelEvent from "@/hooks/events/useCancelEvent";
 import toast from "react-hot-toast";
 import useUserStore from "@/store/useUserStore";
 import { motion } from "framer-motion";

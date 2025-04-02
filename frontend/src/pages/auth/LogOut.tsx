@@ -1,4 +1,4 @@
-import useLogOutUser from "@/hooks/useLogOutUser";
+import useLogOutUser from "@/hooks/auth/useLogOutUser";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";

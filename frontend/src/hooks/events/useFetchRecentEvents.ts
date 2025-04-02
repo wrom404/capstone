@@ -1,4 +1,4 @@
-import { getRecentEvents } from "@/api/eventApi"
+import { getRecentEvents } from "@/api/event/eventApi"
 import { useQuery } from "@tanstack/react-query"
 
 const useFetchRecentEvents = () => {

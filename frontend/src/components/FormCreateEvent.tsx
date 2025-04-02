@@ -14,7 +14,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import React, { useEffect, useState } from "react";
 import { FormDataProps } from "@/types/types";
-import useCreateEvent from "@/hooks/useCreateEvent";
+import useCreateEvent from "@/hooks/events/useCreateEvent";
 import formatDateTimeForm from "@/utils/formatDateTimeForm";
 import Select from "react-select"; // Import react-select component
 import toast from "react-hot-toast";

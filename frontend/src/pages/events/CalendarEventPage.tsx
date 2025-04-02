@@ -1,12 +1,12 @@
 import { useCallback, useState, useEffect } from "react";
 import { Calendar, momentLocalizer, Views, View } from "react-big-calendar";
 import moment from "moment";
-import useFetchAllEvents from "@/hooks/useFetchEvents";
+import useFetchAllEvents from "@/hooks/events/useFetchEvents";
 import { type UnAvailableDateProps, type Event } from "@/types/types";
 import generateRecurringEvents from "@/utils/generateRecurringEvents"; // Import your recurring logic
 import formatForCalendar from "@/utils/formatForCalendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import useFetchUnAvailableDate from "@/hooks/useFetchCountEvent";
+import useFetchUnAvailableDate from "@/hooks/events/useFetchCountEvent";
 import filterUnAvailableDate from "@/utils/filterUnAvailableDate";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";

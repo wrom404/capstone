@@ -1,4 +1,4 @@
-import { deleteEvent } from "@/api/eventApi"
+import { deleteEvent } from "@/api/event/eventApi"
 import { useMutation } from "@tanstack/react-query"
 
 const useDeleteEvent = () => {

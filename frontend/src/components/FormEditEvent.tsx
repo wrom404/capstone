@@ -14,10 +14,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { type FormDataProps } from "@/types/types";
 import React, { useEffect, useState } from "react";
-import useFetchEvent from "@/hooks/useFetchEvent";
+import useFetchEvent from "@/hooks/events/useFetchEvent";
 import Select from "react-select"; // Import react-select component
 import formatTimeEditForm from "@/utils/formatTimeEditForm";
-import useUpdateEvent from "@/hooks/useUpdateEvent";
+import useUpdateEvent from "@/hooks/events/useUpdateEvent";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 

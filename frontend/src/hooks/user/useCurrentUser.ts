@@ -1,4 +1,4 @@
-import { currentUser } from "@/api/userApi";
+import { currentUser } from "@/api/user/userApi";
 import { UserProps } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 

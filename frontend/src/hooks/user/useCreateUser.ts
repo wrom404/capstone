@@ -1,4 +1,4 @@
-import { createUser } from "@/api/userApi"
+import { createUser } from "@/api/user/userApi"
 import { useMutation } from "@tanstack/react-query"
 
 const useCreateUser = () => {

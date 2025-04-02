@@ -1,4 +1,4 @@
-import { getEventsStatusCounts } from "@/api/eventApi";
+import { getEventsStatusCounts } from "@/api/event/eventApi";
 import { useQuery } from "@tanstack/react-query";
 
 const useFetchStatusCount = () => {

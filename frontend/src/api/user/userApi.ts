@@ -1,5 +1,5 @@
 import axios from "axios"
-import { type UserProps, type LoginValue, type CreateUserProps } from "../types/types"
+import { type UserProps, type LoginValue, type CreateUserProps } from "../../types/types"
 axios.defaults.withCredentials = true;
 
 

@@ -1,4 +1,4 @@
-import { getEventsFromLastMonth } from "@/api/eventApi";
+import { getEventsFromLastMonth } from "@/api/event/eventApi";
 import { useQuery } from "@tanstack/react-query";
 
 const useFetchEventsLastMonth = () => {

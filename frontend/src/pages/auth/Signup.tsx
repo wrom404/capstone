@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 import { type CreateUserProps } from "@/types/types";
-import useCreateUser from "@/hooks/useCreateUser";
+import useCreateUser from "@/hooks/user/useCreateUser";
 import toast from "react-hot-toast";
 
 const Signup = () => {

@@ -1,4 +1,4 @@
-import { getCanceledEvents } from "@/api/eventApi";
+import { getCanceledEvents } from "@/api/event/eventApi";
 import { useQuery } from "@tanstack/react-query";
 
 const useFetchCanceledEvent = () => {

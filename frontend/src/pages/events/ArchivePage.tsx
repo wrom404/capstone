@@ -1,38 +1,34 @@
-import CustomDeleteModal from "@/components/CustomDeleteModal";
-import TableEvent from "@/components/TableEvent";
-import useDeleteEvent from "@/hooks/useDeleteEvent";
-import useFetchAllEvents from "@/hooks/useFetchEvents";
-import { type Event } from "@/types/types";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import TableArchive from "@/components/TableArchive";
+import useFetchCanceledEvent from "@/hooks/events/useFetchCanceledEvents";
+import { type CanceledEvent } from "@/types/types";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { TriangleAlert } from "lucide-react";
+import { useEffect, useState } from "react";
+import CustomDeleteModal from "@/components/CustomDeleteModal";
+import { RotateCcw } from "lucide-react";
+import useRestoreEvent from "@/hooks/events/useRestoreEvent";
+import toast from "react-hot-toast";
 
-const EventPage = () => {
-  const {
-    mutate: deleteEvent,
-    error: deleteError,
-    isPending: isDeleting,
-    isSuccess: deleteSuccess,
-  } = useDeleteEvent();
-
+const ArchivePage = () => {
+  const [eventId, setEventId] = useState<string | null>(null);
   const {
     data,
-    error: fetchError,
     isPending: isFetching,
-  } = useFetchAllEvents();
-  
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+    error: fetchError,
+  } = useFetchCanceledEvent();
+  const {
+    mutate: restoreEvent,
+    isPending: isRestoring,
+    isSuccess,
+    error: restoreError,
+  } = useRestoreEvent(eventId || "");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredEvents, setFilteredEvents] = useState<Event[] | undefined>([]);
-
+  const [filteredEvents, setFilteredEvents] = useState<
+    CanceledEvent[] | undefined
+  >([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [eventId, setEventId] = useState<number | null>(null);
-
-  const navigate = useNavigate();
 
   console.log("Data: ", data);
 
@@ -59,12 +55,11 @@ const EventPage = () => {
   }, [setFilteredEvents, data, searchQuery, selectedCategory]);
 
   useEffect(() => {
-    if (deleteSuccess) {
-      toast.success("Event deleted successfully");
+    if (isSuccess) {
+      toast.success("Restored successfully.");
     }
-  }, [deleteSuccess]);
+  }, [isSuccess]);
 
-  // Pagination logic
   const paginatedEvents = filteredEvents?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -74,40 +69,34 @@ const EventPage = () => {
     ? Math.ceil(filteredEvents.length / itemsPerPage)
     : 0;
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
     setCurrentPage(1); // Reset to the first page when category changes
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleClickEvent = (id: number) => {
-    navigate(`/event/${id}`);
+  const handleClickRestoreEvent = (id: string) => {
+    if (id !== null) {
+      setIsModalOpen(true);
+      setEventId(id);
+    }
   };
 
-  const handleClickDelete = (id: number) => {
-    setIsModalOpen(true);
-    setEventId(id);
-  };
-
-  const handleClickEdit = (id: number) => {
-    navigate(`/edit-event/${id}`);
-  };
-
-  const handleDelete = () => {
+  const handleRestoreEvent = () => {
     if (eventId !== null) {
-      deleteEvent(eventId);
+      restoreEvent(eventId);
       setIsModalOpen(false);
     }
   };
 
-  if (isFetching || isDeleting) {
+  if (isFetching || isRestoring) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -115,7 +104,7 @@ const EventPage = () => {
     );
   }
 
-  if (fetchError || deleteError) {
+  if (fetchError || restoreError) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <span className="text-red-600 text-2xl">
@@ -124,15 +113,13 @@ const EventPage = () => {
       </div>
     );
   }
-
   return (
-    <div className="">
+    <div>
       <div className="flex justify-between">
         <div className="mb-6">
-          <h2 className="text-2xl text-gray-800 font-bold">Events</h2>
+          <h2 className="text-2xl text-gray-800 font-bold">Canceled Events</h2>
           <p className="text-sm text-gray-700">
-            Manage and track scheduled, upcoming, and completed events with
-            ease.
+            Manage and track canceled events with ease.
           </p>
         </div>
         <div className="mt-6">
@@ -147,7 +134,7 @@ const EventPage = () => {
             name="category"
             onChange={handleSelectChange}
             value={selectedCategory}
-            className="border border-gray-300 px-3 py-1 mb-4 ml-4"
+            className="border px-3 py-1 mb-4 ml-4"
           >
             <option value="">Filter</option>
             <option value="mass">Mass</option>
@@ -160,22 +147,17 @@ const EventPage = () => {
           </select>
         </div>
       </div>
-
-      <TableEvent
-        events={paginatedEvents || []}
-        handleClickEvent={handleClickEvent}
-        handleClickDelete={handleClickDelete}
-        handleClickEdit={handleClickEdit}
+      <TableArchive
+        data={paginatedEvents || []}
+        handleClickRestoreEvent={handleClickRestoreEvent}
       />
-
-      {/* Pagination Controls */}
       <div className="flex justify-between items-center mt-6 text-gray-800 text-sm">
         <div>
           <span>Items per page:</span>
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="border border-gray-300 px-2 py-1 ml-2 cursor-pointer"
+            className="border px-2 py-1 ml-2 cursor-pointer"
           >
             {[10, 20, 30].map((size) => (
               <option key={size} value={size}>
@@ -188,7 +170,7 @@ const EventPage = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="border border-gray-300 px-3 py-1 mr-2 cursor-pointer"
+            className="border px-3 py-1 mr-2 cursor-pointer"
           >
             <IoIosArrowBack size={20} />
           </button>
@@ -198,23 +180,22 @@ const EventPage = () => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="border border-gray-300 px-3 py-1 ml-2 cursor-pointer"
+            className="border px-3 py-1 ml-2 cursor-pointer"
           >
             <IoIosArrowForward size={20} />
           </button>
         </div>
       </div>
-
       <CustomDeleteModal
-        icon={TriangleAlert}
+        icon={RotateCcw}
         isOpen={isModalOpen}
-        title="Delete Event"
-        message="Proceed to delete? This action cannot be undone."
-        onConfirm={handleDelete}
+        title="Restore Event"
+        message="Proceed to Restore?"
+        onConfirm={handleRestoreEvent}
         onCancel={() => setIsModalOpen(false)}
       />
     </div>
   );
 };
 
-export default EventPage;
+export default ArchivePage;

@@ -1,4 +1,4 @@
-import { cancelEvent } from "@/api/eventApi"
+import { cancelEvent } from "@/api/event/eventApi"
 import { useMutation } from "@tanstack/react-query"
 
 const useCancelEvent = (id: string) => {

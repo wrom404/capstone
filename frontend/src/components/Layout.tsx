@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
-import useCurrentUser from "@/hooks/useCurrentUser";
+import useCurrentUser from "@/hooks/user/useCurrentUser";
 
 // import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
@@ -36,7 +36,6 @@ const Layout = ({ children }: LayoutProps) => {
         <div className="flex-1 flex flex-col w-full">
           <div className="border-b border-gray-300 py-2 flex justify-between w-full  text-gray-800">
             <SidebarTrigger className="p-4 hover:bg-indigo-200" />
-            {/* <div className="mr-8"><CircleUserRound size={32} className="text-gray-700 cursor-pointer hover:text-indigo-800"/></div> */}
             <div className="">
               {isPending ? (
                 ""

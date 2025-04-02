@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { type LoginValue } from "../types/types";
-import parishLogo from "../assets/images/parish-logo.png";
+import { type LoginValue } from "../../types/types";
+import parishLogo from "../../assets/images/parish-logo.png";
 import { EyeOff, Eye, Clock, Calendar } from "lucide-react";
-import { useLoginUser } from "../hooks/useLoginUser";
+import { useLoginUser } from "../../hooks/auth/useLoginUser";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 

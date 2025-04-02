@@ -1,4 +1,4 @@
-import { restoreCanceledEvent } from "@/api/eventApi"
+import { restoreCanceledEvent } from "@/api/event/eventApi"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 const useRestoreEvent = (id: string) => {
