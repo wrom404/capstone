@@ -138,3 +138,18 @@ export async function logoutUser(req, res) {
     .status(200)
     .json({ success: true, message: "Logout successfully" });
 }
+
+export async function getUsers(req, res) {
+  try {
+    const users = await pool.query("SELECT * FROM users ORDER BY id ASC");
+
+    if (users.rows.length === 0) {
+      return res.status(201).json({ success: false, message: "No users" });
+    }
+
+    return res.status(200).json({ success: true, users: users.rows });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error });
+  }
+}

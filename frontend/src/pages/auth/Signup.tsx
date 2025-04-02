@@ -24,12 +24,8 @@ const Signup = () => {
       setIsConfirmPassword("Password did not match");
       return;
     }
-    const newUser = {
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      email: formValue.email,
-      password: formValue.password,
-    };
+    const newUser = { ...formValue }; // Directly use formValue
+    delete newUser.confirmPassword; // Remove confirmPassword before sending
     createUser(newUser);
   };
 
