@@ -46,7 +46,8 @@ export function DropdownMenuCheckboxes() {
         <DropdownMenuCheckboxItem
         // disabled
         >
-          <UserRoundPlus className="text-indigo-600" /> Create User
+          <UserRoundPlus className="text-indigo-600" />
+          <Link to={"/create-user"}>Create User</Link>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem>
           <LogOut className="text-indigo-600" />{" "}

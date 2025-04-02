@@ -12,8 +12,6 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-// Define Checked type explicitly as boolean
-
 const Layout = ({ children }: LayoutProps) => {
   const { isPending, data: user, error } = useCurrentUser();
   const { setUserRole } = useUserStore();

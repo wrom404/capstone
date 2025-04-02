@@ -11,6 +11,9 @@ type ProtectedProps = {
 const ProtectedRoute = ({ children }: ProtectedProps) => {
   const { userRole, isLoading } = useUserStore(); // Ensure `isLoading` is implemented in the store
 
+  console.log("inside protected route");
+  console.log("userRole: ", userRole);
+
   if (isLoading) {
     return (
       <div className="min-h-full flex justify-center items-center">

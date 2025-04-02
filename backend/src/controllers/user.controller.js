@@ -6,18 +6,17 @@ import checkEmail from "../utils/testEmail.js";
 import jwt from "jsonwebtoken";
 
 export async function signupUser(req, res) {
-  const { firstName, lastName, email, password, confirmPassword } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
-  if (!firstName || !lastName || !email || !password || !confirmPassword) {
+  console.log(firstName);
+  console.log(lastName);
+  console.log(email);
+  console.log(password);
+
+  if (!firstName || !lastName || !email || !password) {
     return res
       .status(401)
       .json({ success: false, message: "All fields are required" });
-  }
-
-  if (password !== confirmPassword) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Password did not match" });
   }
 
   const isEmailValid = checkEmail(email);

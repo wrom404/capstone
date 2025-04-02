@@ -142,3 +142,11 @@ export interface EventCountProps {
   completed: number | null;
   scheduled: number | null;
 }
+
+export interface CreateUserProps {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+}

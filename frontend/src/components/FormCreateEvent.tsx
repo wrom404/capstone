@@ -436,7 +436,7 @@ const FormCreateEvent = () => {
       <div className="flex justify-end my-2 mt-4">
         <Button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer"
+          className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer tracking-wide"
         >
           Create
         </Button>

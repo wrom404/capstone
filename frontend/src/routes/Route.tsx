@@ -12,6 +12,7 @@ import PageNotFound from "@/pages/PageNotFound";
 import LogOut from "@/pages/LogOut";
 import AdminPrivateRoute from "./AdminPrivateRoute";
 import ProtectedRoute from "./ProtectedRoute";
+import Signup from "@/pages/Signup";
 
 const RoutePage = () => {
   return (
@@ -48,6 +49,14 @@ const RoutePage = () => {
                     <ProtectedRoute>
                       <EventPage />
                     </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/create-user"
+                  element={
+                    <AdminPrivateRoute role="admin">
+                      <Signup />
+                    </AdminPrivateRoute>
                   }
                 />
                 <Route
