@@ -144,9 +144,21 @@ export interface EventCountProps {
 }
 
 export interface CreateUserProps {
+  id?: string,
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   confirmPassword?: string;
+  role?: string
+}
+
+export interface CreateUserProps2 {
+  id?: string,
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  confirm_password?: string;
+  role?: string
 }

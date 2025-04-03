@@ -1,5 +1,5 @@
 import axios from "axios"
-import { type UserProps, type LoginValue, type CreateUserProps } from "../../types/types"
+import { type UserProps, type LoginValue, type CreateUserProps, type CreateUserProps2 } from "../../types/types"
 axios.defaults.withCredentials = true;
 
 
@@ -56,6 +56,26 @@ export const createUser = async (newUser: CreateUserProps): Promise<CreateUserPr
       throw new Error("Something went wrong");
     }
     return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected error: ", error)
+    }
+    return null
+  }
+}
+
+
+export const getAllUsers = async (): Promise<CreateUserProps2[] | null> => {
+  try {
+    const response = await axios.get('http://localhost:4000/auth/users');
+
+    if (!response.data.success) {
+      console.log(response.data?.message)
+      throw new Error("Something went wrong");
+    }
+    return response.data.users;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log("Axios error: ", error.message)

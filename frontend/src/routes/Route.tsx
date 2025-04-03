@@ -13,6 +13,7 @@ import LogOut from "@/pages/auth/LogOut";
 import AdminPrivateRoute from "./AdminPrivateRoute";
 import ProtectedRoute from "./ProtectedRoute";
 import Signup from "@/pages/auth/Signup";
+import User from "@/pages/user/User";
 
 const RoutePage = () => {
   return (
@@ -81,6 +82,14 @@ const RoutePage = () => {
                   element={
                     <AdminPrivateRoute role="admin">
                       <ScheduleEventPage />
+                    </AdminPrivateRoute>
+                  }
+                />
+                <Route
+                  path="/users"
+                  element={
+                    <AdminPrivateRoute role="admin">
+                      <User />
                     </AdminPrivateRoute>
                   }
                 />

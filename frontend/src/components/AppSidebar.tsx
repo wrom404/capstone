@@ -6,6 +6,7 @@ import {
   CalendarPlus2,
   LogOut,
   LayoutDashboard,
+  Users 
 } from "lucide-react";
 import { MdOutlineEventNote } from "react-icons/md";
 import { PiChurch } from "react-icons/pi";
@@ -74,18 +75,32 @@ export const AppSidebar = () => {
           </Link>
         </li>
         {userRole && userRole === "admin" && (
-          <li
-            className={`py-2 px-2 cursor-pointer ${
-              location.pathname === "/schedule"
-                ? "bg-indigo-50 text-indigo-600 rounded-lg"
-                : "hover:bg-gray-50 text-gray-700"
-            }  rounded-lg flex items-center gap-2`}
-          >
-            <CalendarPlus2 size={20} />
-            <Link to={"/schedule"} className="font-semibold">
-              Schedule
-            </Link>
-          </li>
+          <>
+            <li
+              className={`py-2 px-2 cursor-pointer ${
+                location.pathname === "/schedule"
+                  ? "bg-indigo-50 text-indigo-600 rounded-lg"
+                  : "hover:bg-gray-50 text-gray-700"
+              }  rounded-lg flex items-center gap-2`}
+            >
+              <CalendarPlus2 size={20} />
+              <Link to={"/schedule"} className="font-semibold">
+                Schedule
+              </Link>
+            </li>
+            <li
+              className={`py-2 px-2 cursor-pointer ${
+                location.pathname === "/users"
+                  ? "bg-indigo-50 text-indigo-600 rounded-lg"
+                  : "hover:bg-gray-50 text-gray-700"
+              }  rounded-lg flex items-center gap-2`}
+            >
+              <Users  size={20} />
+              <Link to={"/users"} className="font-semibold">
+                Users
+              </Link>
+            </li>
+          </>
         )}
         <li
           className={`py-2 px-2 cursor-pointer ${
