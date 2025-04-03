@@ -7,6 +7,7 @@ import {
   getUsers,
   deleteUser,
   updateUser,
+  getUser
 } from "../controllers/user.controller.js";
 
 const routes = express.Router();
@@ -20,6 +21,8 @@ routes.get("/current-user", currentUser);
 routes.get("/users", getUsers);
 
 routes.post("/logout", logoutUser);
+
+routes.get("/:id", getUser)
 
 routes.delete("/:id", deleteUser);
 

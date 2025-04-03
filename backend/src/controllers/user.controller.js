@@ -243,3 +243,32 @@ export async function updateUser(req, res) {
     });
   }
 }
+export const getUser = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "ID parameter is missing",
+    });
+  }
+
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+
+    if (result.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    return res.status(200).json({ success: true, user: result.rows[0] });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch user",
+      error: error.message,
+    });
+  }
+};
