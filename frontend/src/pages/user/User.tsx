@@ -37,7 +37,6 @@ const User = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log("isSuccess: ", isSuccess);
       toast.success("User deleted successfully");
     }
   }, [isSuccess]);
@@ -49,7 +48,6 @@ const User = () => {
 
   const handleDelete = () => {
     if (userId) {
-      console.log("Delete user Id: ", userId);
       setIsModalOpen(false);
       deleteUser(userId);
     }

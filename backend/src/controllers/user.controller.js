@@ -205,3 +205,41 @@ export async function deleteUser(req, res) {
     });
   }
 }
+
+export async function updateUser(req, res) {
+  const { id } = req.params;
+  const { firstName, lastName, email, password } = req.body;
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "ID parameter is missing",
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      "UPDATE users SET first_name = $1, last_name = $2, email = $3 WHERE id = $4 RETURNING *",
+      [firstName, lastName, email, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: result.rows[0],
+      message: "User updated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update user",
+      error: error.message,
+    });
+  }
+}

@@ -12,7 +12,7 @@ const CustomDeleteModal = ({
     return;
   }
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-10">
       <div className="bg-white rounded-lg shadow-lg p-6 w-[28rem]">
         <div className="flex items-center gap-2 mb-4">
           <Icon
@@ -27,13 +27,13 @@ const CustomDeleteModal = ({
         <p className="mb-4 text-base text-gray-700">{message}</p>
         <div className="flex justify-end gap-4">
           <button
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer"
             onClick={onCancel}
           >
             Cancel
           </button>
           <button
-            className={`px-4 py-2 ${
+            className={`px-4 py-2 cursor-pointer ${
               (title && title == "Delete Event") || title == "Delete User"
                 ? "bg-red-600 text-white rounded hover:bg-red-700 text-base"
                 : "bg-indigo-600 text-white rounded hover:bg-indigo-700 text-base"

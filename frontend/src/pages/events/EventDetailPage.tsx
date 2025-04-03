@@ -241,7 +241,7 @@ const EventDetailPage = () => {
                 <div className="">
                   <Button
                     type="submit"
-                    className="bg-indigo-600 hover:bg-indigo-700 font-bold cursor-pointer"
+                    className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer"
                     onClick={() =>
                       handleClickEvent(events.id?.toString() || "")
                     }
@@ -250,7 +250,7 @@ const EventDetailPage = () => {
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-red-600 hover:bg-red-700 font-bold cursor-pointer ml-2.5"
+                    className="bg-red-600 hover:bg-red-700 font-semibold cursor-pointer ml-2.5"
                     onClick={() => setIsModalOpen(true)}
                   >
                     Cancel Event

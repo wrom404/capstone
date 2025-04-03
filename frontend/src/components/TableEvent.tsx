@@ -9,7 +9,7 @@ import useUserStore from "@/store/useUserStore";
 import { type TableEventProps } from "@/types/types";
 import formatDateTable from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const TableEvent = ({
@@ -87,7 +87,7 @@ const TableEvent = ({
                       handleClickDelete(event.id || 0);
                     }}
                   >
-                    <Trash className="inline" size={16} />
+                    <Trash2 className="inline" size={16} />
                     <span className="text-sm">Delete</span>
                   </button>
                 </TableCell>

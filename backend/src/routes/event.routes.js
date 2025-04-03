@@ -11,7 +11,7 @@ import {
   restoreCanceledEvent,
   getEventsStatusCount,
   getRecentEvents,
-  getEventsFromLastMonth
+  getEventsFromLastMonth,
 } from "../controllers/event.controller.js";
 import verifyUser from "../middleware/verifyUser.js";
 
@@ -27,11 +27,11 @@ routes.get("/unavailable-date", getUnavailableDates);
 
 routes.get("/canceled/events", getCanceledEvents);
 
-routes.get("/events/counts", getEventsStatusCount)
+routes.get("/events/counts", getEventsStatusCount);
 
 routes.get("/events/recent", getRecentEvents);
 
-routes.get("/event/last-month", getEventsFromLastMonth)
+routes.get("/event/last-month", getEventsFromLastMonth);
 
 routes.get("/:id", getEventById);
 
