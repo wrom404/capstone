@@ -60,7 +60,7 @@ const EventDetailPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Canceled event successfully.");
+      toast.success("Event canceled successfully.");
       navigate(-1);
     }
   }, [isSuccess, navigate]);

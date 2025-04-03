@@ -56,7 +56,7 @@ const ArchivePage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Restored successfully.");
+      toast.success("Event restored successfully.");
     }
   }, [isSuccess]);
 

@@ -153,7 +153,7 @@ export interface CreateUserProps {
   role?: string
 }
 
-export interface CreateUserProps2 {
+export interface FetchedUserProps {
   id?: string,
   first_name: string;
   last_name: string;

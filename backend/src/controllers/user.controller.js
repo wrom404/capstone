@@ -192,6 +192,7 @@ export async function deleteUser(req, res) {
     } else {
       return res.status(500).json({
         success: false,
+        user: result.rows[0],
         message: "Failed to delete user",
       });
     }

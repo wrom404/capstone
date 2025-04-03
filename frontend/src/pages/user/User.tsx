@@ -8,12 +8,39 @@ import {
 import { motion } from "framer-motion";
 import useFetchUsers from "@/hooks/user/useFetchUsers";
 import CustomDeleteModal from "@/components/CustomDeleteModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useDeleteUser from "@/hooks/user/useDeleteUser";
+import toast from "react-hot-toast";
 
 const User = () => {
-  const { data, isPending: error } = useFetchUsers();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>("");
+  const {
+    data,
+    isPending: isFetchingUser,
+    error: fetchError,
+  } = useFetchUsers();
+  const {
+    mutate: deleteUser,
+    isSuccess,
+    isPending: isDeletingUser,
+    error: deleteError,
+  } = useDeleteUser(userId);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (fetchError) {
+      console.log("error: ", fetchError);
+    } else {
+      console.log("error: ", deleteError);
+    }
+  }, [deleteError, fetchError]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("isSuccess: ", isSuccess);
+      toast.success("User deleted successfully");
+    }
+  }, [isSuccess]);
 
   const handleClickDelete = (id: string) => {
     setUserId(id);
@@ -23,6 +50,8 @@ const User = () => {
   const handleDelete = () => {
     if (userId) {
       console.log("Delete user Id: ", userId);
+      setIsModalOpen(false);
+      deleteUser(userId);
     }
   };
 
@@ -30,8 +59,12 @@ const User = () => {
     console.log(id);
   };
 
-  if (error) {
-    console.log("error: ", error);
+  if (isFetchingUser || isDeletingUser) {
+    return (
+      <div className="min-h-full flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
   return (
     <div>

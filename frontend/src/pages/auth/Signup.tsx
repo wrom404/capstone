@@ -31,7 +31,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (data) {
-      toast.success("Create user successfully");
+      toast.success("User created successfully");
       setFormValue({
         firstName: "",
         lastName: "",

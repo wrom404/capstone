@@ -1,5 +1,5 @@
 import axios from "axios"
-import { type UserProps, type LoginValue, type CreateUserProps, type CreateUserProps2 } from "../../types/types"
+import { type UserProps, type LoginValue, type CreateUserProps, type FetchedUserProps } from "../../types/types"
 axios.defaults.withCredentials = true;
 
 
@@ -67,7 +67,7 @@ export const createUser = async (newUser: CreateUserProps): Promise<CreateUserPr
 }
 
 
-export const getAllUsers = async (): Promise<CreateUserProps2[] | null> => {
+export const getAllUsers = async (): Promise<FetchedUserProps[] | null> => {
   try {
     const response = await axios.get('http://localhost:4000/auth/users');
 
@@ -107,3 +107,27 @@ export const currentUser = async (): Promise<UserProps | null> => {
   }
 }
 
+
+export const deleteUser = async (id: string): Promise<FetchedUserProps | null> => {
+  if (!id) {
+    throw new Error("Invalid id")
+  }
+
+  try {
+    const response = await axios.delete(`http://localhost:4000/auth/${id}`);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message)
+    }
+
+    return response.data.user;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected Error: ", error)
+    }
+
+    return null;
+  }
+}
