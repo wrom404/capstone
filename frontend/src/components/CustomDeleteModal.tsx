@@ -17,7 +17,7 @@ const CustomDeleteModal = ({
         <div className="flex items-center gap-2 mb-4">
           <Icon
             className={`${
-              title && title == "Delete Event"
+              title && title == "Delete Event" || title == "Delete User"
                 ? "text-red-600"
                 : "text-indigo-600"
             }`}
@@ -34,13 +34,17 @@ const CustomDeleteModal = ({
           </button>
           <button
             className={`px-4 py-2 ${
-              title && title == "Delete Event"
+              (title && title == "Delete Event") || title == "Delete User"
                 ? "bg-red-600 text-white rounded hover:bg-red-700 text-base"
                 : "bg-indigo-600 text-white rounded hover:bg-indigo-700 text-base"
             }`}
             onClick={onConfirm}
           >
-            {`${title && title == "Delete Event" ? "Delete" : "Restore"}`}
+            {`${
+              (title && title == "Delete Event") || title == "Delete User"
+                ? "Delete"
+                : "Restore"
+            }`}
           </button>
         </div>
       </div>

@@ -153,3 +153,54 @@ export async function getUsers(req, res) {
     return res.status(500).json({ success: false, error });
   }
 }
+
+export async function deleteUser(req, res) {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "ID parameter is missing",
+    });
+  }
+
+  console.log(`ID received: ${id}`);
+
+  try {
+    // Check if the user exists
+    const eventCheck = await pool.query("SELECT * FROM users WHERE id = $1", [
+      id,
+    ]);
+
+    if (eventCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Delete the user
+    const result = await pool.query(
+      "DELETE FROM users WHERE id = $1 RETURNING *",
+      [id]
+    );
+
+    if (result.rows.length > 0) {
+      return res
+        .status(200)
+        .json({ success: true, message: "User deleted successfully" });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to delete user",
+      });
+    }
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the event",
+      error: error.message,
+    });
+  }
+}

@@ -1,12 +1,29 @@
-import { Trash2, Shield, User as UserIcon, Pencil } from "lucide-react";
+import {
+  Trash2,
+  Shield,
+  User as UserIcon,
+  Pencil,
+  TriangleAlert,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import useFetchUsers from "@/hooks/user/useFetchUsers";
+import CustomDeleteModal from "@/components/CustomDeleteModal";
+import { useState } from "react";
 
 const User = () => {
   const { data, isPending: error } = useFetchUsers();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>("");
 
-  const handleDelete = (id: string) => {
-    console.log(id);
+  const handleClickDelete = (id: string) => {
+    setUserId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = () => {
+    if (userId) {
+      console.log("Delete user Id: ", userId);
+    }
   };
 
   const handleEdit = (id: string) => {
@@ -100,7 +117,7 @@ const User = () => {
                           <Pencil className="w-5 h-5" />
                         </button>
                         <button
-                          onClick={() => handleDelete(user.id || "")}
+                          onClick={() => handleClickDelete(user.id || "")}
                           className="text-red-600 hover:text-red-900 transition-colors duration-200 cursor-pointer ml-2"
                         >
                           <Trash2 className="w-5 h-5" />
@@ -113,6 +130,14 @@ const User = () => {
           </tbody>
         </table>
       </motion.div>
+      <CustomDeleteModal
+        icon={TriangleAlert}
+        isOpen={isModalOpen}
+        title="Delete User"
+        message="Proceed to delete? This action cannot be undone."
+        onConfirm={handleDelete}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
