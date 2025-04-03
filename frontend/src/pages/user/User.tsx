@@ -11,59 +11,77 @@ import CustomDeleteModal from "@/components/CustomDeleteModal";
 import { useEffect, useState } from "react";
 import useDeleteUser from "@/hooks/user/useDeleteUser";
 import toast from "react-hot-toast";
+import useFetchUser from "@/hooks/user/useFetchUser";
+import EditUserModal from "@/components/EditUserModal";
+import { FetchedUserProps } from "@/types/types";
 
 const User = () => {
-  const [userId, setUserId] = useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const {
-    data,
-    isPending: isFetchingUser,
+    data: users,
+    isPending: isFetchingUsers,
     error: fetchError,
   } = useFetchUsers();
+
   const {
     mutate: deleteUser,
     isSuccess,
     isPending: isDeletingUser,
     error: deleteError,
-  } = useDeleteUser(userId);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  } = useDeleteUser(selectedUserId || "");
+
+  const {
+    data: selectedUser,
+    isPending: isFetchingUser,
+    error: fetchUserError,
+  } = useFetchUser(selectedUserId || "", {
+    enabled: !!selectedUserId, // Only fetch user if selectedUserId exists
+  });
 
   useEffect(() => {
-    if (fetchError) {
-      console.log("error: ", fetchError);
-    } else {
-      console.log("error: ", deleteError);
-    }
-  }, [deleteError, fetchError]);
+    if (fetchError) console.log("Fetch Error:", fetchError);
+    if (deleteError) console.log("Delete Error:", deleteError);
+    if (fetchUserError) console.log("Fetch User Error:", fetchUserError);
+  }, [deleteError, fetchError, fetchUserError]);
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("User deleted successfully");
+      setIsDeleteModalOpen(false);
     }
   }, [isSuccess]);
 
   const handleClickDelete = (id: string) => {
-    setUserId(id);
-    setIsModalOpen(true);
+    setSelectedUserId(id);
+    setIsDeleteModalOpen(true);
   };
 
   const handleDelete = () => {
-    if (userId) {
-      setIsModalOpen(false);
-      deleteUser(userId);
+    if (selectedUserId) {
+      deleteUser(selectedUserId);
     }
   };
 
-  const handleEdit = (id: string) => {
-    console.log(id);
+  const handleClickEdit = (id: string) => {
+    setSelectedUserId(id);
+    setIsEditModalOpen(true);
   };
 
-  if (isFetchingUser || isDeletingUser) {
+  const handleUpdateUser = (updatedUser: FetchedUserProps) => {
+    console.log("updatedUser: ", updatedUser);
+  };
+
+  if (isFetchingUsers || isDeletingUser || (isFetchingUser && selectedUserId)) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
+
   return (
     <div>
       <div className="mb-6">
@@ -72,6 +90,7 @@ const User = () => {
           Easily view and manage users, including their name, email, and role.
         </p>
       </div>
+
       <motion.div
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
@@ -96,23 +115,18 @@ const User = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data &&
-              data.length > 0 &&
-              data.map((user, index) => (
+            {users &&
+              users.map((user, index) => (
                 <motion.tr
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  key={index}
+                  key={user.id}
                   className="hover:bg-gray-50"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {`${user.first_name} ${user.last_name}`}
-                        </div>
-                      </div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {`${user.first_name} ${user.last_name}`}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -139,10 +153,10 @@ const User = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    {user.role !== "admin" ? (
+                    {user.role !== "admin" && (
                       <>
                         <button
-                          onClick={() => handleEdit(user.id || "")}
+                          onClick={() => handleClickEdit(user.id || "")}
                           className="text-green-600 hover:text-green-900 transition-colors duration-200 cursor-pointer"
                         >
                           <Pencil className="w-5 h-5" />
@@ -154,20 +168,40 @@ const User = () => {
                           <Trash2 className="w-5 h-5" />
                         </button>
                       </>
-                    ) : null}
+                    )}
                   </td>
                 </motion.tr>
               ))}
           </tbody>
         </table>
       </motion.div>
+
+      {/* Edit User Modal */}
+      <EditUserModal
+        isModalOpen={isEditModalOpen}
+        setIsModalOpen={setIsEditModalOpen}
+        user={
+          selectedUser || {
+            id: "",
+            first_name: "",
+            last_name: "",
+            email: "",
+            password: "",
+            confirm_password: "",
+            role: "",
+          }
+        }
+        onUpdate={handleUpdateUser}
+      />
+
+      {/* Delete Confirmation Modal */}
       <CustomDeleteModal
         icon={TriangleAlert}
-        isOpen={isModalOpen}
+        isOpen={isDeleteModalOpen}
         title="Delete User"
         message="Proceed to delete? This action cannot be undone."
         onConfirm={handleDelete}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => setIsDeleteModalOpen(false)}
       />
     </div>
   );

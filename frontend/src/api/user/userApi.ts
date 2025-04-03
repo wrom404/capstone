@@ -156,3 +156,28 @@ export const updateUser = async (id: string, updatedUser: UserProps): Promise<Fe
     return null;
   }
 }
+
+
+export const getUserById = async (id: string): Promise<FetchedUserProps | null> => {
+  if (!id) {
+    throw new Error("Invalid id")
+  }
+
+  try {
+    const response = await axios.get(`http://localhost:4000/auth/${id}`);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message)
+    }
+
+    return response.data.user;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Axios error: ", error.message)
+    } else {
+      console.log("Unexpected Error: ", error)
+    }
+
+    return null;
+  }
+}
