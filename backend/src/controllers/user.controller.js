@@ -208,7 +208,9 @@ export async function deleteUser(req, res) {
 
 export async function updateUser(req, res) {
   const { id } = req.params;
-  const { firstName, lastName, email, password } = req.body;
+  const { first_name, last_name, email, password, role } = req.body;
+
+  console.log(first_name, " ", last_name, " ", email, " ", password, " ", role);
 
   if (!id) {
     return res.status(400).json({
@@ -219,8 +221,8 @@ export async function updateUser(req, res) {
 
   try {
     const result = await pool.query(
-      "UPDATE users SET first_name = $1, last_name = $2, email = $3 WHERE id = $4 RETURNING *",
-      [firstName, lastName, email, id]
+      "UPDATE users SET first_name = $1, last_name = $2, email = $3, password = $4, role = $5 WHERE id = $6 RETURNING *",
+      [first_name, last_name, email, password, role, id]
     );
 
     if (result.rows.length === 0) {

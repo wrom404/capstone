@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { type UnAvailableDateProps, type Event, type FormDataProps, type CanceledEvent, EventCountProps } from "../types/types";
+import { type UnAvailableDateProps, type Event, type FormDataProps, type CanceledEvent, EventCountProps } from "../../types/types";
 
 export const getAllEvents = async (): Promise<Event[] | []> => {
 

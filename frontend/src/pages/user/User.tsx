@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import useFetchUser from "@/hooks/user/useFetchUser";
 import EditUserModal from "@/components/EditUserModal";
 import { FetchedUserProps } from "@/types/types";
+import useUpdateUser from "@/hooks/user/useUpdateUser";
 
 const User = () => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -28,7 +29,7 @@ const User = () => {
 
   const {
     mutate: deleteUser,
-    isSuccess,
+    isSuccess: isDeleteSuccess,
     isPending: isDeletingUser,
     error: deleteError,
   } = useDeleteUser(selectedUserId || "");
@@ -41,18 +42,30 @@ const User = () => {
     enabled: !!selectedUserId, // Only fetch user if selectedUserId exists
   });
 
+  const {
+    mutate: updateUser,
+    isPending: isUpdatingUser,
+    error: updateError,
+    isSuccess: isUpdateSuccess,
+  } = useUpdateUser(selectedUserId || "");
+
   useEffect(() => {
     if (fetchError) console.log("Fetch Error:", fetchError);
     if (deleteError) console.log("Delete Error:", deleteError);
     if (fetchUserError) console.log("Fetch User Error:", fetchUserError);
-  }, [deleteError, fetchError, fetchUserError]);
+    if (updateError) console.log("Fetch User Error:", updateError);
+  }, [deleteError, fetchError, fetchUserError, updateError]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isDeleteSuccess) {
       toast.success("User deleted successfully");
       setIsDeleteModalOpen(false);
     }
-  }, [isSuccess]);
+    if (isUpdateSuccess) {
+      toast.success("User updated successfully");
+      setIsDeleteModalOpen(false);
+    }
+  }, [isDeleteSuccess, isUpdateSuccess]);
 
   const handleClickDelete = (id: string) => {
     setSelectedUserId(id);
@@ -72,9 +85,15 @@ const User = () => {
 
   const handleUpdateUser = (updatedUser: FetchedUserProps) => {
     console.log("updatedUser: ", updatedUser);
+    updateUser({ updatedUser });
   };
 
-  if (isFetchingUsers || isDeletingUser || (isFetchingUser && selectedUserId)) {
+  if (
+    isFetchingUsers ||
+    isDeletingUser ||
+    (isFetchingUser && selectedUserId) ||
+    isUpdatingUser
+  ) {
     return (
       <div className="min-h-full flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>

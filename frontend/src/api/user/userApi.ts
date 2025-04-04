@@ -24,7 +24,6 @@ export const loginUser = async (loginData: LoginValue) => {
   }
 }
 
-
 export const logOutUser = async () => {
   try {
     const response = await axios.post('http://localhost:4000/auth/logout');
@@ -43,7 +42,6 @@ export const logOutUser = async () => {
     return "An unknown error occurred."
   }
 }
-
 
 export const createUser = async (newUser: CreateUserProps): Promise<CreateUserProps | null> => {
 
@@ -66,7 +64,6 @@ export const createUser = async (newUser: CreateUserProps): Promise<CreateUserPr
   }
 }
 
-
 export const getAllUsers = async (): Promise<FetchedUserProps[] | null> => {
   try {
     const response = await axios.get('http://localhost:4000/auth/users');
@@ -85,7 +82,6 @@ export const getAllUsers = async (): Promise<FetchedUserProps[] | null> => {
     return null
   }
 }
-
 
 export const currentUser = async (): Promise<UserProps | null> => {
   try {
@@ -106,7 +102,6 @@ export const currentUser = async (): Promise<UserProps | null> => {
     return null;
   }
 }
-
 
 export const deleteUser = async (id: string): Promise<FetchedUserProps | null> => {
   if (!id) {
@@ -132,11 +127,11 @@ export const deleteUser = async (id: string): Promise<FetchedUserProps | null> =
   }
 }
 
-
-export const updateUser = async (id: string, updatedUser: UserProps): Promise<FetchedUserProps | null> => {
+export const updateUser = async ({ id, updatedUser }: { id: string, updatedUser: FetchedUserProps }): Promise<FetchedUserProps | null> => {
   if (!id) {
     throw new Error("Invalid id")
   }
+  console.log("updatedUser: ", updatedUser)
 
   try {
     const response = await axios.put(`http://localhost:4000/auth/${id}`, updatedUser);
