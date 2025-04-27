@@ -52,7 +52,7 @@ const TableEvent = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="cursor-pointer hover:bg-gray-50 border border-gray-300"
+              className="cursor-pointer hover:bg-gray-50 border border-gray-300 text-gray-600"
               key={index}
               onClick={(e) => {
                 e.stopPropagation();

@@ -24,6 +24,7 @@ const LoginPage = () => {
 
   const [isPasswordOpen, setIsPasswordOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     if (isSuccess && data?.success) {
@@ -41,42 +42,42 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen border border-red-300 flex">
-      <div className="flex-1 flex flex-col gap-2 items-center">
-        <div className="mt-18">
+    <div className="bg-white min-h-screen border border-red-300 flex flex-col md:flex-row">
+      <div className="flex-1 flex flex-col md:gap-16 gap-10 items-center">
+        <div className="mt-10 md:mt-12 lg:mt-18">
           <div className="flex items-center gap-2">
-            <img src={parishLogo} className="h-20" alt="Parish Logo" />
+            <img src={parishLogo} className="md:h-20 h-16" alt="Parish Logo" />
             <div>
-              <h1 className="text-center text-2xl text-gray-800 font-bold tracking-wider">
+              <h1 className="text-center md:text-2xl text-lg text-gray-800 font-bold tracking-wider">
                 St. Isidore The Laborer
               </h1>
-              <h1 className="text-2xl text-gray-800 font-bold tracking-wider mt-1">
+              <h1 className="md:text-2xl text-lg text-gray-800 font-bold tracking-wider md:mt-1">
                 Parish of Merida
               </h1>
             </div>
           </div>
-          <h2 className="text-center text-xl text-gray-600 mt-4 mb-8">
-            Event Scheduling
-          </h2>
         </div>
         <motion.form
-          className="form-glass w-full sm:max-w-md xl:max-w-lg p-8 bg-white rounded sm:shadow-md"
+          className="form-glass w-full sm:max-w-md xl:max-w-lg p-8 bg-white rounded-2xl md:border md:border-gray-400 border-0"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           onSubmit={handleSubmit}
         >
-          <h2 className="mb-6 text-2xl font-bold text-center text-gray-900">
-            Login
+          <h2 className="mb-2 text-2xl font-bold text-center text-gray-900">
+            Welcome back
           </h2>
+          <h3 className="text-gray-800 text-center mb-4">
+            Please enter your details to login.
+          </h3>
 
           {/* Show error message */}
           {errorMessage && (
-            <p className="text-red-600 text-center mb-4">{errorMessage}</p>
+            <p className="text-red-400 text-center mb-4">{errorMessage}</p>
           )}
 
           <div className="mb-4">
-            <label className="block mb-1 text-sm font-medium text-gray-900">
+            <label className="block mb-1 text-sm text-gray-900 font-semibold">
               Email
             </label>
             <input
@@ -85,11 +86,11 @@ const LoginPage = () => {
               onChange={(e) =>
                 setFormValue({ ...formValue, email: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
           </div>
           <div className="mb-4 relative">
-            <label className="block mb-1 text-sm font-medium text-gray-900">
+            <label className="block mb-1 text-sm text-gray-900 font-semibold">
               Password
             </label>
             <input
@@ -98,22 +99,40 @@ const LoginPage = () => {
               onChange={(e) =>
                 setFormValue({ ...formValue, password: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
             {isPasswordOpen ? (
-              <EyeOff
+              <Eye
                 className="text-gray-800 absolute right-6 bottom-3 cursor-pointer"
                 onClick={() => setIsPasswordOpen(false)}
                 size={16}
               />
             ) : (
-              <Eye
+              <EyeOff
                 className="text-gray-800 absolute right-6 bottom-3 cursor-pointer"
                 onClick={() => setIsPasswordOpen(true)}
                 size={16}
               />
             )}
           </div>
+
+          {/* Remember Me Checkbox */}
+          <div className="mb-4 flex items-center">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
+            />
+            <label
+              htmlFor="rememberMe"
+              className="ml-2 text-sm text-gray-700 cursor-pointer font-semibold"
+            >
+              Remember Me
+            </label>
+          </div>
+
           <div className="my-6 flex justify-end w-full">
             <button
               type="submit"
@@ -128,11 +147,11 @@ const LoginPage = () => {
           </div>
         </motion.form>
       </div>
-      <div className="flex justify-center items-center flex-1 h-screen bg-blue-50">
+      <div className="flex justify-center items-center flex-1 h-screen bg-blue-50 max-sm:hidden">
         <div>
           <div className="flex justify-center gap-4">
-            <Calendar className="text-blue-600" size={80} />
-            <Clock className="text-blue-600" size={80} />
+            <Calendar className="text-blue-400" size={80} />
+            <Clock className="text-blue-400" size={80} />
           </div>
           <div className="mt-8">
             <h3 className="text-gray-800 text-2xl font-semibold tracking-wider text-center mb-6">

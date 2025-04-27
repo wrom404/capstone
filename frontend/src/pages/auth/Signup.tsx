@@ -58,7 +58,7 @@ const Signup = () => {
           <h2 className="mb-6 text-2xl font-bold text-center text-gray-900">
             Create User
           </h2>
-          <div className="flex gap-4">
+          <div className="flex max-md:flex-col max-md:gap-0 gap-4">
             <div className="mb-4 w-full">
               <label className="block mb-1 text-sm font-medium text-gray-900">
                 First Name
@@ -69,7 +69,7 @@ const Signup = () => {
                 onChange={(e) =>
                   setFormValue({ ...formValue, firstName: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
               />
             </div>
             <div className="mb-4 w-full">
@@ -82,7 +82,7 @@ const Signup = () => {
                 onChange={(e) =>
                   setFormValue({ ...formValue, lastName: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
               />
             </div>
           </div>
@@ -96,7 +96,7 @@ const Signup = () => {
               onChange={(e) =>
                 setFormValue({ ...formValue, email: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
           </div>
           <div className="mb-4 relative">
@@ -109,7 +109,7 @@ const Signup = () => {
               onChange={(e) =>
                 setFormValue({ ...formValue, password: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
             {isPasswordOpen ? (
               <EyeOff
@@ -135,7 +135,7 @@ const Signup = () => {
               onChange={(e) =>
                 setFormValue({ ...formValue, confirmPassword: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
             {isPasswordOpen ? (
               <EyeOff
@@ -169,7 +169,7 @@ const Signup = () => {
               {isPending ? (
                 <div className="w-6 h-6 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                "Create User"
+                `Create User`
               )}
             </button>
           </div>

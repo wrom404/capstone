@@ -51,10 +51,9 @@ const CalendarEventPage = () => {
 
   console.log("fetchedEvents: ", fetchedEvents);
 
+  const todayString = moment().format("YYYY-MM-DD");
   const dayPropGetter = (date: Date) => {
     const dateString = moment(date).format("YYYY-MM-DD");
-    const todayString = moment().format("YYYY-MM-DD");
-
     const matchingEvent = eventCount.find(
       (event) => moment(event.date).format("YYYY-MM-DD") === dateString
     );
@@ -159,22 +158,81 @@ const CalendarEventPage = () => {
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      className="px-2 md:px-8 py-4" // ADD some padding
     >
-      <Calendar
-        localizer={localizer}
-        events={myCalendarEvents}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: "90vh" }}
-        views={["month", "week", "day", "agenda"]}
-        view={view}
-        date={date}
-        onView={(newView: View) => setView(newView)}
-        onNavigate={(newDate) => setDate(newDate)}
-        onSelectEvent={handleSelectEvent}
-        eventPropGetter={eventPropGetter}
-        dayPropGetter={dayPropGetter}
-      />
+      <div className="w-full overflow-x-auto">
+        <Calendar
+          localizer={localizer}
+          events={myCalendarEvents}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: "80vh", minHeight: "500px" }} // FIX height for smaller screens
+          views={["month", "week", "day", "agenda"]}
+          view={view}
+          date={date}
+          onView={(newView: View) => setView(newView)}
+          onNavigate={(newDate) => setDate(newDate)}
+          onSelectEvent={handleSelectEvent}
+          eventPropGetter={eventPropGetter}
+          dayPropGetter={dayPropGetter}
+        />
+      </div>
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-600">
+          Event Legend
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:gap-6 md:gap-2 gap-0">
+          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "#d4edda" }} // Color for "Mass"
+            ></div>
+            <span className="text-sm text-gray-700">Mass</span>
+          </div>
+          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "#fcd5ce" }} // Color for "Wedding"
+            ></div>
+            <span className="text-sm text-gray-700">Wedding</span>
+          </div>
+          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "#cfe2f3" }} // Color for "Baptism"
+            ></div>
+            <span className="text-sm text-gray-700">Baptism</span>
+          </div>
+          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "#f8f9fa" }} // Color for "Funeral"
+            ></div>
+            <span className="text-sm text-gray-700">Funeral</span>
+          </div>
+          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "#e2d3f3" }} // Color for "Confession"
+            ></div>
+            <span className="text-sm text-gray-700">Confession</span>
+          </div>
+          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "#ffe5b4" }} // Color for "Meeting"
+            ></div>
+            <span className="text-sm text-gray-700">Meeting</span>
+          </div>
+          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "#f7f7e9" }} // Color for "Others"
+            ></div>
+            <span className="text-sm text-gray-700">Others</span>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 };

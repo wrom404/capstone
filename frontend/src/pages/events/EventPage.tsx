@@ -22,7 +22,7 @@ const EventPage = () => {
     error: fetchError,
     isPending: isFetching,
   } = useFetchAllEvents();
-  
+
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
@@ -126,19 +126,20 @@ const EventPage = () => {
   }
 
   return (
-    <div className="">
-      <div className="flex justify-between">
-        <div className="mb-6">
+    <div className="px-2 md:px-8 py-4">
+      {/* Header and filters */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+        <div className="mb-4 md:mb-0">
           <h2 className="text-2xl text-gray-800 font-bold">Events</h2>
           <p className="text-sm text-gray-700">
             Manage and track scheduled, upcoming, and completed events with
             ease.
           </p>
         </div>
-        <div className="mt-6">
+        <div className="flex flex-col md:flex-row md:items-center gap-2">
           <input
             type="text"
-            className="border border-gray-300 py-1 px-3"
+            className="border border-gray-300 py-1 px-3 w-full md:w-auto"
             placeholder="Search..."
             value={searchQuery}
             onChange={handleSearchChange}
@@ -147,7 +148,7 @@ const EventPage = () => {
             name="category"
             onChange={handleSelectChange}
             value={selectedCategory}
-            className="border border-gray-300 px-3 py-1 mb-4 ml-4"
+            className="border border-gray-300 px-3 py-1 w-full md:w-auto"
           >
             <option value="">Filter</option>
             <option value="mass">Mass</option>
@@ -161,16 +162,19 @@ const EventPage = () => {
         </div>
       </div>
 
-      <TableEvent
-        events={paginatedEvents || []}
-        handleClickEvent={handleClickEvent}
-        handleClickDelete={handleClickDelete}
-        handleClickEdit={handleClickEdit}
-      />
+      {/* Table */}
+      <div className="overflow-x-auto mt-6">
+        <TableEvent
+          events={paginatedEvents || []}
+          handleClickEvent={handleClickEvent}
+          handleClickDelete={handleClickDelete}
+          handleClickEdit={handleClickEdit}
+        />
+      </div>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-between items-center mt-6 text-gray-800 text-sm">
-        <div>
+      {/* Pagination */}
+      <div className="flex flex-col md:flex-row justify-between items-center mt-6 text-gray-800 text-sm gap-4">
+        <div className="flex items-center">
           <span>Items per page:</span>
           <select
             value={itemsPerPage}
@@ -184,11 +188,12 @@ const EventPage = () => {
             ))}
           </select>
         </div>
+
         <div className="flex items-center">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="border border-gray-300 px-3 py-1 mr-2 cursor-pointer"
+            className="border border-gray-300 px-3 py-1 mr-2 cursor-pointer disabled:opacity-50"
           >
             <IoIosArrowBack size={20} />
           </button>
@@ -198,13 +203,14 @@ const EventPage = () => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="border border-gray-300 px-3 py-1 ml-2 cursor-pointer"
+            className="border border-gray-300 px-3 py-1 ml-2 cursor-pointer disabled:opacity-50"
           >
             <IoIosArrowForward size={20} />
           </button>
         </div>
       </div>
 
+      {/* Delete Modal */}
       <CustomDeleteModal
         icon={TriangleAlert}
         isOpen={isModalOpen}

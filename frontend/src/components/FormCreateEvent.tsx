@@ -22,6 +22,7 @@ import validateEventTime from "@/utils/validateEventTime";
 import { type Event } from "@/types/types";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { CalendarPlus2 } from "lucide-react";
 
 const FormCreateEvent = () => {
   const {
@@ -187,12 +188,13 @@ const FormCreateEvent = () => {
     <motion.form
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: .5}}
+      transition={{ duration: 0.5 }}
       onSubmit={handleSubmitForm}
       className="border border-gray-300 rounded-lg p-6 w-full"
     >
-      <h2 className="text-2xl font-bold mt-2 mb-3">Create Event</h2>
-      <div className="flex gap-8">
+      <h2 className="text-2xl font-bold mt-2 mb-3">Schedule Event</h2>
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* First Column */}
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Event</Label>
@@ -228,6 +230,7 @@ const FormCreateEvent = () => {
               </SelectContent>
             </CustomSelect>
           </div>
+
           {(formEvent.eventType == "mass" ||
             formEvent.eventType == "wedding" ||
             formEvent.eventType == "baptism" ||
@@ -307,6 +310,7 @@ const FormCreateEvent = () => {
             />
           </div>
         </div>
+
         {/* Second Column */}
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -359,7 +363,7 @@ const FormCreateEvent = () => {
             />
             <label
               htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70  cursor-pointer"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
               Recurring Event?
             </label>
@@ -399,7 +403,7 @@ const FormCreateEvent = () => {
                 />
                 <label
                   htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70  cursor-pointer"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 >
                   Has End Date?
                 </label>
@@ -436,9 +440,9 @@ const FormCreateEvent = () => {
       <div className="flex justify-end my-2 mt-4">
         <Button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer tracking-wide"
+          className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer tracking-wide px-6 py-3 rounded-lg text-white flex items-center gap-2"
         >
-          Create
+          <CalendarPlus2 /> Schedule Event
         </Button>
       </div>
     </motion.form>

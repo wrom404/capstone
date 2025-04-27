@@ -58,9 +58,9 @@ const LineChartComponent = ({ fetchedEvents }: { fetchedEvents: Event[] }) => {
 
   return (
     <ResponsiveContainer
-      className="mt-2 border-none w-fit rounded-xl shadow-none flex items-center justify-center"
       width="100%"
       height={300}
+      className="!w-full !h-[300px]" // force full width & height on mobile
     >
       <LineChart
         data={transformedData}

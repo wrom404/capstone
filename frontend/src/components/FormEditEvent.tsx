@@ -174,7 +174,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       className="border border-gray-300 rounded-lg p-6 w-full"
     >
       <h2 className="text-2xl font-bold mt-2 mb-3">Edit Event</h2>
-      <div className="flex gap-8">
+      <div className="flex flex-col md:flex-row gap-8">
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Event</Label>

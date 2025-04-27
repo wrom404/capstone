@@ -31,15 +31,14 @@ const EventCard = ({ statusCount }: { statusCount: EventCountProps }) => {
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Upcoming Events */}
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: .1 }}
-          className=""
+          transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <Card className="w-full border rounded-lg shadow-xs p-4">
+          <Card className="w-full border rounded-lg shadow-xs p-4 h-full">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-base font-semibold text-gray-700">
                 Upcoming Events
@@ -63,7 +62,7 @@ const EventCard = ({ statusCount }: { statusCount: EventCountProps }) => {
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: .2 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className=""
         >
           <Card className="w-full border rounded-lg shadow-xs p-4">
@@ -90,7 +89,7 @@ const EventCard = ({ statusCount }: { statusCount: EventCountProps }) => {
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: .3 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           className=""
         >
           <Card className="w-full border rounded-lg shadow-xs p-4">
@@ -117,7 +116,7 @@ const EventCard = ({ statusCount }: { statusCount: EventCountProps }) => {
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: .4 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           className=""
         >
           <Card className="w-full border rounded-lg shadow-xs p-4">
