@@ -67,7 +67,7 @@ const FormCreateEvent = () => {
   useEffect(() => {
     if (isSuccess && data && (data as Event)?.success) {
       console.log(data);
-      toast.success("Event created successfully");
+      toast.success("Event scheduled successfully");
     } else if (isError && error) {
       if (axios.isAxiosError(error)) {
         console.log("error: ", error.response?.data?.message);

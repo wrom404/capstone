@@ -20,6 +20,7 @@ import formatTimeEditForm from "@/utils/formatTimeEditForm";
 import useUpdateEvent from "@/hooks/events/useUpdateEvent";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { Save } from "lucide-react";
 
 const options = [
   { value: "Monday", label: "Monday" },
@@ -427,7 +428,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
           type="submit"
           className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer tracking-wide"
         >
-          Update
+          <Save /> Save Changes
         </Button>
       </div>
     </motion.form>

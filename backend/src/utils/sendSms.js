@@ -1,32 +1,35 @@
-// function sendSms(phoneNumber, message) {
-//   const accountSid = process.env.TWILIO_ACCOUNT_SID;
-//   const authToken = process.env.TWILIO_AUTH_TOKEN;
-//   const client = require('twilio')(accountSid, authToken);
+import twilio from "twilio";
+// import dotenv from "dotenv";
 
-//   return client.messages
-//     .create({
-//       body: message,
-//       from: process.env.TWILIO_PHONE_NUMBER,
-//       to: phoneNumber,
-//     })
-//     .then((message) => console.log(message.sid))
-//     .catch((err) => console.log(err));
-// }
+// dotenv.config();
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = twilio(accountSid, authToken);
 
-function sendSms(clientNumber, date, startTime, endTime) {
-  const now = new Date().getTime(); // Current timestamp
-  const endTimestamp = new Date(endTime).getTime(); // Convert end time to timestamp
-  const triggerTime = endTimestamp - 3 * 60 * 1000; // 3 minutes before end time
+async function sendSms(phoneNumber, date, startTime, endTime) {
+  const message = `Your event is confirmed on ${date} from ${startTime} to ${endTime}.`;
+  let formattedNumber;
 
-  const delay = triggerTime - now; // Calculate delay
+  console.log("accountSid:", accountSid);
+  console.log("authToken:", authToken);
+  console.log("client:", client);
+  console.log("phoneNumber:", phoneNumber);
 
-  if (delay > 0) {
-    setTimeout(() => {
-      console.log("inside sendSms");
-      // Here, you can add the actual SMS sending logic
-    }, delay);
-  } else {
-    console.log("End time is too close or already passed.");
+  if (phoneNumber.startsWith("09") && phoneNumber.length === 11) {
+    formattedNumber = "+63" + phoneNumber.slice(1); // Remove the leading '0' and prepend '+63'
+  }
+
+  try {
+    const result = await client.messages.create({
+      body: message,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: formattedNumber,
+    });
+    console.log(result.sid);
+    return result;
+  } catch (err) {
+    console.error("SMS Error:", err);
+    throw err;
   }
 }
 

@@ -75,12 +75,6 @@ export async function createEvent(req, res) {
       const serverStart = new Date(selectDate.start_time).getTime();
       const serverEnd = new Date(selectDate.end_time).getTime();
 
-      console.log("Comparing times:");
-      console.log("Client Start:", clientStart);
-      console.log("Client End:", clientEnd);
-      console.log("Server Start:", serverStart);
-      console.log("Server End:", serverEnd);
-
       if (clientStart <= serverEnd && clientEnd >= serverStart) {
         console.log("Time slot already occupied, please choose another time.");
         return res.status(400).json({
@@ -91,7 +85,9 @@ export async function createEvent(req, res) {
     }
 
     if (trimmedClientNumber) {
-      sendSms(trimmedClientNumber, date, startTime, endTime);
+      console.log("trimmedClientNumber: ", trimmedClientNumber);
+      console.log("Inside the client number validation");
+      // await sendSms(trimmedClientNumber, date, startTime, endTime);
     }
 
     const result = await pool.query(
