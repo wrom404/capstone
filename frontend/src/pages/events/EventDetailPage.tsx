@@ -62,7 +62,7 @@ const EventDetailPage = () => {
     expectedAttendance: "",
     eventType: "",
     priestName: "",
-    clientNumber: "",
+    clientEmail: "",
     date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
     startTime: "", // "HH:MM:SS" format
     endTime: "", // "HH:MM:SS" format
@@ -84,13 +84,14 @@ const EventDetailPage = () => {
     const eventData = fetchedEvent?.[0];
     if (eventData) {
       setEvents({
+        id: eventData.id?.toString() || "",
         title: eventData.title || "",
         description: eventData.description || "",
         venue: eventData.venue || "",
         expectedAttendance: eventData.expected_attendance || "",
         eventType: eventData.event_type || "",
         priestName: eventData.priest_name || "",
-        clientNumber: eventData.client_number || "",
+        clientEmail: eventData.client_email || "",
         date: formatDateFromISO(eventData.date || "") || "",
         startTime: eventData.start_time
           ? formatTimeFromISO(eventData.start_time)
@@ -117,7 +118,7 @@ const EventDetailPage = () => {
     }
   }, [isSuccess, navigate]);
 
-  const handleClickEvent = (id: string) => {
+  const handleClickEvent = (id: number) => {
     navigate(`/edit-event/${id}`);
   };
 
@@ -215,7 +216,7 @@ const EventDetailPage = () => {
                           month: "long",
                           day: "numeric",
                         })} 
-                        <span className=""> - </span>
+                        {events.hasEndDate && " - "}
                       {events.endDate &&
                         new Date(events.endDate).toLocaleDateString("en-US", {
                           weekday: "long",
@@ -379,13 +380,13 @@ const EventDetailPage = () => {
               </div>
             )}
 
-            {events.clientNumber && (
+            {events.clientEmail && (
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-gray-600">
                   <span className="font-medium text-gray-800">
-                    Contact Number:
+                    Email:
                   </span>{" "}
-                  {events.clientNumber}
+                  {events.clientEmail}
                 </p>
               </div>
             )}
@@ -396,7 +397,7 @@ const EventDetailPage = () => {
                     type="submit"
                     className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer"
                     onClick={() =>
-                      handleClickEvent(events.id?.toString() || "")
+                      handleClickEvent(Number(events.id) || 0)
                     }
                   >
                     Edit Event

@@ -2,6 +2,7 @@ import pool from "../config/db.js";
 import trimValue from "../utils/trim.js";
 import moment from "moment-timezone";
 import sendSms from "../utils/sendSms.js";
+import { sendEmailNotification } from "../utils/sendEmailNotification .js";
 
 // updated
 export async function createEvent(req, res) {
@@ -12,7 +13,7 @@ export async function createEvent(req, res) {
     description,
     venue,
     expectedAttendance,
-    clientNumber,
+    clientEmail,
     date,
     startTime,
     endTime,
@@ -24,6 +25,31 @@ export async function createEvent(req, res) {
     sponsors = [], // [{ sponsor_name, sponsor_type }]
     organizers = [], // [{ name, position }]
   } = req.body;
+
+  const timeZone = "Asia/Manila"; // or your local timezone
+
+  const formattedDate = moment.tz(date, timeZone).format("MMMM D, YYYY");
+  const formattedStartTime = moment
+    .tz(`${date} ${startTime}`, "YYYY-MM-DD HH:mm", timeZone)
+    .format("h:mm A");
+  const formattedEndTime = moment
+    .tz(`${date} ${endTime}`, "YYYY-MM-DD HH:mm", timeZone)
+    .format("h:mm A");
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
+      <h2 style="color: #2c3e50;">📅 Parish Event Scheduled</h2>
+      <p>Hello Admin,</p>
+      <p>An event has been successfully scheduled in the parish system:</p>
+      <ul>
+        <li><strong>Event Type:</strong> ${eventType}</li>
+        <li><strong>Date:</strong> ${formattedDate}</li>
+        <li><strong>Time:</strong> ${formattedStartTime} – ${formattedEndTime}</li>
+        <li><strong>Venue:</strong> ${venue}</li>
+      </ul>
+      <p style="color: #888; font-size: 0.9em;">This is an automated email. Please do not reply.</p>
+    </div>
+  `;
 
   if (!title || !startTime || !endTime || !eventType || !date || !venue) {
     return res
@@ -42,6 +68,15 @@ export async function createEvent(req, res) {
         success: false,
         message: "Date is fully booked. Please choose another date.",
       });
+    }
+
+    if (clientEmail) {
+      // send email notification
+      await sendEmailNotification(
+        clientEmail,
+        `Your Event Request: ${eventType} on ${date}`,
+        htmlContent
+      );
     }
 
     // Time conflict check
@@ -69,7 +104,7 @@ export async function createEvent(req, res) {
     // Insert event
     const eventInsert = await pool.query(
       `INSERT INTO events 
-        (title, event_type, priest_name, description, venue, expected_attendance, client_number, 
+        (title, event_type, priest_name, description, venue, expected_attendance, client_email, 
          date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, chapel_name)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
        RETURNING id`,
@@ -80,7 +115,7 @@ export async function createEvent(req, res) {
         description,
         venue,
         expectedAttendance,
-        clientNumber,
+        clientEmail,
         date,
         startTime,
         endTime,
@@ -294,7 +329,7 @@ export async function updateEvent(req, res) {
     description,
     venue,
     expectedAttendance,
-    clientNumber,
+    clientEmail,
     date,
     startTime,
     endTime,
@@ -316,7 +351,7 @@ export async function updateEvent(req, res) {
   const trimmedVenue = venue && trimValue(venue);
   const trimmedPriestName = priestName && trimValue(priestName);
   const trimmedDescription = description && trimValue(description);
-  const trimmedClientNumber = clientNumber && trimValue(clientNumber);
+  const trimmedClientEmail = clientEmail && trimValue(clientEmail);
 
   // const client = await pool.connect();
   try {
@@ -326,7 +361,7 @@ export async function updateEvent(req, res) {
     const result = await pool.query(
       `UPDATE events
        SET title = $1, event_type = $2, priest_name = $3, description = $4,
-           venue = $5, client_number = $6, date = $7, start_time = $8, end_time = $9,
+           venue = $5, client_email = $6, date = $7, start_time = $8, end_time = $9,
            is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13,
            expected_attendance = $14
        WHERE id = $15
@@ -337,7 +372,7 @@ export async function updateEvent(req, res) {
         trimmedPriestName,
         trimmedDescription,
         trimmedVenue,
-        trimmedClientNumber,
+        trimmedClientEmail,
         date,
         startTime,
         endTime,

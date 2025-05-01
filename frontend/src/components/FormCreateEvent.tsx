@@ -41,7 +41,7 @@ const FormCreateEvent = () => {
     expectedAttendance: "",
     eventType: "",
     priestName: "",
-    clientNumber: "",
+    clientEmail: "",
     date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
     startTime: "", // "HH:MM:SS" format
     endTime: "", // "HH:MM:SS" format
@@ -222,7 +222,7 @@ const FormCreateEvent = () => {
       expectedAttendance: "",
       eventType: "",
       priestName: "",
-      clientNumber: "",
+      clientEmail: "",
       date: "",
       startTime: "",
       endTime: "",
@@ -385,12 +385,12 @@ const FormCreateEvent = () => {
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>
-              Client Number <span className="text-gray-500">*</span>
+              Client Email <span className="text-gray-500">*</span>
             </Label>
             <Input
-              value={formEvent.clientNumber || ""}
+              value={formEvent.clientEmail || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, clientNumber: e.target.value })
+                setFormEvent({ ...formEvent, clientEmail: e.target.value })
               }
               type="text"
               id="text"

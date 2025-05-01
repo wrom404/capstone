@@ -40,7 +40,7 @@ interface FormDataProps {
   expectedAttendance: string;
   eventType: string;
   priestName: string;
-  clientNumber: string;
+  clientEmail: string;
   date: string;
   startTime: string;
   endTime: string;
@@ -104,7 +104,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     expectedAttendance: "",
     eventType: "",
     priestName: "",
-    clientNumber: "",
+    clientEmail: "",
     date: "",
     startTime: "",
     endTime: "",
@@ -167,7 +167,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         expectedAttendance: eventData.expected_attendance || "",
         eventType: eventData.event_type || "",
         priestName: eventData.priest_name || "",
-        clientNumber: eventData.client_number || "",
+        clientEmail: eventData.client_email || "",
         date: formatDateFromISO(eventData.date || "") || "",
         startTime: eventData.start_time
           ? formatTimeFromISO(eventData.start_time)
@@ -208,57 +208,6 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       return;
     }
   };
-
-  // // Functions to handle sponsor management
-  // const addSponsor = () => {
-  //   setFormEvent({
-  //     ...formEvent,
-  //     sponsors: [
-  //       ...formEvent.sponsors,
-  //       { sponsor_name: "", sponsor_type: "Principal" },
-  //     ],
-  //   });
-  // };
-
-  // const removeSponsor = (index: number) => {
-  //   const updatedSponsors = [...formEvent.sponsors];
-  //   updatedSponsors.splice(index, 1);
-  //   setFormEvent({ ...formEvent, sponsors: updatedSponsors });
-  // };
-
-  // const updateSponsor = (
-  //   index: number,
-  //   field: "sponsor_name" | "sponsor_type",
-  //   value: string
-  // ) => {
-  //   const updatedSponsors = [...formEvent.sponsors];
-  //   updatedSponsors[index] = { ...updatedSponsors[index], [field]: value };
-  //   setFormEvent({ ...formEvent, sponsors: updatedSponsors });
-  // };
-
-  // // Functions to handle organizer management
-  // const addOrganizer = () => {
-  //   setFormEvent({
-  //     ...formEvent,
-  //     organizers: [...formEvent.organizers, { name: "", position: "Staff" }],
-  //   });
-  // };
-
-  // const removeOrganizer = (index: number) => {
-  //   const updatedOrganizers = [...formEvent.organizers];
-  //   updatedOrganizers.splice(index, 1);
-  //   setFormEvent({ ...formEvent, organizers: updatedOrganizers });
-  // };
-
-  // const updateOrganizer = (
-  //   index: number,
-  //   field: "name" | "position",
-  //   value: string
-  // ) => {
-  //   const updatedOrganizers = [...formEvent.organizers];
-  //   updatedOrganizers[index] = { ...updatedOrganizers[index], [field]: value };
-  //   setFormEvent({ ...formEvent, organizers: updatedOrganizers });
-  // };
 
   const handleRemoveSponsor = (index: number) => {
     const updatedSponsors = [...formEvent.sponsors];
@@ -453,12 +402,12 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>
-              Client Number <span className="text-gray-50">*</span>
+              Client Email <span className="text-gray-50">*</span>
             </Label>
             <Input
-              value={formEvent.clientNumber || ""}
+              value={formEvent.clientEmail || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, clientNumber: e.target.value })
+                setFormEvent({ ...formEvent, clientEmail: e.target.value })
               }
               type="text"
               id="text"

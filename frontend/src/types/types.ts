@@ -9,7 +9,7 @@ export type Event = {
   event_type?: string | null;
   expected_attendance?: string | null;
   priest_name?: string | null;
-  client_number?: string | null;
+  client_email?: string | null;
   date?: string | null; // ISO string (e.g., "2025-04-04T16:00:00.000Z")
   start_time?: string; // "HH:MM:SS" format
   end_time?: string; // "HH:MM:SS" format
@@ -42,7 +42,7 @@ export type CalendarEvent = {
   venue: string;
   event_type: string;
   priest_name: string | null;
-  client_number: string | null;
+  client_email: string | null;
   date: string;
   start_time: string;
   end_time: string;
@@ -99,7 +99,7 @@ export type FormDataProps = {
   description: string;
   venue: string;
   expectedAttendance: string;
-  clientNumber?: string;
+  clientEmail?: string;
   date: string | null; // You will store the date as a string (ISO 8601 formatted)
   startTime: string | null; // You store the time in HH:mm format as a string
   endTime: string | null; // You store the time in HH:mm format as a string
@@ -144,7 +144,7 @@ export interface CanceledEvent {
   priest_name: null;
   description: string;
   venue: string;
-  client_number: null;
+  client_email: null;
   date: Date;
   start_time: Date;
   end_time: Date;
