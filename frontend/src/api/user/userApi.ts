@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 
 export const loginUser = async (loginData: LoginValue) => {
   try {
-    const response = await axios.post('http://localhost:4000/auth/login', loginData)
+    const response = await axios.post('http://localhost:4000/api/auth/login', loginData)
 
     if (!response.data.success) {
       console.log(response.data?.error)
@@ -26,7 +26,7 @@ export const loginUser = async (loginData: LoginValue) => {
 
 export const logOutUser = async () => {
   try {
-    const response = await axios.post('http://localhost:4000/auth/logout');
+    const response = await axios.post('http://localhost:4000/api/auth/logout');
     if (!response.data.success) {
       console.log(response.data.message)
       throw new Error("Something went wrong.")
@@ -47,7 +47,7 @@ export const createUser = async (newUser: CreateUserProps): Promise<CreateUserPr
 
   try {
     console.log("new user: ", newUser)
-    const response = await axios.post('http://localhost:4000/auth/sign-up', newUser);
+    const response = await axios.post('http://localhost:4000/api/auth/sign-up', newUser);
 
     if (!response.data.success) {
       console.log(response.data?.message)
@@ -66,7 +66,7 @@ export const createUser = async (newUser: CreateUserProps): Promise<CreateUserPr
 
 export const getAllUsers = async (): Promise<FetchedUserProps[] | null> => {
   try {
-    const response = await axios.get('http://localhost:4000/auth/users');
+    const response = await axios.get('http://localhost:4000/api/auth/users');
 
     if (!response.data.success) {
       console.log(response.data?.message)
@@ -85,7 +85,7 @@ export const getAllUsers = async (): Promise<FetchedUserProps[] | null> => {
 
 export const currentUser = async (): Promise<UserProps | null> => {
   try {
-    const response = await axios.get('http://localhost:4000/auth/current-user');
+    const response = await axios.get('http://localhost:4000/api/auth/current-user');
 
     if (!response.data.success) {
       console.log(response.data?.error)
@@ -109,7 +109,7 @@ export const deleteUser = async (id: string): Promise<FetchedUserProps | null> =
   }
 
   try {
-    const response = await axios.delete(`http://localhost:4000/auth/${id}`);
+    const response = await axios.delete(`http://localhost:4000/auth/api/${id}`);
 
     if (!response.data.success) {
       throw new Error(response.data.message)
@@ -134,7 +134,7 @@ export const updateUser = async ({ id, updatedUser }: { id: string, updatedUser:
   console.log("updatedUser: ", updatedUser)
 
   try {
-    const response = await axios.put(`http://localhost:4000/auth/${id}`, updatedUser);
+    const response = await axios.put(`http://localhost:4000/auth/api/${id}`, updatedUser);
 
     if (!response.data.success) {
       throw new Error(response.data.message)
@@ -159,7 +159,7 @@ export const getUserById = async (id: string): Promise<FetchedUserProps | null> 
   }
 
   try {
-    const response = await axios.get(`http://localhost:4000/auth/${id}`);
+    const response = await axios.get(`http://localhost:4000/auth/api/${id}`);
 
     if (!response.data.success) {
       throw new Error(response.data.message)

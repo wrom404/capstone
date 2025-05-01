@@ -22,7 +22,7 @@ import validateEventTime from "@/utils/validateEventTime";
 import { type Event } from "@/types/types";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { CalendarPlus2 } from "lucide-react";
+import { CalendarPlus2, Plus, Trash2 } from "lucide-react";
 
 const FormCreateEvent = () => {
   const {
@@ -49,10 +49,24 @@ const FormCreateEvent = () => {
     recurringDays: [],
     hasEndDate: false,
     endDate: "",
+    chapelName: "", // New field for chapel name
+    sponsors: [], // New field for sponsors array
+    organizers: [], // New field for organizers array
   });
   const [timeError, setTimeError] = useState<string>("");
   const [textFieldError, setTextFieldError] = useState<string>("");
   const [countError, setCountError] = useState<string>("");
+
+  // New state for managing a new sponsor entry
+  const [newSponsor, setNewSponsor] = useState({
+    sponsor_name: "",
+    sponsor_type: "Secondary",
+  });
+  // New state for managing a new organizer entry
+  const [newOrganizer, setNewOrganizer] = useState({
+    name: "",
+    position: "Staff",
+  });
 
   const options = [
     { value: "Monday", label: "Monday" },
@@ -62,6 +76,20 @@ const FormCreateEvent = () => {
     { value: "Friday", label: "Friday" },
     { value: "Saturday", label: "Saturday" },
     { value: "Sunday", label: "Sunday" },
+  ];
+
+  const sponsorTypes = [
+    { value: "Principal", label: "Principal" },
+    { value: "Secondary", label: "Secondary" },
+    // { value: "Honorary", label: "Honorary" },
+  ];
+
+  const organizerPositions = [
+    { value: "Parishioner", label: "Parishioner" },
+    { value: "Staff", label: "Staff" },
+    { value: "Volunteer", label: "Volunteer" },
+    { value: "Committee Head", label: "Committee Head" },
+    { value: "Others", label: "Others" },
   ];
 
   useEffect(() => {
@@ -88,6 +116,52 @@ const FormCreateEvent = () => {
     } else {
       return;
     }
+  };
+
+  // Handle adding a new sponsor
+  const handleAddSponsor = () => {
+    if (!newSponsor.sponsor_name) {
+      toast.error("Sponsor name is required");
+      return;
+    }
+
+    setFormEvent({
+      ...formEvent,
+      sponsors: [...formEvent.sponsors, newSponsor],
+    });
+
+    // Reset the new sponsor form
+    setNewSponsor({ sponsor_name: "", sponsor_type: "Secondary" });
+  };
+
+  // Handle removing a sponsor
+  const handleRemoveSponsor = (index: number) => {
+    const updatedSponsors = [...formEvent.sponsors];
+    updatedSponsors.splice(index, 1);
+    setFormEvent({ ...formEvent, sponsors: updatedSponsors });
+  };
+
+  // Handle adding a new organizer
+  const handleAddOrganizer = () => {
+    if (!newOrganizer.name) {
+      toast.error("Organizer name is required");
+      return;
+    }
+
+    setFormEvent({
+      ...formEvent,
+      organizers: [...formEvent.organizers, newOrganizer],
+    });
+
+    // Reset the new organizer form
+    setNewOrganizer({ name: "", position: "Staff" });
+  };
+
+  // Handle removing an organizer
+  const handleRemoveOrganizer = (index: number) => {
+    const updatedOrganizers = [...formEvent.organizers];
+    updatedOrganizers.splice(index, 1);
+    setFormEvent({ ...formEvent, organizers: updatedOrganizers });
   };
 
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
@@ -156,6 +230,9 @@ const FormCreateEvent = () => {
       recurringDays: [],
       hasEndDate: false,
       endDate: "",
+      chapelName: "",
+      sponsors: [],
+      organizers: [],
     });
   };
 
@@ -205,7 +282,7 @@ const FormCreateEvent = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, title: e.target.value })
               }
-              className="shadow-none border border-gray-400 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full"
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -216,7 +293,7 @@ const FormCreateEvent = () => {
                 setFormEvent({ ...formEvent, eventType: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-400 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -231,26 +308,37 @@ const FormCreateEvent = () => {
             </CustomSelect>
           </div>
 
-          {(formEvent.eventType == "mass" ||
-            formEvent.eventType == "wedding" ||
-            formEvent.eventType == "baptism" ||
-            formEvent.eventType == "funeral" ||
-            formEvent.eventType == "confession") && (
-            <div className="grid w-full items-center gap-1.5 py-2.5">
-              <Label>
-                Priest Name<span className="text-gray-500">*</span>
-              </Label>
-              <Input
-                type="text"
-                id="text"
-                value={formEvent.priestName || ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormEvent({ ...formEvent, priestName: e.target.value })
-                }
-                className="shadow-none border border-gray-400 focus:ring-1 w-full"
-              />
-            </div>
-          )}
+          <div className="grid w-full items-center gap-1.5 py-2.5">
+            <Label>
+              Priest<span className="text-gray-500">*</span>
+            </Label>
+            <Input
+              type="text"
+              id="text"
+              value={formEvent.priestName || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormEvent({ ...formEvent, priestName: e.target.value })
+              }
+              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+            />
+          </div>
+
+          <div className="grid w-full items-center gap-1.5 py-2.5">
+            <Label>
+              Chapel Name<span className="text-gray-500">*</span>
+            </Label>
+            <Input
+              type="text"
+              id="chapelName"
+              value={formEvent.chapelName || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormEvent({ ...formEvent, chapelName: e.target.value })
+              }
+              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              placeholder="e.g. San Isidro Chapel"
+            />
+          </div>
+
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label htmlFor="message">Description</Label>
             <Textarea
@@ -259,7 +347,7 @@ const FormCreateEvent = () => {
                 setFormEvent({ ...formEvent, description: e.target.value })
               }
               id="message"
-              className="border-gray-400 w-full"
+              className="border-gray-300 w-full"
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -271,7 +359,7 @@ const FormCreateEvent = () => {
               }
               type="text"
               id="text"
-              className="shadow-none border border-gray-400 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full"
             />
           </div>
 
@@ -283,7 +371,7 @@ const FormCreateEvent = () => {
                 setFormEvent({ ...formEvent, expectedAttendance: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-400 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -306,7 +394,7 @@ const FormCreateEvent = () => {
               }
               type="text"
               id="text"
-              className="shadow-none border border-gray-400 focus:ring-0 focus:outline-none w-full"
+              className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
             />
           </div>
         </div>
@@ -328,7 +416,7 @@ const FormCreateEvent = () => {
               minDate={new Date()}
               isClearable
               dateFormat="yyyy/MM/dd"
-              className="text-sm border border-gray-400 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -336,7 +424,7 @@ const FormCreateEvent = () => {
             <div className="flex gap-4">
               <input
                 type="time"
-                className="border border-gray-400 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, startTime: e.target.value })
                 }
@@ -345,7 +433,7 @@ const FormCreateEvent = () => {
               <span className="flex items-center">to</span>
               <input
                 type="time"
-                className="border border-gray-400 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, endTime: e.target.value })
                 }
@@ -354,12 +442,163 @@ const FormCreateEvent = () => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 py-6">
+          {/* Sponsors Section */}
+          <div className="mt-6 mb-4">
+            <Label className="text-md font-semibold">Sponsors</Label>
+
+            <div className="mt-2 space-y-2">
+              {formEvent.sponsors.map((sponsor, index) => (
+                <div
+                  key={index}
+                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                >
+                  <div className="flex-1">
+                    <p className="font-medium">{sponsor.sponsor_name}</p>
+                    <p className="text-sm text-gray-500">
+                      {sponsor.sponsor_type}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    onClick={() => handleRemoveSponsor(index)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-3 p-3 border border-gray-300 rounded-md">
+              <h4 className="font-medium text-sm mb-2">Add Sponsor</h4>
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Label className="text-xs">Name</Label>
+                  <Input
+                    type="text"
+                    value={newSponsor.sponsor_name}
+                    onChange={(e) =>
+                      setNewSponsor({
+                        ...newSponsor,
+                        sponsor_name: e.target.value,
+                      })
+                    }
+                    className="text-sm"
+                    placeholder="Mr. & Mrs. Smith"
+                  />
+                </div>
+                <div className="w-1/3">
+                  <Label className="text-xs">Type</Label>
+                  <CustomSelect
+                    value={newSponsor.sponsor_type}
+                    onValueChange={(e) =>
+                      setNewSponsor({ ...newSponsor, sponsor_type: e })
+                    }
+                  >
+                    <SelectTrigger className="text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sponsorTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </CustomSelect>
+                </div>
+                <Button
+                  type="button"
+                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  onClick={handleAddSponsor}
+                >
+                  <Plus size={16} />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Organizers Section */}
+          <div className="mt-6 mb-4">
+            <Label className="text-md font-semibold">Organizers</Label>
+
+            <div className="mt-2 space-y-2">
+              {formEvent.organizers.map((organizer, index) => (
+                <div
+                  key={index}
+                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                >
+                  <div className="flex-1">
+                    <p className="font-medium">{organizer.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {organizer.position}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    onClick={() => handleRemoveOrganizer(index)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-3 p-3 border border-gray-300 rounded-md">
+              <h4 className="font-medium text-sm mb-2">Add Organizer</h4>
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Label className="text-xs">Name</Label>
+                  <Input
+                    type="text"
+                    value={newOrganizer.name}
+                    onChange={(e) =>
+                      setNewOrganizer({ ...newOrganizer, name: e.target.value })
+                    }
+                    className="text-sm"
+                    placeholder="John Doe"
+                  />
+                </div>
+                <div className="w-1/3">
+                  <Label className="text-xs">Position</Label>
+                  <CustomSelect
+                    value={newOrganizer.position}
+                    onValueChange={(e) =>
+                      setNewOrganizer({ ...newOrganizer, position: e })
+                    }
+                  >
+                    <SelectTrigger className="text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {organizerPositions.map((position) => (
+                        <SelectItem key={position.value} value={position.value}>
+                          {position.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </CustomSelect>
+                </div>
+                <Button
+                  type="button"
+                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  onClick={handleAddOrganizer}
+                >
+                  <Plus size={16} />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2 pt-6 pb-3">
             <Checkbox
               checked={formEvent.isRecurring}
               onCheckedChange={handleOnCheckChange}
               id="terms"
-              className="cursor-pointer shadow border-1 border-gray-400"
+              className="cursor-pointer shadow border-1 border-gray-300"
             />
             <label
               htmlFor="terms"
@@ -392,14 +631,14 @@ const FormCreateEvent = () => {
                   }
                 />
               </div>
-              <div className="flex items-center space-x-2 py-6">
+              <div className="flex items-center space-x-2 pt-6 pb-3">
                 <Checkbox
                   checked={formEvent.hasEndDate}
                   onCheckedChange={(e: boolean) =>
                     setFormEvent({ ...formEvent, hasEndDate: e })
                   }
                   id="terms"
-                  className="shadow cursor-pointer border-1 border-gray-400"
+                  className="shadow cursor-pointer border-1 border-gray-300"
                 />
                 <label
                   htmlFor="terms"
@@ -420,7 +659,7 @@ const FormCreateEvent = () => {
                 id="endDate"
                 minDate={new Date()}
                 dateFormat="yyyy/MM/dd"
-                className="text-sm border border-gray-400 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
                 selected={
                   formEvent.endDate ? new Date(formEvent.endDate) : null
                 }

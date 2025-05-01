@@ -3,6 +3,7 @@ import trimValue from "../utils/trim.js";
 import moment from "moment-timezone";
 import sendSms from "../utils/sendSms.js";
 
+// updated
 export async function createEvent(req, res) {
   const {
     title,
@@ -12,94 +13,74 @@ export async function createEvent(req, res) {
     venue,
     expectedAttendance,
     clientNumber,
-    date, //YY-MM-DD
-    startTime, //HH:MI:SS
+    date,
+    startTime,
     endTime,
     isRecurring,
     recurringDays,
     hasEndDate,
     endDate,
+    chapelName,
+    sponsors = [], // [{ sponsor_name, sponsor_type }]
+    organizers = [], // [{ name, position }]
   } = req.body;
-
-  console.log(
-    `title: ${title}, startTime: ${startTime}, endTime: ${endTime}, description: ${description}, venue: ${venue}, expectedAttendance: ${expectedAttendance}, clientNumber: ${clientNumber}, eventType: ${eventType}, priestName ${priestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
-  );
 
   if (!title || !startTime || !endTime || !eventType || !date || !venue) {
     return res
       .status(400)
-      .json({ success: false, error: "All required fields must be filled." });
+      .json({ success: false, error: "Missing required fields." });
   }
 
-  const trimmedTitle = title && trimValue(title);
-  const trimmedVenue = venue && trimValue(venue);
-  const trimmedPriestName = priestName && trimValue(priestName);
-  const trimmedDescription = description && trimValue(description);
-  const trimmedClientNumber = clientNumber && trimValue(clientNumber);
-
-  console.log(
-    `TRIMMED VALUES = title: ${trimmedTitle}, startTime: ${startTime}, endTime: ${endTime}, description: ${trimmedDescription}, venue: ${trimmedVenue}, expectedAttendance: ${expectedAttendance}, clientNumber: ${trimmedClientNumber}, eventType: ${eventType}, priestName ${trimmedPriestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
-  );
-
   try {
-    // query for count event
+    // Capacity check
     const countResult = await pool.query(
       "SELECT COUNT(id) FROM events WHERE date = $1",
       [date]
     );
-
-    // Check if the date already has 10 or more events
     if (countResult.rows[0].count >= 10) {
-      const errorResponse = {
+      return res.status(400).json({
         success: false,
-        count: countResult.rows[0],
         message: "Date is fully booked. Please choose another date.",
-      };
-
-      console.log("Error Response:", errorResponse); // Add console.log here
-
-      return res.status(400).json(errorResponse);
+      });
     }
 
-    // query events for specific date
-    const dateQuery = await pool.query("SELECT * FROM events WHERE date = $1", [
-      date,
-    ]);
-
-    const selectedDate = dateQuery.rows;
-
-    for (const selectDate of selectedDate) {
-      const clientStart = new Date(startTime).getTime(); // Convert to timestamp
-      const clientEnd = new Date(endTime).getTime();
-
-      const serverStart = new Date(selectDate.start_time).getTime();
-      const serverEnd = new Date(selectDate.end_time).getTime();
-
+    // Time conflict check
+    const existingEvents = await pool.query(
+      "SELECT * FROM events WHERE date = $1",
+      [date]
+    );
+    for (const row of existingEvents.rows) {
+      const clientStart = new Date(`${date}T${startTime}`).getTime();
+      const clientEnd = new Date(`${date}T${endTime}`).getTime();
+      const serverStart = new Date(
+        `${row.date.toISOString().split("T")[0]}T${row.start_time}`
+      ).getTime();
+      const serverEnd = new Date(
+        `${row.date.toISOString().split("T")[0]}T${row.end_time}`
+      ).getTime();
       if (clientStart <= serverEnd && clientEnd >= serverStart) {
-        console.log("Time slot already occupied, please choose another time.");
         return res.status(400).json({
           success: false,
-          message: "Time slot already occupied, please choose another time.",
+          message: "Time slot already occupied.",
         });
       }
     }
 
-    if (trimmedClientNumber) {
-      console.log("trimmedClientNumber: ", trimmedClientNumber);
-      console.log("Inside the client number validation");
-      // await sendSms(trimmedClientNumber, date, startTime, endTime);
-    }
-
-    const result = await pool.query(
-      "INSERT INTO events (title, event_type, priest_name, description, venue, expected_attendance, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
+    // Insert event
+    const eventInsert = await pool.query(
+      `INSERT INTO events 
+        (title, event_type, priest_name, description, venue, expected_attendance, client_number, 
+         date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, chapel_name)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+       RETURNING id`,
       [
-        trimmedTitle,
+        title,
         eventType,
-        trimmedPriestName,
-        trimmedDescription,
-        trimmedVenue,
+        priestName,
+        description,
+        venue,
         expectedAttendance,
-        trimmedClientNumber,
+        clientNumber,
         date,
         startTime,
         endTime,
@@ -107,45 +88,116 @@ export async function createEvent(req, res) {
         recurringDays,
         hasEndDate,
         endDate,
+        chapelName,
       ]
     );
 
+    const eventId = eventInsert.rows[0].id;
+
+    // Insert sponsors
+    for (const sponsor of sponsors) {
+      const sponsorName = sponsor.sponsor_name?.trim();
+      const sponsorType = sponsor.sponsor_type?.trim(); // Should be 'Principal' or 'Secondary'
+      if (sponsorName && sponsorType) {
+        await pool.query(
+          `INSERT INTO event_sponsors (event_id, sponsor_name, sponsor_type)
+           VALUES ($1, $2, $3)`,
+          [eventId, sponsorName, sponsorType]
+        );
+      }
+    }
+
+    // Insert organizers
+    for (const org of organizers) {
+      const name = org.name?.trim();
+      const position = org.position?.trim();
+      if (!name || !position) continue;
+
+      // Insert or retrieve organizer
+      const orgResult = await pool.query(
+        `INSERT INTO organizers (name)
+         VALUES ($1)
+         RETURNING id`,
+        [name]
+      );
+      const organizerId = orgResult.rows[0].id;
+
+      // Join with event
+      await pool.query(
+        `INSERT INTO event_organizers (event_id, organizer_id, position)
+         VALUES ($1, $2, $3)`,
+        [eventId, organizerId, position]
+      );
+    }
+
     return res.status(201).json({
       success: true,
-      data: result.rows[0],
-      message: "Event created successfully",
-      count: countResult.rows,
+      message: "Event created with sponsors and organizers",
+      eventId,
     });
   } catch (error) {
+    console.error("Error in createEvent:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to created event",
+      message: "Failed to create event",
       error: error.message,
     });
   }
 }
 
+// updated
 export async function getEvents(req, res) {
   try {
-    const result = await pool.query("SELECT * FROM events ORDER BY id DESC");
+    const result = await pool.query(`
+      SELECT * 
+      FROM events 
+      WHERE status != 'canceled' AND is_canceled = false 
+      ORDER BY id DESC
+    `);
 
     if (result.rows.length === 0) {
-      res.status(400).json({ success: false, message: "No Events Found." });
+      return res
+        .status(400)
+        .json({ success: false, message: "No Events Found." });
     }
-    const events = result.rows.map((event) => {
-      if (event.start_time) {
-        event.start_time = moment
-          .utc(event.start_time)
-          .tz("Asia/Manila")
-          .format();
-      }
-      if (event.end_time) {
-        event.end_time = moment.utc(event.end_time).tz("Asia/Manila").format();
-      }
-      return event;
-    });
 
-    // console.log(events); // Now shows the correct time in PH timezone
+    const events = await Promise.all(
+      result.rows.map(async (event) => {
+        // Format datetime fields
+        if (event.start_time) {
+          event.start_time = moment
+            .utc(event.start_time)
+            .tz("Asia/Manila")
+            .format();
+        }
+        if (event.end_time) {
+          event.end_time = moment
+            .utc(event.end_time)
+            .tz("Asia/Manila")
+            .format();
+        }
+
+        // Fetch sponsors
+        const sponsorResult = await pool.query(
+          "SELECT sponsor_name, sponsor_type FROM event_sponsors WHERE event_id = $1",
+          [event.id]
+        );
+        event.sponsors = sponsorResult.rows;
+
+        // Fetch organizers
+        const organizerResult = await pool.query(
+          `SELECT o.name, eo.position 
+           FROM event_organizers eo
+           JOIN organizers o ON o.id = eo.organizer_id
+           WHERE eo.event_id = $1`,
+          [event.id]
+        );
+        event.organizers = organizerResult.rows;
+
+        return event;
+      })
+    );
+
     return res.status(200).json({ success: true, data: events });
   } catch (error) {
     return res.status(500).json({
@@ -156,9 +208,12 @@ export async function getEvents(req, res) {
   }
 }
 
+// updated
 export async function getEventById(req, res) {
   const { id } = req.params;
+
   try {
+    // Fetch the event
     const result = await pool.query("SELECT * FROM events WHERE id = $1", [id]);
 
     if (result.rows.length === 0) {
@@ -167,19 +222,37 @@ export async function getEventById(req, res) {
         .json({ success: true, message: "No Events Found." });
     }
 
-    result.rows.map((event) => {
-      if (event.start_time) {
-        event.start_time = moment
-          .utc(event.start_time)
-          .tz("Asia/Manila")
-          .format();
-      }
-      if (event.end_time) {
-        event.end_time = moment.utc(event.end_time).tz("Asia/Manila").format();
-      }
-    });
+    const event = result.rows[0];
 
-    return res.status(200).json({ success: true, data: result.rows });
+    // Convert datetime fields
+    if (event.start_time) {
+      event.start_time = moment
+        .utc(event.start_time)
+        .tz("Asia/Manila")
+        .format();
+    }
+    if (event.end_time) {
+      event.end_time = moment.utc(event.end_time).tz("Asia/Manila").format();
+    }
+
+    // Fetch event sponsors
+    const sponsorResult = await pool.query(
+      "SELECT sponsor_name, sponsor_type FROM event_sponsors WHERE event_id = $1",
+      [id]
+    );
+    event.sponsors = sponsorResult.rows;
+
+    // Fetch event organizers (join with organizers)
+    const organizerResult = await pool.query(
+      `SELECT o.name, eo.position
+       FROM event_organizers eo
+       JOIN organizers o ON o.id = eo.organizer_id
+       WHERE eo.event_id = $1`,
+      [id]
+    );
+    event.organizers = organizerResult.rows;
+
+    return res.status(200).json({ success: true, data: event });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -211,6 +284,7 @@ export async function getUnavailableDates(req, res) {
   }
 }
 
+// updated
 export async function updateEvent(req, res) {
   const { id } = req.params;
   const {
@@ -221,34 +295,42 @@ export async function updateEvent(req, res) {
     venue,
     expectedAttendance,
     clientNumber,
-    date, //YY-MM-DD
-    startTime, //HH:MI:SS
+    date,
+    startTime,
     endTime,
     isRecurring,
     recurringDays,
     hasEndDate,
     endDate,
+    sponsors = [], // Expecting: [{ sponsor_name, sponsor_type }]
+    organizers = [], // Expecting: [{ name, position }]
   } = req.body;
 
-  console.log(
-    `title: ${title}, startTime: ${startTime}, endTime: ${endTime}, description: ${description}, venue: ${venue}, expectedAttendance: ${expectedAttendance}, clientNumber: ${clientNumber}, eventType: ${eventType}, priestName ${priestName}, date:${date}, recurringDays:${recurringDays}, isRecurring:${isRecurring}, hasEndDate:${hasEndDate}, endDate: ${endDate}`
-  ); // it logs like this title: sample event, startTime: 2025-03-26T09:00:00.000Z, endTime: 2025-03-26T11:00:00.000Z, description: sample event, venue: ormoc, expectedAttendance: 100, clientNumber: , eventType: confession, priestName priest 1, date:2025-03-26T16:00:00.000Z, recurringDays:, isRecurring:false, hasEndDate:false, endDate: null
-
   if (!title || !startTime || !endTime || !eventType || !date || !venue) {
-    console.log("All required fields must be filled.");
     return res
       .status(400)
       .json({ success: false, message: "All required fields must be filled." });
   }
+
   const trimmedTitle = title && trimValue(title);
   const trimmedVenue = venue && trimValue(venue);
   const trimmedPriestName = priestName && trimValue(priestName);
   const trimmedDescription = description && trimValue(description);
   const trimmedClientNumber = clientNumber && trimValue(clientNumber);
 
+  // const client = await pool.connect();
   try {
+    await pool.query("BEGIN");
+
+    // Update core event data
     const result = await pool.query(
-      "UPDATE events SET title = $1, event_type = $2, priest_name = $3, description = $4, venue = $5, client_number = $6, date = $7, start_time = $8, end_time = $9, is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13, expected_attendance = $14 WHERE id = $15 RETURNING *",
+      `UPDATE events
+       SET title = $1, event_type = $2, priest_name = $3, description = $4,
+           venue = $5, client_number = $6, date = $7, start_time = $8, end_time = $9,
+           is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13,
+           expected_attendance = $14
+       WHERE id = $15
+       RETURNING *`,
       [
         trimmedTitle,
         eventType,
@@ -268,13 +350,59 @@ export async function updateEvent(req, res) {
       ]
     );
 
+    const updatedEvent = result.rows[0];
+
+    // Clear and re-insert sponsors
+    await pool.query("DELETE FROM event_sponsors WHERE event_id = $1", [id]);
+    for (const sponsor of sponsors) {
+      const { sponsor_name, sponsor_type } = sponsor;
+      await pool.query(
+        `INSERT INTO event_sponsors (event_id, sponsor_name, sponsor_type)
+         VALUES ($1, $2, $3)`,
+        [id, sponsor_name, sponsor_type]
+      );
+    }
+
+    // Clear and re-insert organizers
+    await pool.query("DELETE FROM event_organizers WHERE event_id = $1", [id]);
+    for (const organizer of organizers) {
+      const { name, position } = organizer;
+
+      // Insert or find existing organizer
+      const orgResult = await pool.query(
+        "SELECT id FROM organizers WHERE name = $1",
+        [name]
+      );
+
+      let organizerId;
+      if (orgResult.rows.length > 0) {
+        organizerId = orgResult.rows[0].id;
+      } else {
+        const insertResult = await pool.query(
+          "INSERT INTO organizers (name) VALUES ($1) RETURNING id",
+          [name]
+        );
+        organizerId = insertResult.rows[0].id;
+      }
+
+      // Insert into event_organizers
+      await pool.query(
+        `INSERT INTO event_organizers (event_id, organizer_id, position)
+         VALUES ($1, $2, $3)`,
+        [id, organizerId, position]
+      );
+    }
+
+    await pool.query("COMMIT");
+
     return res.status(200).json({
       success: true,
-      data: result.rows[0],
+      data: updatedEvent,
       message: "Event updated successfully",
     });
   } catch (error) {
-    console.log(error);
+    await pool.query("ROLLBACK");
+    console.error("Update error:", error.message);
     return res.status(500).json({
       success: false,
       message: "Failed to update event",
@@ -283,6 +411,7 @@ export async function updateEvent(req, res) {
   }
 }
 
+// updated
 export async function deleteEvent(req, res) {
   const { id } = req.params;
 
@@ -293,38 +422,44 @@ export async function deleteEvent(req, res) {
     });
   }
 
-  console.log(`ID received: ${id}`);
-
   try {
-    // Check if the event exists
+    console.log(`ID received: ${id}`);
+
+    await pool.query("BEGIN");
+
+    // Check if event exists
     const eventCheck = await pool.query("SELECT * FROM events WHERE id = $1", [
       id,
     ]);
 
     if (eventCheck.rows.length === 0) {
+      await pool.query("ROLLBACK");
       return res.status(404).json({
         success: false,
         message: "Event not found",
       });
     }
 
+    // Delete from event_sponsors
+    await pool.query("DELETE FROM event_sponsors WHERE event_id = $1", [id]);
+
+    // Delete from event_organizers
+    await pool.query("DELETE FROM event_organizers WHERE event_id = $1", [id]);
+
     // Delete the event
-    const result = await pool.query(
+    const deleteResult = await pool.query(
       "DELETE FROM events WHERE id = $1 RETURNING *",
       [id]
     );
 
-    if (result.rows.length > 0) {
-      return res
-        .status(200)
-        .json({ success: true, message: "Event deleted successfully" });
-    } else {
-      return res.status(500).json({
-        success: false,
-        message: "Failed to delete event",
-      });
-    }
+    await pool.query("COMMIT");
+
+    return res.status(200).json({
+      success: true,
+      message: "Event and related records deleted successfully",
+    });
   } catch (error) {
+    await pool.query("ROLLBACK");
     console.error("Error deleting event:", error);
     return res.status(500).json({
       success: false,
@@ -334,137 +469,134 @@ export async function deleteEvent(req, res) {
   }
 }
 
+// updated
 export async function cancelEvent(req, res) {
   const { id } = req.params;
-  const { cancelMessage } = req.body; // Extract from request body
+  const { cancelMessage } = req.body;
 
   if (!id) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Event ID is required." });
+    return res.status(400).json({
+      success: false,
+      message: "Event ID is required.",
+    });
   }
 
   try {
-    await pool.query("BEGIN");
-
-    // Move event to canceled_events
-    const insertQuery = `
-      INSERT INTO canceled_events (title, event_type, priest_name, description, venue, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, expected_attendance, status, canceled_at, reason)
-      SELECT title, event_type, priest_name, description, venue, client_number, date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, expected_attendance, 'canceled', NOW(), $1
-      FROM events WHERE id = $2;
+    const updateQuery = `
+      UPDATE events
+      SET 
+        is_canceled = TRUE,
+        status = 'canceled',
+        canceled_at = NOW(),
+        cancel_reason = $1
+      WHERE id = $2
+      RETURNING *;
     `;
-    await pool.query(insertQuery, [cancelMessage, id]);
 
-    // Delete from events
-    const deleteQuery = `DELETE FROM events WHERE id = $1;`;
-    await pool.query(deleteQuery, [id]);
+    const result = await pool.query(updateQuery, [cancelMessage, id]);
 
-    await pool.query("COMMIT");
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Event not found or already canceled.",
+      });
+    }
 
-    console.log(`Event ID ${id} successfully canceled.`);
-    return res
-      .status(200)
-      .json({ success: true, message: "Event canceled successfully." });
+    console.log(`Event ID ${id} successfully marked as canceled.`);
+    return res.status(200).json({
+      success: true,
+      message: "Event canceled successfully.",
+      data: result.rows[0],
+    });
   } catch (error) {
-    await pool.query("ROLLBACK");
     console.error("Error canceling event:", error);
-    console.error("Error message:", error?.message);
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to cancel event." });
+    return res.status(500).json({
+      success: false,
+      message: "Failed to cancel event.",
+      error: error.message,
+    });
   }
 }
 
+// updated
 export async function getCanceledEvents(req, res) {
   try {
-    const result = await pool.query(
-      "SELECT * FROM canceled_events ORDER BY id DESC"
-    );
-
-    if (result.rows.length === 0) {
-      console.log("No canceled events found in the database.");
-      return res
-        .status(204) // Or 204 (No Content)
-        .json({ success: true, message: "No canceled events found." });
-    }
+    const result = await pool.query(`
+      SELECT 
+        e.*, 
+        COALESCE(json_agg(es) FILTER (WHERE es.event_id IS NOT NULL), '[]') AS sponsors,
+        COALESCE(
+          json_agg(
+            json_build_object('id', o.id, 'name', o.name, 'position', eo.position)
+          ) FILTER (WHERE o.id IS NOT NULL), '[]'
+        ) AS organizers
+      FROM events e
+      LEFT JOIN event_sponsors es ON es.event_id = e.id
+      LEFT JOIN event_organizers eo ON eo.event_id = e.id
+      LEFT JOIN organizers o ON eo.organizer_id = o.id
+      WHERE e.is_canceled = TRUE AND e.status='canceled'
+      GROUP BY e.id
+      ORDER BY e.canceled_at DESC
+    `);
 
     return res.status(200).json({
       success: true,
       data: result.rows,
-      message: "Successfully fetched canceled events.",
+      message: result.rows.length
+        ? "Successfully fetched canceled events with sponsors and organizers."
+        : "No canceled events found.",
     });
   } catch (error) {
-    console.error("Error fetching canceled events:", error); // More specific error log
+    console.error("Error fetching canceled events:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch canceled events: " + error.message, // Include error message
+      message: "Failed to fetch canceled events.",
+      error: error.message,
     });
   }
 }
 
+// updated
 export async function restoreCanceledEvent(req, res) {
   const { id } = req.params;
+
   if (!id) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Event ID is required." });
+    return res.status(400).json({
+      success: false,
+      message: "Event ID is required.",
+    });
   }
 
   try {
     await pool.query("BEGIN");
 
-    const selectEvents = await pool.query(
-      "SELECT * FROM canceled_events WHERE id = $1",
+    // 1. Get the canceled event from the main events table
+    const { rows: events } = await pool.query(
+      "SELECT * FROM events WHERE id = $1 AND status = 'canceled'",
       [id]
     );
 
-    if (selectEvents.rows.length === 0) {
-      return res.status(400).json({ success: false, message: "Invalid ID" });
-    }
-
-    const selectedEvent = selectEvents.rows[0];
-    console.log("Selected event: ", selectedEvent);
-
-    // Move event from canceled_events to events
-    const insertQuery = `
-      INSERT INTO events (title, event_type, priest_name, description, venue, client_number, date, start_time, end_time, status, is_recurring, recurring_days, has_end_date, end_date, expected_attendance, restored_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`;
-
-    const insertQueryResult = await pool.query(insertQuery, [
-      selectedEvent.title,
-      selectedEvent.event_type,
-      selectedEvent.priest_name,
-      selectedEvent.description,
-      selectedEvent.venue,
-      selectedEvent.client_number,
-      selectedEvent.date,
-      selectedEvent.start_time,
-      selectedEvent.end_time,
-      "scheduled",
-      selectedEvent.is_recurring,
-      selectedEvent.recurring_days,
-      selectedEvent.has_end_date,
-      selectedEvent.end_date,
-      selectedEvent.expected_attendance,
-      "NOW()",
-    ]);
-
-    if (insertQueryResult.rows.length === 0) {
+    if (events.length === 0) {
       await pool.query("ROLLBACK");
-      console.error("Error: Failed to insert event into events table.");
-      return res.status(500).json({
+      return res.status(400).json({
         success: false,
-        message: "Failed to restore event.",
+        message: "Event not found or is not canceled.",
       });
     }
 
-    // Delete from canceled_events
-    const deleteQuery = `DELETE FROM canceled_events WHERE id = $1;`;
-    await pool.query(deleteQuery, [id]);
+    // 2. Restore the event
+    await pool.query(
+      `
+      UPDATE events
+      SET status = 'scheduled',
+          restored_at = $1,
+          is_canceled = 'false'
+      WHERE id = $2
+    `,
+      [new Date(), id]
+    );
 
     await pool.query("COMMIT");
-
-    console.log(`Event ID ${id} successfully restored.`);
 
     return res.status(200).json({
       success: true,
@@ -473,9 +605,11 @@ export async function restoreCanceledEvent(req, res) {
   } catch (error) {
     await pool.query("ROLLBACK");
     console.error("Error restoring event:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Failed to restore event." });
+    return res.status(500).json({
+      success: false,
+      message: "Failed to restore event.",
+      error: error.message,
+    });
   }
 }
 

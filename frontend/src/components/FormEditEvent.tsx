@@ -12,17 +12,48 @@ import { Button } from "@/src/components/ui/button";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { type FormDataProps } from "@/types/types";
 import React, { useEffect, useState } from "react";
 import useFetchEvent from "@/hooks/events/useFetchEvent";
-import Select from "react-select"; // Import react-select component
-import formatTimeEditForm from "@/utils/formatTimeEditForm";
+import Select from "react-select";
+// import formatTimeEditForm from "@/utils/formatTimeEditForm";
 import useUpdateEvent from "@/hooks/events/useUpdateEvent";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Save } from "lucide-react";
+import { Save, Plus, Trash2 } from "lucide-react";
 
-const options = [
+// Sponsor and Organizer interfaces
+interface Sponsor {
+  sponsor_name: string;
+  sponsor_type: string;
+}
+
+interface Organizer {
+  name: string;
+  position: string;
+}
+
+// Extended FormDataProps interface
+interface FormDataProps {
+  title: string;
+  description: string;
+  venue: string;
+  expectedAttendance: string;
+  eventType: string;
+  priestName: string;
+  clientNumber: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  isRecurring: boolean;
+  recurringDays: string[];
+  hasEndDate: boolean;
+  endDate: string | null;
+  chapelName: string;
+  sponsors: Sponsor[];
+  organizers: Organizer[];
+}
+
+const dayOptions = [
   { value: "Monday", label: "Monday" },
   { value: "Tuesday", label: "Tuesday" },
   { value: "Wednesday", label: "Wednesday" },
@@ -32,20 +63,39 @@ const options = [
   { value: "Sunday", label: "Sunday" },
 ];
 
+const sponsorTypes = [
+  { value: "Principal", label: "Principal" },
+  { value: "Secondary", label: "Secondary" },
+  // { value: "Honorary", label: "Honorary" },
+];
+
+const organizerPositions = [
+  { value: "Parishioner", label: "Parishioner" },
+  { value: "Staff", label: "Staff" },
+  { value: "Volunteer", label: "Volunteer" },
+  { value: "Committee Head", label: "Committee Head" },
+  { value: "Others", label: "Others" },
+];
+
+// Option arrays for dropdown selects
+
 const FormEditEvent = ({ id }: { id: string | undefined }) => {
   const {
     data,
     error: fetchedError,
     isPending: isFetchingEvent,
+    isSuccess, // Add this to check if the query completed successfully
   } = useFetchEvent(id || "");
+
   const {
     mutate: updateEvent,
     isPending: isUpdatingEvent,
     error: updateError,
   } = useUpdateEvent(id || "");
 
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [isSuccessMessage, setIsSuccessMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [formEvent, setFormEvent] = useState<FormDataProps>({
     title: "",
@@ -62,13 +112,54 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     recurringDays: [],
     hasEndDate: false,
     endDate: "",
+    chapelName: "",
+    sponsors: [],
+    organizers: [],
   });
+  // New state for managing a new sponsor entry
+  const [newSponsor, setNewSponsor] = useState({
+    sponsor_name: "",
+    sponsor_type: "Secondary",
+  });
+  const [newOrganizer, setNewOrganizer] = useState({
+    name: "",
+    position: "Staff",
+  });
+
+  // Log the complete query result
+  console.log("Query result:", {
+    data,
+    error: fetchedError,
+    isPending: isFetchingEvent,
+    isSuccess,
+  });
+
+  // Format the date and time from ISO string
+  const formatDateFromISO = (isoString: string) => {
+    if (!isoString) return "";
+    return isoString.split("T")[0];
+  };
+
+  // Format time from ISO string (HH:MM)
+  const formatTimeFromISO = (isoString: string) => {
+    if (!isoString) return "";
+    try {
+      const date = new Date(isoString);
+      return `${String(date.getHours()).padStart(2, "0")}:${String(
+        date.getMinutes()
+      ).padStart(2, "0")}`;
+    } catch (error) {
+      console.error("Error formatting time:", error);
+      return "";
+    }
+  };
 
   useEffect(() => {
     if (data && data.length > 0) {
       console.log("Fetched Data:", data); // Debugging log
 
       const eventData = data[0];
+      console.log(eventData);
       setFormEvent({
         title: eventData.title || "",
         description: eventData.description || "",
@@ -77,50 +168,31 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         eventType: eventData.event_type || "",
         priestName: eventData.priest_name || "",
         clientNumber: eventData.client_number || "",
-        date: eventData.date || "",
+        date: formatDateFromISO(eventData.date || "") || "",
         startTime: eventData.start_time
-          ? formatTimeEditForm(eventData.start_time)
-          : "", // Format on load
+          ? formatTimeFromISO(eventData.start_time)
+          : "",
         endTime: eventData.end_time
-          ? formatTimeEditForm(eventData.end_time)
-          : "", // Format on load
+          ? formatTimeFromISO(eventData.end_time)
+          : "",
         isRecurring: eventData.is_recurring || false,
-        recurringDays: eventData.recurring_days
-          ? eventData.recurring_days.map(
-              (day: string) =>
-                `${day.slice(0, 1).toUpperCase()}${day.slice(1).toLowerCase()}`
-            ) // Ensure lowercase
-          : [],
+        recurringDays: eventData.recurring_days || [],
         hasEndDate: eventData.has_end_date || false,
         endDate: eventData.end_date || "",
+        chapelName: eventData.chapel_name || "",
+        sponsors: eventData.sponsors || [],
+        organizers: eventData.organizers || [],
       });
-      setLoading(false);
+      // Set loading to false after data is processed
+      setIsLoading(false);
     }
   }, [data]);
-  console.log(formEvent);
 
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Implement your form submission logic here
     console.log("Form submitted:", formEvent);
     updateEvent({ formEvent, id: id || "" });
     setIsSuccessMessage("Updated successfully");
-    setFormEvent({
-      title: "",
-      description: "",
-      venue: "",
-      expectedAttendance: "",
-      eventType: "",
-      priestName: "",
-      clientNumber: "",
-      date: "",
-      startTime: "",
-      endTime: "",
-      isRecurring: false,
-      recurringDays: [],
-      hasEndDate: false,
-      endDate: "",
-    });
   };
 
   const handleOnCheckChange = (checked: boolean) => {
@@ -137,7 +209,100 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     }
   };
 
-  if (isFetchingEvent || isUpdatingEvent) {
+  // // Functions to handle sponsor management
+  // const addSponsor = () => {
+  //   setFormEvent({
+  //     ...formEvent,
+  //     sponsors: [
+  //       ...formEvent.sponsors,
+  //       { sponsor_name: "", sponsor_type: "Principal" },
+  //     ],
+  //   });
+  // };
+
+  // const removeSponsor = (index: number) => {
+  //   const updatedSponsors = [...formEvent.sponsors];
+  //   updatedSponsors.splice(index, 1);
+  //   setFormEvent({ ...formEvent, sponsors: updatedSponsors });
+  // };
+
+  // const updateSponsor = (
+  //   index: number,
+  //   field: "sponsor_name" | "sponsor_type",
+  //   value: string
+  // ) => {
+  //   const updatedSponsors = [...formEvent.sponsors];
+  //   updatedSponsors[index] = { ...updatedSponsors[index], [field]: value };
+  //   setFormEvent({ ...formEvent, sponsors: updatedSponsors });
+  // };
+
+  // // Functions to handle organizer management
+  // const addOrganizer = () => {
+  //   setFormEvent({
+  //     ...formEvent,
+  //     organizers: [...formEvent.organizers, { name: "", position: "Staff" }],
+  //   });
+  // };
+
+  // const removeOrganizer = (index: number) => {
+  //   const updatedOrganizers = [...formEvent.organizers];
+  //   updatedOrganizers.splice(index, 1);
+  //   setFormEvent({ ...formEvent, organizers: updatedOrganizers });
+  // };
+
+  // const updateOrganizer = (
+  //   index: number,
+  //   field: "name" | "position",
+  //   value: string
+  // ) => {
+  //   const updatedOrganizers = [...formEvent.organizers];
+  //   updatedOrganizers[index] = { ...updatedOrganizers[index], [field]: value };
+  //   setFormEvent({ ...formEvent, organizers: updatedOrganizers });
+  // };
+
+  const handleRemoveSponsor = (index: number) => {
+    const updatedSponsors = [...formEvent.sponsors];
+    updatedSponsors.splice(index, 1);
+    setFormEvent({ ...formEvent, sponsors: updatedSponsors });
+  };
+
+  const handleAddSponsor = () => {
+    if (!newSponsor.sponsor_name) {
+      toast.error("Sponsor name is required");
+      return;
+    }
+
+    setFormEvent({
+      ...formEvent,
+      sponsors: [...formEvent.sponsors, newSponsor],
+    });
+
+    // Reset the new sponsor form
+    setNewSponsor({ sponsor_name: "", sponsor_type: "Secondary" });
+  };
+
+  const handleRemoveOrganizer = (index: number) => {
+    const updatedOrganizers = [...formEvent.organizers];
+    updatedOrganizers.splice(index, 1);
+    setFormEvent({ ...formEvent, organizers: updatedOrganizers });
+  };
+
+  const handleAddOrganizer = () => {
+    if (!newOrganizer.name) {
+      toast.error("Organizer name is required");
+      return;
+    }
+
+    setFormEvent({
+      ...formEvent,
+      organizers: [...formEvent.organizers, newOrganizer],
+    });
+
+    // Reset the new organizer form
+    setNewOrganizer({ name: "", position: "Staff" });
+  };
+
+  if (isFetchingEvent || isUpdatingEvent || isLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -145,13 +310,6 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
   if (updateError || fetchedError) {
     return (
       <div className="min-h-screen flex justify-center items-center">
@@ -175,7 +333,9 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       className="border border-gray-300 rounded-lg p-6 w-full"
     >
       <h2 className="text-2xl font-bold mt-2 mb-3">Edit Event</h2>
+
       <div className="flex flex-col md:flex-row gap-8">
+        {/* First Column */}
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Event</Label>
@@ -189,6 +349,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               className="shadow-none border border-gray-400 focus:ring-1 w-full"
             />
           </div>
+
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Category</Label>
             <CustomSelect
@@ -211,6 +372,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               </SelectContent>
             </CustomSelect>
           </div>
+
           {(formEvent.eventType === "mass" ||
             formEvent.eventType === "wedding" ||
             formEvent.eventType === "baptism" ||
@@ -231,6 +393,19 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               />
             </div>
           )}
+
+          <div className="grid w-full items-center gap-1.5 py-2.5">
+            <Label>Chapel Name</Label>
+            <Input
+              type="text"
+              value={formEvent.chapelName || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormEvent({ ...formEvent, chapelName: e.target.value })
+              }
+              className="shadow-none border border-gray-400 focus:ring-1 w-full"
+            />
+          </div>
+
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label htmlFor="message">Description</Label>
             <Textarea
@@ -242,6 +417,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               className="border-gray-400 w-full"
             />
           </div>
+
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Venue</Label>
             <Input
@@ -290,6 +466,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
             />
           </div>
         </div>
+
         {/* Second Column */}
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -310,6 +487,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               className="text-sm border border-gray-400 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
             />
           </div>
+
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>Time</Label>
             <div className="flex gap-4">
@@ -349,11 +527,12 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
             />
             <label
               htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70  cursor-pointer"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
               Recurring Event?
             </label>
           </div>
+
           {formEvent.isRecurring && (
             <div className="">
               <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -362,18 +541,18 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   isMulti
                   placeholder=""
                   className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
-                  options={options}
-                  value={options.filter(
+                  options={dayOptions}
+                  value={dayOptions.filter(
                     (option) =>
                       formEvent.recurringDays &&
-                      formEvent.recurringDays.includes(option.value) // Matches lowercase values correctly
+                      formEvent.recurringDays.includes(option.value)
                   )}
                   onChange={(selectedOptions) =>
                     setFormEvent({
                       ...formEvent,
                       recurringDays: selectedOptions.map(
                         (option) => option.value
-                      ), // Stores lowercase values correctly
+                      ),
                     })
                   }
                 />
@@ -389,13 +568,14 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 />
                 <label
                   htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70  cursor-pointer"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 >
                   Has End Date?
                 </label>
               </div>
             </div>
           )}
+
           {formEvent.hasEndDate && (
             <div className="grid w-full items-center gap-1.5 py-2.5">
               <Label htmlFor="endDate">
@@ -421,14 +601,166 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               />
             </div>
           )}
+
+          {/* Sponsors Section */}
+          <div className="mt-6 mb-4">
+            <Label className="text-md font-semibold">Sponsors</Label>
+
+            <div className="mt-2 space-y-2">
+              {formEvent.sponsors.map((sponsor, index) => (
+                <div
+                  key={index}
+                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                >
+                  <div className="flex-1">
+                    <p className="font-medium">{sponsor.sponsor_name}</p>
+                    <p className="text-sm text-gray-500">
+                      {sponsor.sponsor_type}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    onClick={() => handleRemoveSponsor(index)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-3 p-3 border border-gray-300 rounded-md">
+              <h4 className="font-medium text-sm mb-2">Add Sponsor</h4>
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Label className="text-xs">Name</Label>
+                  <Input
+                    type="text"
+                    value={newSponsor.sponsor_name}
+                    onChange={(e) =>
+                      setNewSponsor({
+                        ...newSponsor,
+                        sponsor_name: e.target.value,
+                      })
+                    }
+                    className="text-sm"
+                    placeholder="Mr. & Mrs. Smith"
+                  />
+                </div>
+                <div className="w-1/3">
+                  <Label className="text-xs">Type</Label>
+                  <CustomSelect
+                    value={newSponsor.sponsor_type}
+                    onValueChange={(e) =>
+                      setNewSponsor({ ...newSponsor, sponsor_type: e })
+                    }
+                  >
+                    <SelectTrigger className="text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sponsorTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </CustomSelect>
+                </div>
+                <Button
+                  type="button"
+                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  onClick={handleAddSponsor}
+                >
+                  <Plus size={16} />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Organizers Section */}
+          <div className="mt-6 mb-4">
+            <Label className="text-md font-semibold">Organizers</Label>
+
+            <div className="mt-2 space-y-2">
+              {formEvent.organizers.map((organizer, index) => (
+                <div
+                  key={index}
+                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                >
+                  <div className="flex-1">
+                    <p className="font-medium">{organizer.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {organizer.position}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    onClick={() => handleRemoveOrganizer(index)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-3 p-3 border border-gray-300 rounded-md">
+              <h4 className="font-medium text-sm mb-2">Add Organizer</h4>
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Label className="text-xs">Name</Label>
+                  <Input
+                    type="text"
+                    value={newOrganizer.name}
+                    onChange={(e) =>
+                      setNewOrganizer({ ...newOrganizer, name: e.target.value })
+                    }
+                    className="text-sm"
+                    placeholder="John Doe"
+                  />
+                </div>
+                <div className="w-1/3">
+                  <Label className="text-xs">Position</Label>
+                  <CustomSelect
+                    value={newOrganizer.position}
+                    onValueChange={(e) =>
+                      setNewOrganizer({ ...newOrganizer, position: e })
+                    }
+                  >
+                    <SelectTrigger className="text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {organizerPositions.map((position) => (
+                        <SelectItem key={position.value} value={position.value}>
+                          {position.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </CustomSelect>
+                </div>
+                <Button
+                  type="button"
+                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  onClick={handleAddOrganizer}
+                >
+                  <Plus size={16} />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       <div className="flex justify-end my-2 mt-4">
         <Button
           type="submit"
           className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer tracking-wide"
         >
-          <Save /> Save Changes
+          <Save className="mr-2" /> Save Changes
         </Button>
       </div>
     </motion.form>

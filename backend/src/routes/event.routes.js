@@ -27,11 +27,11 @@ routes.get("/unavailable-date", getUnavailableDates);
 
 routes.get("/canceled/events", getCanceledEvents);
 
-routes.get("/events/counts", getEventsStatusCount);
+routes.get("/counts", getEventsStatusCount);
 
-routes.get("/events/recent", getRecentEvents);
+routes.get("/recent", getRecentEvents);
 
-routes.get("/event/last-month", getEventsFromLastMonth);
+routes.get("/last-month", getEventsFromLastMonth);
 
 routes.get("/:id", getEventById);
 

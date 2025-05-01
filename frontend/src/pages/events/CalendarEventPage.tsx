@@ -67,9 +67,9 @@ const CalendarEventPage = () => {
         color: isLimitReached ? "white" : "black",
         fontWeight: dateString === todayString ? "bold" : "normal",
         cursor: isLimitReached ? "not-allowed" : "pointer",
-        border: dateString === todayString ? "1px solid indigo" : undefined, // Fix: use undefined instead of false
+        border: dateString === todayString ? "1px solid #2563eb" : undefined, // Fix: use undefined instead of false
         borderLeft:
-          dateString !== todayString ? "1px solid #ddd" : "2px solid #1f2937", // Fix: use undefined instead of false
+          dateString !== todayString ? "1px solid #ddd" : "2px solid #1e3a8a", // Fix: use undefined instead of false
       },
     };
   };

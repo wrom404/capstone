@@ -4,7 +4,7 @@ import { type UnAvailableDateProps, type Event, type FormDataProps, type Cancele
 export const getAllEvents = async (): Promise<Event[] | []> => {
 
   try {
-    const response = await axios.get("http://localhost:4000/api");
+    const response = await axios.get("http://localhost:4000/api/event");
 
     if (!response.data.success || !Array.isArray(response.data.data)) {
       return [];
@@ -22,27 +22,27 @@ export const getAllEvents = async (): Promise<Event[] | []> => {
 };
 
 export const getEventById = async (id: string): Promise<Event[] | []> => {
+  console.log("API called with ID:", id);
   try {
-    const response = await axios.get(`http://localhost:4000/api/${id}`);
+    const response = await axios.get(`http://localhost:4000/api/event/${id}`);
+    console.log("Full API response:", response);
 
     if (!response.data.success) {
+      console.error("API reported failure:", response.data.error);
       return response.data.error;
     }
-    return response.data.data;
+    console.log("Parsed response data:", response.data.data);
+    const eventData = response.data.data;
+    return Array.isArray(eventData) ? eventData : [eventData];
   } catch (error) {
-    // handle different error case
-    if (axios.isAxiosError(error)) {
-      console.error("Axios Error:", error.message);
-    } else {
-      console.error("Unexpected Error:", error);
-    }
-    return [];
+    console.error("Unexpected Error:", error);
   }
+  return [];
 }
 
 export const getUnavailableDate = async (): Promise<UnAvailableDateProps | []> => {
   try {
-    const response = await axios.get('http://localhost:4000/api/unavailable-date');
+    const response = await axios.get('http://localhost:4000/api/event/unavailable-date');
 
     if (!response.data.success) {
       return response.data.error;
@@ -62,7 +62,7 @@ export const getUnavailableDate = async (): Promise<UnAvailableDateProps | []> =
 export const deleteEvent = async (id: number): Promise<Event | string> => {
 
   try {
-    const response = await axios.delete(`http://localhost:4000/api/${id}`);
+    const response = await axios.delete(`http://localhost:4000/api/event/${id}`);
 
     if (response.data.success) {
       return response.data.data;
@@ -81,7 +81,7 @@ export const deleteEvent = async (id: number): Promise<Event | string> => {
 
 export const createEvent = async (events: FormDataProps): Promise<Event | string> => {
   try {
-    const response = await axios.post('http://localhost:4000/api/create-event', events);
+    const response = await axios.post('http://localhost:4000/api/event/create-event', events);
 
     if (!response.data.success) {
       console.log("may error");
@@ -138,7 +138,7 @@ export const updateEvent = async ({ formEvent, id }: { formEvent: FormDataProps,
       endDate: formEvent.endDate || null
     }
     console.log("formattedEvent: ", formattedEvent)
-    const response = await axios.put(`http://localhost:4000/api/${id}`, formattedEvent)
+    const response = await axios.put(`http://localhost:4000/api/event/${id}`, formattedEvent)
 
     if (!response.data.success) {
       console.log(response.data?.message)
@@ -164,7 +164,7 @@ export const cancelEvent = async ({ cancelMessage, id }: { cancelMessage: string
     return null;
   }
   try {
-    const response = await axios.put(`http://localhost:4000/api/${id}/cancel`, { cancelMessage });
+    const response = await axios.put(`http://localhost:4000/api/event/${id}/cancel`, { cancelMessage });
     if (!response.data.success) {
       console.log(response.data?.message);
       throw new Error(response.data?.message)
@@ -178,7 +178,7 @@ export const cancelEvent = async ({ cancelMessage, id }: { cancelMessage: string
 
 export const getCanceledEvents = async (): Promise<CanceledEvent[] | []> => {
   try {
-    const response = await axios.get('http://localhost:4000/api/canceled/events');
+    const response = await axios.get('http://localhost:4000/api/event/canceled/events');
 
     if (!response.data.success || !Array.isArray(response.data.data)) {
       return []; // ✅ Always return an array
@@ -197,7 +197,7 @@ export const getCanceledEvents = async (): Promise<CanceledEvent[] | []> => {
 
 export const restoreCanceledEvent = async (id: string): Promise<{ success: boolean, message: string } | []> => {
   try {
-    const response = await axios.put(`http://localhost:4000/api/${id}/restore`);
+    const response = await axios.put(`http://localhost:4000/api/event/${id}/restore`);
 
     if (!response.data.success) {
       console.log(response.data.message)
@@ -217,7 +217,7 @@ export const restoreCanceledEvent = async (id: string): Promise<{ success: boole
 
 export const getEventsStatusCounts = async (): Promise<EventCountProps> => {
   try {
-    const response = await axios.get('http://localhost:4000/api/events/counts');
+    const response = await axios.get('http://localhost:4000/api/event/counts');
     if (!response.data.success) {
       console.log(response.data.error);
       return { upcoming: 0, completed: 0, scheduled: 0 }; // Return a valid default object
@@ -235,7 +235,7 @@ export const getEventsStatusCounts = async (): Promise<EventCountProps> => {
 
 export const getRecentEvents = async (): Promise<Event[] | []> => {
   try {
-    const response = await axios.get('http://localhost:4000/api/events/recent');
+    const response = await axios.get('http://localhost:4000/api/event/recent');
 
     if (!response.data.success) {
       console.log(response.data.error);

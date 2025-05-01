@@ -6,10 +6,10 @@ import {
   CalendarPlus2,
   LogOut,
   LayoutDashboard,
-  Users 
+  Users,
+  Church,
 } from "lucide-react";
 import { MdOutlineEventNote } from "react-icons/md";
-import { PiChurch } from "react-icons/pi";
 import { useLocation } from "react-router";
 import useUserStore from "@/store/useUserStore";
 
@@ -20,8 +20,8 @@ export const AppSidebar = () => {
   return (
     <Sidebar className="w-64 bg-white text-gray-800 h-screen p-4">
       <h2 className="text-lg font-bold px-2 text-gray-800 bg-white flex gap-2.5">
-        <div className=" border p-0.5 rounded-md bg-indigo-600">
-          <PiChurch className="w-6 h-6 text-white" />
+        <div className=" border p-0.5 rounded-md">
+          <Church className="w-6 h-6 text-indigo-600" />
         </div>
         <span className="text-xl font-bold text-gray-800">Parish Events</span>
       </h2>
@@ -95,7 +95,7 @@ export const AppSidebar = () => {
                   : "hover:bg-gray-50 text-gray-700"
               }  rounded-lg flex items-center gap-2`}
             >
-              <Users  size={20} />
+              <Users size={20} />
               <Link to={"/users"} className="font-semibold">
                 Users
               </Link>

@@ -20,6 +20,15 @@ export type Event = {
   end_date?: string | null;
   created_at?: string;
   canceled_at?: string | null;
+  chapel_name?: string; // Name of the chapel where the event will be held
+  sponsors?: { 
+    sponsor_name: string; 
+    sponsor_type: string; // "Principal" | "Secondary"
+  }[];
+  organizers?: {
+    name: string;
+    position: string; // "Parishioner" | "Staff" | "Volunteer" | "Committee Head" | "Others"
+  }[];
 
   // Required for React Big Calendar
   start?: Date;
@@ -83,6 +92,7 @@ export type FormProps = {
 }
 
 export type FormDataProps = {
+  id?: string | null;
   title: string;
   eventType: string;
   priestName?: string;
@@ -97,6 +107,16 @@ export type FormDataProps = {
   recurringDays?: string[]; // Array of days like ["Monday", "Tuesday"]
   hasEndDate?: boolean;
   endDate?: string | null; // You store the endDate as ISO 8601 formatted string or null
+  chapelName?: string; // Name of the chapel where the event will be held
+  status?: string | null;
+  sponsors: { 
+    sponsor_name: string; 
+    sponsor_type: string; // "Principal" | "Secondary"
+  }[];
+  organizers: {
+    name: string;
+    position: string; // "Parishioner" | "Staff" | "Volunteer" | "Committee Head" | "Others"
+  }[];
 
   start?: Date | null;
   end?: Date | null;

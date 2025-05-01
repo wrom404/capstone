@@ -20,9 +20,9 @@ app.use(cookieParser());
 
 app.use(logger);
 
-app.use("/auth", userRoutes);
+app.use("/api/auth", userRoutes);
 
-app.use("/api", eventRoutes);
+app.use("/api/event", eventRoutes);
 
 app.listen(PORT, () => {
   console.log("Server is running at port", PORT);

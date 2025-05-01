@@ -1,4 +1,4 @@
-import useFetchAllEvent from "@/hooks/events/useFetchEvent";
+import useFetchEvent from "@/hooks/events/useFetchEvent";
 import { useParams } from "react-router-dom";
 import {
   Calendar,
@@ -7,9 +7,13 @@ import {
   Users,
   ArrowLeft,
   Repeat,
+  Church,
+  Tags,
+  Handshake,
+  UserCog,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Event } from "@/types/types";
+import { type FormDataProps } from "@/types/types";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import CustomCancelModal from "@/components/CustomCancelModal";
@@ -18,13 +22,32 @@ import toast from "react-hot-toast";
 import useUserStore from "@/store/useUserStore";
 import { motion } from "framer-motion";
 
+const formatDateFromISO = (isoString: string) => {
+  if (!isoString) return "";
+  return isoString.split("T")[0];
+};
+
+const formatTimeFromISO = (isoString: string) => {
+  if (!isoString) return "";
+  try {
+    const date = new Date(isoString);
+    return `${String(date.getHours()).padStart(2, "0")}:${String(
+      date.getMinutes()
+    ).padStart(2, "0")}`;
+  } catch (error) {
+    console.error("Error formatting time:", error);
+    return "";
+  }
+};
+
 const EventDetailPage = () => {
   const { id } = useParams();
   const {
-    data: fetchedEvents,
+    data: fetchedEvent,
     isPending: isFetchingEvents,
     error: fetchedError,
-  } = useFetchAllEvent(id || "");
+  } = useFetchEvent(id || "");
+
   const {
     mutate: cancelEvent,
     isPending: isCancelingEvent,
@@ -32,32 +55,61 @@ const EventDetailPage = () => {
     isSuccess,
   } = useCancelEvent(id || "");
   const { userRole } = useUserStore();
-  const [events, setEvents] = useState<Event>({
+  const [events, setEvents] = useState<FormDataProps>({
     title: "",
     description: "",
     venue: "",
-    expected_attendance: "",
-    event_type: "",
-    priest_name: "",
-    client_number: "",
+    expectedAttendance: "",
+    eventType: "",
+    priestName: "",
+    clientNumber: "",
     date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
-    start_time: "", // "HH:MM:SS" format
-    end_time: "", // "HH:MM:SS" format
-    is_recurring: false,
-    recurring_days: [],
-    has_end_date: false,
-    end_date: "",
+    startTime: "", // "HH:MM:SS" format
+    endTime: "", // "HH:MM:SS" format
+    isRecurring: false,
+    recurringDays: [],
+    hasEndDate: false,
+    endDate: "",
+    status: "",
+    id: "",
+    chapelName: "", // New field for chapel name
+    sponsors: [], // New field for sponsors array
+    organizers: [], // New field for organizers array
   });
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [cancelMessage, setCancelMessage] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (fetchedEvents) {
-      setEvents(fetchedEvents[0]);
+    const eventData = fetchedEvent?.[0];
+    if (eventData) {
+      setEvents({
+        title: eventData.title || "",
+        description: eventData.description || "",
+        venue: eventData.venue || "",
+        expectedAttendance: eventData.expected_attendance || "",
+        eventType: eventData.event_type || "",
+        priestName: eventData.priest_name || "",
+        clientNumber: eventData.client_number || "",
+        date: formatDateFromISO(eventData.date || "") || "",
+        startTime: eventData.start_time
+          ? formatTimeFromISO(eventData.start_time)
+          : "",
+        endTime: eventData.end_time
+          ? formatTimeFromISO(eventData.end_time)
+          : "",
+        isRecurring: eventData.is_recurring || false,
+        recurringDays: eventData.recurring_days || [],
+        hasEndDate: eventData.has_end_date || false,
+        endDate: eventData.end_date || "",
+        chapelName: eventData.chapel_name || "",
+        status: eventData.status || "",
+        sponsors: eventData.sponsors || [],
+        organizers: eventData.organizers || [],
+      });
     }
-  }, [fetchedEvents]);
-
+  }, [fetchedEvent]);
+  console.log("events: ", events);
   useEffect(() => {
     if (isSuccess) {
       toast.success("Event canceled successfully.");
@@ -149,90 +201,191 @@ const EventDetailPage = () => {
           {/* Events Details */}
           <div className="p-6 space-y-6">
             {/* Date and Time Section */}
-            <div className="space-y-4">
-              <div className="flex items-center text-gray-700">
-                <Calendar className="w-6 h-6 mr-3 text-indigo-600" />
-                <div>
-                  <p className="font-medium">Date</p>
-                  <p>
-                    {events.date &&
-                      new Date(events.date).toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center text-gray-700">
-                <Clock className="w-6 h-6 mr-3 text-indigo-600" />
-                <div>
-                  <p className="font-medium">Time</p>
-                  <p>
-                    {events.start_time &&
-                      new Date(events.start_time).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}{" "}
-                    -{" "}
-                    {events.end_time &&
-                      new Date(events.end_time).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}
-                  </p>
-                </div>
-              </div>
-
-              {events.is_recurring && (
-                <div className="flex items-center text-gray-700">
-                  <Repeat className="w-6 h-6 mr-3 text-indigo-600" />
+            <div className="flex">
+              <div className="flex-1 space-y-6">
+                <div className="flex text-gray-700">
+                  <Calendar className="w-6 h-6 mr-3 text-indigo-600" />
                   <div>
-                    <p className="font-medium">Recurring Schedule</p>
-                    <p>Every {events.recurring_days?.join(" and ")}</p>
+                    <p className="font-medium text-gray-800 text-base">Date</p>
+                    <p>
+                      {events.date &&
+                        new Date(events.date).toLocaleDateString("en-US", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })} 
+                        <span className=""> - </span>
+                      {events.endDate &&
+                        new Date(events.endDate).toLocaleDateString("en-US", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                    </p>
                   </div>
                 </div>
-              )}
+
+                <div className="flex text-gray-700">
+                  <Clock className="w-6 h-6 mr-3 text-indigo-600" />
+                  <div>
+                    <p className="font-medium text-gray-800 text-base">Time</p>
+                    <p>
+                      {events.startTime &&
+                        events.date &&
+                        new Date(
+                          `${events.date}T${events.startTime}`
+                        ).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}{" "}
+                      -{" "}
+                      {events.endTime &&
+                        events.date &&
+                        new Date(
+                          `${events.date}T${events.endTime}`
+                        ).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                    </p>
+                  </div>
+                </div>
+
+                {events.isRecurring && (
+                  <div className="flex text-gray-700 max-w-lg">
+                    <Repeat className="w-6 h-6 mr-3 text-indigo-600" />
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        Recurring Schedule
+                      </p>
+                      <p>
+                        {events.recurringDays?.map((day, index) => (
+                          <span key={day}>
+                            {day}
+                            {events.recurringDays &&
+                              index < events.recurringDays.length - 1 && (
+                                <strong className="font-bold"> · </strong>
+                              )}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 space-y-6">
+                <div className="flex text-gray-700">
+                  <Tags className="w-6 h-6 mr-3 text-indigo-600" />
+                  <div>
+                    <p className="font-medium text-gray-800 text-base">
+                      Category
+                    </p>
+                    <p>{events.eventType}</p>
+                  </div>
+                </div>
+                {events.chapelName && (
+                  <div className="flex text-gray-700">
+                    <Church className="w-6 h-6 mr-3 text-indigo-600" />
+                    <div>
+                      <p className="font-medium text-gray-800 text-base">
+                        Chapel
+                      </p>
+                      <p>{events.chapelName}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Location and Attendance Section */}
-            <div className="space-y-4 pt-4 border-t border-gray-100">
-              <div className="flex items-center text-gray-700">
-                <MapPin className="w-6 h-6 mr-3 text-indigo-600" />
-                <div>
-                  <p className="font-medium">Venue</p>
-                  <p>{events.venue}</p>
+            <div className="flex pt-4 border-t border-gray-100">
+              <div className="flex-1 space-y-6">
+                <div className="flex text-gray-700">
+                  <MapPin className="w-6 h-6 mr-3 text-indigo-600" />
+                  <div>
+                    <p className="font-medium text-gray-800">Venue</p>
+                    <p>{events.venue}</p>
+                  </div>
+                </div>
+
+                <div className="flex text-gray-700">
+                  <Users className="w-6 h-6 mr-3 text-indigo-600" />
+                  <div>
+                    <p className="font-medium text-gray-800">
+                      Expected Attendance
+                    </p>
+                    <p>{events.expectedAttendance} people</p>
+                  </div>
                 </div>
               </div>
+              <div className="flex-1 space-y-6">
+                {events.sponsors.length > 0 && (
+                  <div className="flex pt-4 border-gray-100">
+                    <Handshake className="w-6 h-6 mr-3 text-indigo-600" />
+                    <div className="">
+                      <p className="font-medium text-gray-800 mb-1">
+                        Sponsors:
+                      </p>
+                      <ul className="list-disc list-inside text-gray-600">
+                        {events.sponsors.map((sponsor, index) => (
+                          <li key={index}>
+                            {sponsor.sponsor_name}{" "}
+                            <span className="text-sm text-gray-500">
+                              ({sponsor.sponsor_type})
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
 
-              <div className="flex items-center text-gray-700">
-                <Users className="w-6 h-6 mr-3 text-indigo-600" />
-                <div>
-                  <p className="font-medium">Expected Attendance</p>
-                  <p>{events.expected_attendance} people</p>
-                </div>
+                {events.organizers.length > 0 && (
+                  <div className="flex pt-4 border-gray-100">
+                    <UserCog className="w-6 h-6 mr-3 text-indigo-600" />
+                    <div className="">
+                      <p className="font-medium text-gray-800 mb-1">
+                        Organizers:
+                      </p>
+                      <ul className="list-disc list-inside text-gray-600">
+                        {events.organizers.map((organizer, index) => (
+                          <li key={index}>
+                            {organizer.name}{" "}
+                            <span className="text-sm text-gray-500">
+                              ({organizer.position})
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Additional Details Section */}
-            {events.priest_name && (
+            {events.priestName && (
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-gray-600">
-                  <span className="font-medium">Officiated by:</span>{" "}
-                  {events.priest_name}
+                  <span className="font-medium text-gray-800">
+                    Officiated by:
+                  </span>{" "}
+                  {events.priestName}
                 </p>
               </div>
             )}
 
-            {events.client_number && (
+            {events.clientNumber && (
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-gray-600">
-                  <span className="font-medium">Contact Number:</span>{" "}
-                  {events.client_number}
+                  <span className="font-medium text-gray-800">
+                    Contact Number:
+                  </span>{" "}
+                  {events.clientNumber}
                 </p>
               </div>
             )}
