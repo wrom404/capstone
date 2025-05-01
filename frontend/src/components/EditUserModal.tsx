@@ -54,7 +54,7 @@ const EditUserModal = ({
           <h2 className="text-xl font-semibold text-gray-900">Edit User</h2>
           <button
             onClick={() => setIsModalOpen(false)}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-500 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -62,7 +62,7 @@ const EditUserModal = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">
+            <label className="block text-sm font-medium text-gray-800 mb-2">
               First Name
             </label>
             <input
@@ -75,7 +75,7 @@ const EditUserModal = ({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">
+            <label className="block text-sm font-medium text-gray-800 mb-2">
               Last Name
             </label>
             <input
@@ -89,7 +89,7 @@ const EditUserModal = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">
+            <label className="block text-sm font-medium text-gray-800 mb-2">
               Email
             </label>
             <input
@@ -103,7 +103,7 @@ const EditUserModal = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">
+            <label className="block text-sm font-medium text-gray-800 mb-2">
               Role
             </label>
             <select

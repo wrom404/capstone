@@ -2,7 +2,7 @@ import {
   Trash2,
   Shield,
   User as UserIcon,
-  Pencil,
+  SquarePen ,
   TriangleAlert,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -178,7 +178,7 @@ const User = () => {
                         onClick={() => handleClickEdit(user.id || "")}
                         className="text-green-600 hover:text-green-900 transition-colors duration-200 cursor-pointer"
                       >
-                        <Pencil className="w-5 h-5" />
+                        <SquarePen  className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => handleClickDelete(user.id || "")}
