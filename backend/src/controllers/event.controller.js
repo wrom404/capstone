@@ -39,9 +39,10 @@ export async function createEvent(req, res) {
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
       <h2 style="color: #2c3e50;">📅 Parish Event Scheduled</h2>
-      <p>Hello Admin,</p>
+      <p>Hello,</p>
       <p>An event has been successfully scheduled in the parish system:</p>
       <ul>
+        <li><strong>Event:</strong> ${title}</li>
         <li><strong>Event Type:</strong> ${eventType}</li>
         <li><strong>Date:</strong> ${formattedDate}</li>
         <li><strong>Time:</strong> ${formattedStartTime} – ${formattedEndTime}</li>
@@ -84,6 +85,9 @@ export async function createEvent(req, res) {
       "SELECT * FROM events WHERE date = $1",
       [date]
     );
+
+    console.log("existingEvents: ", existingEvents.rows);
+    
     for (const row of existingEvents.rows) {
       const clientStart = new Date(`${date}T${startTime}`).getTime();
       const clientEnd = new Date(`${date}T${endTime}`).getTime();
@@ -93,6 +97,10 @@ export async function createEvent(req, res) {
       const serverEnd = new Date(
         `${row.date.toISOString().split("T")[0]}T${row.end_time}`
       ).getTime();
+      console.log("clientStart: ", clientStart);
+      console.log("clientEnd: ", clientEnd);
+      console.log("serverStart: ", serverStart);
+      console.log("serverEnd: ", serverEnd);
       if (clientStart <= serverEnd && clientEnd >= serverStart) {
         return res.status(400).json({
           success: false,

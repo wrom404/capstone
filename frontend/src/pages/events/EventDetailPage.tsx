@@ -21,10 +21,26 @@ import useCancelEvent from "@/hooks/events/useCancelEvent";
 import toast from "react-hot-toast";
 import useUserStore from "@/store/useUserStore";
 import { motion } from "framer-motion";
+import moment from "moment-timezone";
 
+/**
+ * Converts an ISO date string to a formatted date string (YYYY-MM-DD) in Asia/Manila timezone.
+ *
+ * Why it's needed:
+ * - Dates from the backend (especially in ISO format) are usually in UTC or have a timezone offset.
+ * - If we simply split the string (e.g. isoString.split("T")[0]), the browser might interpret the time in the user's local timezone,
+ *   which can lead to off-by-one-day errors (e.g. May 10 becoming May 9 in the UI).
+ *
+ * What it does:
+ * - Uses Moment.js with timezone support to interpret the date as Asia/Manila time (UTC+8).
+ * - Ensures that the correct local date is extracted regardless of the user's local timezone.
+ *
+ * @param isoString - An ISO 8601 formatted datetime string (e.g. "2025-05-10T00:00:00+08:00")
+ * @returns A string in "YYYY-MM-DD" format representing the correct date in Asia/Manila time.
+ */
 const formatDateFromISO = (isoString: string) => {
   if (!isoString) return "";
-  return isoString.split("T")[0];
+  return moment.tz(isoString, "Asia/Manila").format("YYYY-MM-DD");
 };
 
 const formatTimeFromISO = (isoString: string) => {
@@ -215,8 +231,8 @@ const EventDetailPage = () => {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
-                        })} 
-                        {events.hasEndDate && " - "}
+                        })}
+                      {events.hasEndDate && " - "}
                       {events.endDate &&
                         new Date(events.endDate).toLocaleDateString("en-US", {
                           weekday: "long",
@@ -383,9 +399,7 @@ const EventDetailPage = () => {
             {events.clientEmail && (
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-gray-600">
-                  <span className="font-medium text-gray-800">
-                    Email:
-                  </span>{" "}
+                  <span className="font-medium text-gray-800">Email:</span>{" "}
                   {events.clientEmail}
                 </p>
               </div>
@@ -396,9 +410,7 @@ const EventDetailPage = () => {
                   <Button
                     type="submit"
                     className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer"
-                    onClick={() =>
-                      handleClickEvent(Number(events.id) || 0)
-                    }
+                    onClick={() => handleClickEvent(Number(events.id) || 0)}
                   >
                     Edit Event
                   </Button>

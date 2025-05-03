@@ -141,7 +141,7 @@ const LoginPage = () => {
               {isPending ? (
                 <div className="w-6 h-6 border-4 border-gray-50 border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                "Login"
+                "Sign in"
               )}
             </button>
           </div>
