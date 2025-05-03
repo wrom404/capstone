@@ -84,7 +84,6 @@ export const createEvent = async (events: FormDataProps): Promise<Event | string
     const response = await axios.post('http://localhost:4000/api/event/create-event', events);
 
     if (!response.data.success) {
-      console.log("may error");
       throw new Error("Date is fully booked. Please choose another date.");
     }
     return response.data;

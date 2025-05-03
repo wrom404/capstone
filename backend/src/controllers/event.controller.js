@@ -3,6 +3,7 @@ import trimValue from "../utils/trim.js";
 import moment from "moment-timezone";
 import sendSms from "../utils/sendSms.js";
 import { sendEmailNotification } from "../utils/sendEmailNotification .js";
+import formatToManilaTime from "../utils/formatToManilaTime.js";
 
 // updated
 export async function createEvent(req, res) {
@@ -60,6 +61,7 @@ export async function createEvent(req, res) {
 
   try {
     // Capacity check
+    // Check if the date is already fully booked
     const countResult = await pool.query(
       "SELECT COUNT(id) FROM events WHERE date = $1",
       [date]
@@ -86,25 +88,29 @@ export async function createEvent(req, res) {
       [date]
     );
 
-    console.log("existingEvents: ", existingEvents.rows);
-    
+    const clientEnd = new Date(startTime);
+    const clientStart = new Date(endTime);
+
+    const clientStartTime = formatToManilaTime(clientStart); // Convert millisecond to Manila time format example: 2023-10-01T08:00:00.000Z to 08:00 AM
+    const clientEndTime = formatToManilaTime(clientEnd);
+
     for (const row of existingEvents.rows) {
-      const clientStart = new Date(`${date}T${startTime}`).getTime();
-      const clientEnd = new Date(`${date}T${endTime}`).getTime();
-      const serverStart = new Date(
-        `${row.date.toISOString().split("T")[0]}T${row.start_time}`
-      ).getTime();
-      const serverEnd = new Date(
-        `${row.date.toISOString().split("T")[0]}T${row.end_time}`
-      ).getTime();
-      console.log("clientStart: ", clientStart);
-      console.log("clientEnd: ", clientEnd);
-      console.log("serverStart: ", serverStart);
-      console.log("serverEnd: ", serverEnd);
-      if (clientStart <= serverEnd && clientEnd >= serverStart) {
+      const eventStartTime = new Date(row.start_time).getTime();
+      const eventEndTime = new Date(row.end_time).getTime();
+
+      const serverStart = new Date(eventStartTime);
+      const serverEnd = new Date(eventEndTime);
+
+      const convertedServerStartTime = formatToManilaTime(serverStart);
+      const convertedServerEndTime = formatToManilaTime(serverEnd);
+
+      if (
+        clientStartTime <= convertedServerEndTime &&
+        clientEndTime >= convertedServerStartTime
+      ) {
         return res.status(400).json({
           success: false,
-          message: "Time slot already occupied.",
+          message: "Time slot already occupied. Please choose another time.",
         });
       }
     }
