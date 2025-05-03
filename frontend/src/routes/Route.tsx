@@ -12,15 +12,17 @@ import PageNotFound from "@/pages/error/PageNotFound";
 import LogOut from "@/pages/auth/LogOut";
 import AdminPrivateRoute from "./AdminPrivateRoute";
 import ProtectedRoute from "./ProtectedRoute";
-import Signup from "@/pages/auth/Signup";
+// import Signup from "@/pages/auth/Signup";
 import User from "@/pages/user/User";
+import Register from "@/pages/auth/Signup";
 
 const RoutePage = () => {
   return (
     <Router>
       <Routes>
         {/* Public Route (Login Page - No Layout) */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/sign-in" element={<LoginPage />} />
+        <Route path="/sign-up" element={<Register />} />
 
         {/* Private Routes (Wrapped with Layout) */}
         <Route
@@ -50,14 +52,6 @@ const RoutePage = () => {
                     <ProtectedRoute>
                       <EventPage />
                     </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/create-user"
-                  element={
-                    <AdminPrivateRoute role="admin">
-                      <Signup />
-                    </AdminPrivateRoute>
                   }
                 />
                 <Route

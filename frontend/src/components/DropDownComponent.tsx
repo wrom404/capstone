@@ -11,7 +11,6 @@ import {
   ChevronUp,
   LogOut,
   UserRound,
-  UserRoundPlus,
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -43,15 +42,9 @@ export function DropdownMenuCheckboxes() {
         >
           <UserRound className="text-indigo-600" /> Profile
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-        // disabled
-        >
-          <UserRoundPlus className="text-indigo-600" />
-          <Link to={"/create-user"}>Create User</Link>
-        </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem>
           <LogOut className="text-indigo-600" />{" "}
-          <Link to={"/logout"}>Logout</Link>
+          <Link to={"/sign-in"}>Logout</Link>
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -58,7 +58,7 @@ const LoginPage = () => {
           </div>
         </div>
         <motion.form
-          className="form-glass w-full sm:max-w-md xl:max-w-lg p-8 bg-white rounded-2xl md:border md:border-gray-400 border-0"
+          className="form-glass w-full sm:max-w-md xl:max-w-lg p-8 bg-white rounded-2xl md:border md:border-gray-300 border-0"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -67,7 +67,7 @@ const LoginPage = () => {
           <h2 className="mb-2 text-2xl font-bold text-center text-gray-900">
             Welcome back
           </h2>
-          <h3 className="text-gray-800 text-center mb-4">
+          <h3 className="text-gray-600 text-center mb-4">
             Please enter your details to login.
           </h3>
 
@@ -86,7 +86,7 @@ const LoginPage = () => {
               onChange={(e) =>
                 setFormValue({ ...formValue, email: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
           </div>
           <div className="mb-4 relative">
@@ -99,7 +99,7 @@ const LoginPage = () => {
               onChange={(e) =>
                 setFormValue({ ...formValue, password: e.target.value })
               }
-              className="w-full px-3 py-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
             {isPasswordOpen ? (
               <Eye
@@ -133,7 +133,7 @@ const LoginPage = () => {
             </label>
           </div>
 
-          <div className="my-6 flex justify-end w-full">
+          <div className="mt-6 flex justify-end w-full">
             <button
               type="submit"
               className="w-full px-6 py-2 font-semibold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer rounded-lg focus:outline-none focus:ring focus:ring-blue-200 flex justify-center"
@@ -144,6 +144,14 @@ const LoginPage = () => {
                 "Sign in"
               )}
             </button>
+          </div>
+          <div className="mt-4 flex justify-start w-full">
+            <p className="text-sm">
+              Don't have an account?{" "}
+              <a href="/sign-up" className="text-indigo-600">
+                Sign up
+              </a>
+            </p>
           </div>
         </motion.form>
       </div>
