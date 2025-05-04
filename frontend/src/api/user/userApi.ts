@@ -134,7 +134,7 @@ export const updateUser = async ({ id, updatedUser }: { id: string, updatedUser:
   console.log("updatedUser: ", updatedUser)
 
   try {
-    const response = await axios.put(`http://localhost:4000/auth/api/${id}`, updatedUser);
+    const response = await axios.put(`http://localhost:4000/api/auth/${id}`, updatedUser);
 
     if (!response.data.success) {
       throw new Error(response.data.message)
@@ -159,11 +159,12 @@ export const getUserById = async (id: string): Promise<FetchedUserProps | null> 
   }
 
   try {
-    const response = await axios.get(`http://localhost:4000/auth/api/${id}`);
+    const response = await axios.get(`http://localhost:4000/api/auth/${id}`);
 
     if (!response.data.success) {
       throw new Error(response.data.message)
     }
+    console.log("response: ", response.data.user)
 
     return response.data.user;
   } catch (error) {

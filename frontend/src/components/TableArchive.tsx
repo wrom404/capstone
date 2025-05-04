@@ -11,6 +11,7 @@ import formatDate from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
 import { RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
+import { roles as adminRoles } from "@/constant/constant";
 
 function TableArchive({
   data,
@@ -42,7 +43,7 @@ function TableArchive({
             Canceled on
           </TableHead>
           <TableHead className="text-gray-800 font-semibold">Status</TableHead>
-          {userRole && userRole === "admin" && (
+          {userRole && adminRoles.includes(userRole) && (
             <TableHead className="text-gray-800 font-semibold">
               Actions
             </TableHead>
@@ -69,7 +70,7 @@ function TableArchive({
                 {formatDate(data?.canceled_at.toString() || "")}
               </TableCell>
               <TableCell>{data.status || ""}</TableCell>
-              {userRole && userRole === "admin" && (
+              {userRole && adminRoles.includes(userRole) && (
                 <TableCell>
                   <button
                     className="cursor-pointer text-indigo-800 bg-indigo-100 hover:text-indigo-900 py-1 px-2 rounded-md flex items-center gap-1"

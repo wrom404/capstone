@@ -44,7 +44,7 @@ export function DropdownMenuCheckboxes() {
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem>
           <LogOut className="text-indigo-600" />{" "}
-          <Link to={"/sign-in"}>Logout</Link>
+          <Link to={"/logout"}>Logout</Link>
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

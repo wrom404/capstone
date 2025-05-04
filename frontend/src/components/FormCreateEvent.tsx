@@ -256,7 +256,6 @@ const FormCreateEvent = () => {
   }
 
   if (countError) {
-    console.log("qwew");
     toast.error(countError);
     setCountError("");
   }
@@ -335,7 +334,6 @@ const FormCreateEvent = () => {
                 setFormEvent({ ...formEvent, chapelName: e.target.value })
               }
               className="shadow-none border border-gray-300 focus:ring-1 w-full"
-              placeholder="e.g. San Isidro Chapel"
             />
           </div>
 

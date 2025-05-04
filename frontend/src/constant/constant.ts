@@ -1,0 +1,1 @@
+export const roles: string[] = ["Head Administrator", "Administrator"]

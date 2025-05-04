@@ -6,20 +6,21 @@ import checkEmail from "../utils/testEmail.js";
 import jwt from "jsonwebtoken";
 
 export async function signupUser(req, res) {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, role } = req.body;
 
   console.log(firstName);
   console.log(lastName);
   console.log(email);
   console.log(password);
+  console.log(role);
 
-  if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !lastName || !email || !password || !role) {
     return res
       .status(401)
       .json({ success: false, message: "All fields are required" });
   }
 
-  const isEmailValid = checkEmail(email);
+  const isEmailValid = checkEmail(email); // testEmail(email) using regex
   if (!isEmailValid) {
     return res.status(401).json({ success: false, message: "Invalid email" });
   }
@@ -33,9 +34,15 @@ export async function signupUser(req, res) {
 
   try {
     const result = await pool.query(
-      "INSERT INTO users (first_name, last_name, email, password) VALUES($1, $2, $3, $4) RETURNING *",
-      [firstName, lastName, email, hashedPassword]
+      "INSERT INTO users (first_name, last_name, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING *",
+      [firstName, lastName, email, hashedPassword, role]
     );
+
+    if (result.rows.length === 0) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Failed to sign-up" });
+    }
 
     return res.status(201).json({
       success: true,

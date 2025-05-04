@@ -1,5 +1,12 @@
 import { motion } from "framer-motion";
 import { Calendar, Clock, Eye, EyeOff } from "lucide-react";
+import {
+  Select as CustomSelect,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/ui/select";
 import { useState, useEffect } from "react";
 import parishLogo from "../../assets/images/parish-logo.png";
 import useCreateUser from "../../hooks/user/useCreateUser";
@@ -15,6 +22,7 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "",
   });
   const [isPasswordOpen, setIsPasswordOpen] = useState<boolean>(false);
   const [isConfirmPasswordError, setIsConfirmPassword] = useState<string>("");
@@ -40,6 +48,7 @@ const Register = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        role: "",
       });
       toast.success("Sign up successfully, redirecting to sign in page...", {
         duration: 3000,
@@ -139,6 +148,37 @@ const Register = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary bg-transparent text-gray-900"
             />
           </div>
+          <div className="mb-4">
+            <label className="block mb-1 text-sm text-gray-900 font-semibold">
+              Position in the Church
+            </label>
+            <CustomSelect
+              value={formValue.role}
+              onValueChange={(value) =>
+                setFormValue({ ...formValue, role: value })
+              }
+            >
+              <SelectTrigger className="w-full border border-gray-300 shadow-none">
+                <SelectValue placeholder="Select your position" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Parish Office Personnel">
+                  Parish Office Personnel
+                </SelectItem>
+                <SelectItem value="Sacristan">Sacristan</SelectItem>
+                <SelectItem value="Choir Member">Choir Member</SelectItem>
+                <SelectItem value="Lay Minister">Lay Minister</SelectItem>
+                <SelectItem value="Lector">Lector</SelectItem>
+                <SelectItem value="Altar Server">Altar Server</SelectItem>
+                <SelectItem value="Catechist">Catechist</SelectItem>
+                <SelectItem value="Youth Ministry Member">
+                  Youth Ministry Member
+                </SelectItem>
+                <SelectItem value="Collector">Collector</SelectItem>
+              </SelectContent>
+            </CustomSelect>
+          </div>
+
           <div className="mb-4 relative">
             <label className="block mb-1 text-sm text-gray-900 font-semibold">
               Password

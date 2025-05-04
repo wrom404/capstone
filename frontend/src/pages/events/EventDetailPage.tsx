@@ -22,6 +22,7 @@ import toast from "react-hot-toast";
 import useUserStore from "@/store/useUserStore";
 import { motion } from "framer-motion";
 import moment from "moment-timezone";
+import { roles as adminRoles } from "@/constant/constant";
 
 /**
  * Converts an ISO date string to a formatted date string (YYYY-MM-DD) in Asia/Manila timezone.
@@ -405,7 +406,7 @@ const EventDetailPage = () => {
               </div>
             )}
             <div className="border-t pt-6 flex justify-end">
-              {userRole && userRole === "admin" && (
+              {userRole && adminRoles.includes(userRole) && (
                 <div className="">
                   <Button
                     type="submit"

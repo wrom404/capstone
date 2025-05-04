@@ -12,6 +12,7 @@ import {
 import { MdOutlineEventNote } from "react-icons/md";
 import { useLocation } from "react-router";
 import useUserStore from "@/store/useUserStore";
+import { roles as adminRoles } from "@/constant/constant";
 
 export const AppSidebar = () => {
   const { userRole } = useUserStore();
@@ -74,7 +75,7 @@ export const AppSidebar = () => {
             Archive
           </Link>
         </li>
-        {userRole && userRole === "admin" && (
+        {userRole && adminRoles.includes(userRole) && (
           <>
             <li
               className={`py-2 px-2 cursor-pointer ${
@@ -88,19 +89,21 @@ export const AppSidebar = () => {
                 Schedule
               </Link>
             </li>
-            <li
-              className={`py-2 px-2 cursor-pointer ${
-                location.pathname === "/users"
-                  ? "bg-indigo-50 text-indigo-600 rounded-lg"
-                  : "hover:bg-gray-50 text-gray-700"
-              }  rounded-lg flex items-center gap-2`}
-            >
-              <Users size={20} />
-              <Link to={"/users"} className="font-semibold">
-                Users
-              </Link>
-            </li>
           </>
+        )}
+        {userRole && ["Head Administrator"].includes(userRole) && (
+          <li
+            className={`py-2 px-2 cursor-pointer ${
+              location.pathname === "/users"
+                ? "bg-indigo-50 text-indigo-600 rounded-lg"
+                : "hover:bg-gray-50 text-gray-700"
+            }  rounded-lg flex items-center gap-2`}
+          >
+            <Users size={20} />
+            <Link to={"/users"} className="font-semibold">
+              Users
+            </Link>
+          </li>
         )}
         <li
           className={`py-2 px-2 cursor-pointer ${

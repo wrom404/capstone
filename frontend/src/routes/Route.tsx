@@ -12,9 +12,9 @@ import PageNotFound from "@/pages/error/PageNotFound";
 import LogOut from "@/pages/auth/LogOut";
 import AdminPrivateRoute from "./AdminPrivateRoute";
 import ProtectedRoute from "./ProtectedRoute";
-// import Signup from "@/pages/auth/Signup";
 import User from "@/pages/user/User";
-import Register from "@/pages/auth/Signup";
+import Signup from "@/pages/auth/SignUp";
+import { roles as adminRoles } from "@/constant/constant";
 
 const RoutePage = () => {
   return (
@@ -22,7 +22,7 @@ const RoutePage = () => {
       <Routes>
         {/* Public Route (Login Page - No Layout) */}
         <Route path="/sign-in" element={<LoginPage />} />
-        <Route path="/sign-up" element={<Register />} />
+        <Route path="/sign-up" element={<Signup />} />
 
         {/* Private Routes (Wrapped with Layout) */}
         <Route
@@ -74,7 +74,9 @@ const RoutePage = () => {
                 <Route
                   path="/schedule"
                   element={
-                    <AdminPrivateRoute role="admin">
+                    <AdminPrivateRoute
+                      roles={adminRoles}
+                    >
                       <ScheduleEventPage />
                     </AdminPrivateRoute>
                   }
@@ -82,7 +84,9 @@ const RoutePage = () => {
                 <Route
                   path="/users"
                   element={
-                    <AdminPrivateRoute role="admin">
+                    <AdminPrivateRoute
+                      roles={adminRoles}
+                    >
                       <User />
                     </AdminPrivateRoute>
                   }

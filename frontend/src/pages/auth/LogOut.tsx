@@ -14,7 +14,7 @@ const LogOut = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Logout successfully");
-      navigate("/login");
+      navigate("/sign-in");
     }
   }, [isSuccess, navigate]);
 

@@ -11,6 +11,7 @@ import formatDateTable from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
 import { Pencil, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { roles } from "@/constant/constant";
 
 const TableEvent = ({
   events,
@@ -38,7 +39,7 @@ const TableEvent = ({
           <TableHead className="text-gray-800 font-semibold">Date</TableHead>
           <TableHead className="text-gray-800 font-semibold">Time</TableHead>
           <TableHead className="text-gray-800 font-semibold">Status</TableHead>
-          {userRole && userRole === "admin" && (
+          {userRole && roles.includes(userRole) && (
             <TableHead className="text-gray-800 font-semibold">
               Actions
             </TableHead>
@@ -68,7 +69,7 @@ const TableEvent = ({
                 event.start_time || ""
               )} - ${formatTime(event.end_time || "")}`}</TableCell>
               <TableCell className="">{event.status}</TableCell>
-              {userRole && userRole === "admin" && (
+              {userRole && roles.includes(userRole) && (
                 <TableCell className="flex gap-4">
                   <button
                     className="cursor-pointer text-green-800 bg-green-100 hover:text-green-900 py-1 px-2 rounded-md flex items-center gap-0.5"

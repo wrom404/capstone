@@ -112,8 +112,20 @@ const EditUserModal = ({
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
+              <option value="Administrator">Administrator</option>
+              <option value="Parish Office Personnel">
+                Parish Office Personnel
+              </option>
+              <option value="Sacristan">Sacristan</option>
+              <option value="Choir Member">Choir Member</option>
+              <option value="Lay Minister">Lay Minister</option>
+              <option value="Lector">Lector</option>
+              <option value="Altar Server">Altar Server</option>
+              <option value="Catechist">Catechist</option>
+              <option value="Youth Ministry Member">
+                Youth Ministry Member
+              </option>
+              <option value="Collector">Collector</option>
             </select>
           </div>
 

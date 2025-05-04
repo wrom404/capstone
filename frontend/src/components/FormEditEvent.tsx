@@ -254,7 +254,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
   if (isFetchingEvent || isUpdatingEvent || isLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -295,7 +295,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, title: e.target.value })
               }
-              className="shadow-none border border-gray-400 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full"
             />
           </div>
 
@@ -307,7 +307,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 setFormEvent({ ...formEvent, eventType: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-400 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -338,7 +338,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, priestName: e.target.value })
                 }
-                className="shadow-none border border-gray-400 focus:ring-1 w-full"
+                className="shadow-none border border-gray-300 focus:ring-1 w-full"
               />
             </div>
           )}
@@ -351,7 +351,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, chapelName: e.target.value })
               }
-              className="shadow-none border border-gray-400 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full"
             />
           </div>
 
@@ -363,7 +363,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 setFormEvent({ ...formEvent, description: e.target.value })
               }
               id="message"
-              className="border-gray-400 w-full"
+              className="border-gray-300 w-full"
             />
           </div>
 
@@ -376,7 +376,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               }
               type="text"
               id="text"
-              className="shadow-none border border-gray-400 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full"
             />
           </div>
 
@@ -388,7 +388,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 setFormEvent({ ...formEvent, expectedAttendance: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-400 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -411,7 +411,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               }
               type="text"
               id="text"
-              className="shadow-none border border-gray-400 focus:ring-0 focus:outline-none w-full"
+              className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
             />
           </div>
         </div>
@@ -433,7 +433,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               minDate={new Date()}
               isClearable
               dateFormat="yyyy/MM/dd"
-              className="text-sm border border-gray-400 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
             />
           </div>
 
@@ -442,7 +442,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
             <div className="flex gap-4">
               <input
                 type="time"
-                className="border border-gray-400 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
                 onChange={(e) =>
                   setFormEvent((prev) => ({
                     ...prev,
@@ -455,7 +455,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               <span className="flex items-center">to</span>
               <input
                 type="time"
-                className="border border-gray-400 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
                 onChange={(e) =>
                   setFormEvent((prev) => ({
                     ...prev,
@@ -466,90 +466,6 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               />
             </div>
           </div>
-
-          <div className="flex items-center space-x-2 py-6">
-            <Checkbox
-              checked={formEvent.isRecurring}
-              onCheckedChange={handleOnCheckChange}
-              id="terms"
-              className="cursor-pointer shadow border-1 border-gray-400"
-            />
-            <label
-              htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-            >
-              Recurring Event?
-            </label>
-          </div>
-
-          {formEvent.isRecurring && (
-            <div className="">
-              <div className="grid w-full items-center gap-1.5 py-2.5">
-                <Label>Select Recurring Days</Label>
-                <Select
-                  isMulti
-                  placeholder=""
-                  className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
-                  options={dayOptions}
-                  value={dayOptions.filter(
-                    (option) =>
-                      formEvent.recurringDays &&
-                      formEvent.recurringDays.includes(option.value)
-                  )}
-                  onChange={(selectedOptions) =>
-                    setFormEvent({
-                      ...formEvent,
-                      recurringDays: selectedOptions.map(
-                        (option) => option.value
-                      ),
-                    })
-                  }
-                />
-              </div>
-              <div className="flex items-center space-x-2 py-6">
-                <Checkbox
-                  checked={formEvent.hasEndDate}
-                  onCheckedChange={(e: boolean) =>
-                    setFormEvent({ ...formEvent, hasEndDate: e })
-                  }
-                  id="terms"
-                  className="shadow cursor-pointer border-1 border-gray-400"
-                />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                >
-                  Has End Date?
-                </label>
-              </div>
-            </div>
-          )}
-
-          {formEvent.hasEndDate && (
-            <div className="grid w-full items-center gap-1.5 py-2.5">
-              <Label htmlFor="endDate">
-                End Date{" "}
-                <span className="text-xs text-gray-500">(YYY/MM/DD)</span>
-              </Label>
-              <DatePicker
-                id="endDate"
-                minDate={new Date()}
-                dateFormat="yyyy/MM/dd"
-                className="text-sm border border-gray-400 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
-                selected={
-                  formEvent.endDate ? new Date(formEvent.endDate) : null
-                }
-                onChange={(date: Date | null) =>
-                  setFormEvent({
-                    ...formEvent,
-                    endDate: date ? date.toISOString() : null,
-                  })
-                }
-                isClearable
-                autoComplete="off"
-              />
-            </div>
-          )}
 
           {/* Sponsors Section */}
           <div className="mt-6 mb-4">
@@ -701,6 +617,89 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               </div>
             </div>
           </div>
+          <div className="flex items-center space-x-2 py-6">
+            <Checkbox
+              checked={formEvent.isRecurring}
+              onCheckedChange={handleOnCheckChange}
+              id="terms"
+              className="cursor-pointer shadow border-1 border-gray-400"
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            >
+              Recurring Event?
+            </label>
+          </div>
+
+          {formEvent.isRecurring && (
+            <div className="">
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label>Select Recurring Days</Label>
+                <Select
+                  isMulti
+                  placeholder=""
+                  className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
+                  options={dayOptions}
+                  value={dayOptions.filter(
+                    (option) =>
+                      formEvent.recurringDays &&
+                      formEvent.recurringDays.includes(option.value)
+                  )}
+                  onChange={(selectedOptions) =>
+                    setFormEvent({
+                      ...formEvent,
+                      recurringDays: selectedOptions.map(
+                        (option) => option.value
+                      ),
+                    })
+                  }
+                />
+              </div>
+              <div className="flex items-center space-x-2 py-6">
+                <Checkbox
+                  checked={formEvent.hasEndDate}
+                  onCheckedChange={(e: boolean) =>
+                    setFormEvent({ ...formEvent, hasEndDate: e })
+                  }
+                  id="terms"
+                  className="shadow cursor-pointer border-1 border-gray-300"
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  Has End Date?
+                </label>
+              </div>
+            </div>
+          )}
+
+          {formEvent.hasEndDate && (
+            <div className="grid w-full items-center gap-1.5 py-2.5">
+              <Label htmlFor="endDate">
+                End Date{" "}
+                <span className="text-xs text-gray-500">(YYY/MM/DD)</span>
+              </Label>
+              <DatePicker
+                id="endDate"
+                minDate={new Date()}
+                dateFormat="yyyy/MM/dd"
+                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+                selected={
+                  formEvent.endDate ? new Date(formEvent.endDate) : null
+                }
+                onChange={(date: Date | null) =>
+                  setFormEvent({
+                    ...formEvent,
+                    endDate: date ? date.toISOString() : null,
+                  })
+                }
+                isClearable
+                autoComplete="off"
+              />
+            </div>
+          )}
         </div>
       </div>
 
