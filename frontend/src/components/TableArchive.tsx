@@ -69,15 +69,18 @@ function TableArchive({
               <TableCell>
                 {formatDate(data?.canceled_at.toString() || "")}
               </TableCell>
-              <TableCell>{data.status || ""}</TableCell>
+              <TableCell>
+                <span className="bg-red-50 text-red-600 py-1 px-2 rounded-md text-sm">
+                  {data.status || ""}
+                </span>
+              </TableCell>
               {userRole && adminRoles.includes(userRole) && (
                 <TableCell>
                   <button
-                    className="cursor-pointer text-indigo-800 bg-indigo-100 hover:text-indigo-900 py-1 px-2 rounded-md flex items-center gap-1"
+                    className="cursor-pointer text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 py-1 px-2 rounded-md flex items-center gap-1"
                     onClick={() => handleClickRestoreEvent(data.id.toString())}
                   >
                     <RotateCcw size={16} />
-                    Restore
                   </button>
                 </TableCell>
               )}

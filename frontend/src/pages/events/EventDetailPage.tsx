@@ -203,10 +203,10 @@ const EventDetailPage = () => {
               <span
                 className={`px-4 py-2 rounded-full text-sm font-medium ${
                   events.status === "upcoming"
-                    ? "bg-green-100 text-green-800"
+                    ? "bg-green-50 text-green-600"
                     : events.status === "completed"
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-indigo-200 text-indigo-800"
+                    ? "bg-yellow-50 text-yellow-600"
+                    : "bg-indigo-50 text-indigo-600"
                 }`}
               >
                 {events.status &&

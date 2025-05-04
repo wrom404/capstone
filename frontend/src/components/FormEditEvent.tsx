@@ -15,11 +15,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import React, { useEffect, useState } from "react";
 import useFetchEvent from "@/hooks/events/useFetchEvent";
 import Select from "react-select";
-// import formatTimeEditForm from "@/utils/formatTimeEditForm";
 import useUpdateEvent from "@/hooks/events/useUpdateEvent";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Save, Plus, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router";
 
 // Sponsor and Organizer interfaces
 interface Sponsor {
@@ -125,6 +125,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     name: "",
     position: "Staff",
   });
+  const navigate = useNavigate();
 
   // Log the complete query result
   console.log("Query result:", {
@@ -705,10 +706,17 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
 
       <div className="flex justify-end my-2 mt-4">
         <Button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="bg-transparent hover:bg-transparent bg:border-indigo-700 hover:text-indigo-700 text-indigo-600 border border-indigo-600 font-semibold cursor-pointer tracking-wide mr-2"
+        >
+          Back
+        </Button>
+        <Button
           type="submit"
           className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer tracking-wide"
         >
-          <Save className="mr-2" /> Save Changes
+          <Save className="" /> Save Changes
         </Button>
       </div>
     </motion.form>

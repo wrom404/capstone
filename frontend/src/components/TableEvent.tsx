@@ -9,7 +9,7 @@ import useUserStore from "@/store/useUserStore";
 import { type TableEventProps } from "@/types/types";
 import formatDateTable from "@/utils/formatDateTable";
 import formatTime from "@/utils/formatTime";
-import { Pencil, Trash2 } from "lucide-react";
+import { SquarePen, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { roles } from "@/constant/constant";
 
@@ -68,28 +68,42 @@ const TableEvent = ({
               <TableCell className="">{`${formatTime(
                 event.start_time || ""
               )} - ${formatTime(event.end_time || "")}`}</TableCell>
-              <TableCell className="">{event.status}</TableCell>
+
+              <TableCell className="">
+                <span
+                  className={`px-2 py-1 rounded-lg text-sm font-medium ${
+                    event.status === "upcoming"
+                      ? "bg-green-50 text-green-600"
+                      : event.status === "completed"
+                      ? "bg-yellow-50 text-yellow-600"
+                      : "bg-indigo-50 text-indigo-600"
+                  }`}
+                >
+                  {event.status &&
+                    event.status.charAt(0).toUpperCase() +
+                      event.status.slice(1)}
+                </span>
+              </TableCell>
+
               {userRole && roles.includes(userRole) && (
                 <TableCell className="flex gap-4">
                   <button
-                    className="cursor-pointer text-green-800 bg-green-100 hover:text-green-900 py-1 px-2 rounded-md flex items-center gap-0.5"
+                    className="cursor-pointer text-green-600 hover:text-green-700 hover:bg-green-100 py-1 rounded-md flex items-center gap-0.5"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleClickEdit(event.id || 0);
                     }}
                   >
-                    <Pencil className="inline" size={16} />{" "}
-                    <span className="text-sm">Edit</span>
+                    <SquarePen className="inline" size={18} />{" "}
                   </button>
                   <button
-                    className="cursor-pointer text-red-800 hover:text-red-900 bg-red-100 py-1 px-2 rounded-md flex items-center gap-0.5"
+                    className="cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 py-1 rounded-md flex items-center gap-0.5"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleClickDelete(event.id || 0);
                     }}
                   >
-                    <Trash2 className="inline" size={16} />
-                    <span className="text-sm">Delete</span>
+                    <Trash2 className="inline" size={18} />
                   </button>
                 </TableCell>
               )}
