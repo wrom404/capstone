@@ -21,8 +21,8 @@ export type Event = {
   created_at?: string;
   canceled_at?: string | null;
   chapel_name?: string; // Name of the chapel where the event will be held
-  sponsors?: { 
-    sponsor_name: string; 
+  sponsors?: {
+    sponsor_name: string;
     sponsor_type: string; // "Principal" | "Secondary"
   }[];
   organizers?: {
@@ -109,8 +109,8 @@ export type FormDataProps = {
   endDate?: string | null; // You store the endDate as ISO 8601 formatted string or null
   chapelName?: string; // Name of the chapel where the event will be held
   status?: string | null;
-  sponsors: { 
-    sponsor_name: string; 
+  sponsors: {
+    sponsor_name: string;
     sponsor_type: string; // "Principal" | "Secondary"
   }[];
   organizers: {
@@ -181,4 +181,18 @@ export interface FetchedUserProps {
   password: string;
   confirm_password?: string;
   role?: string
+}
+
+export type FetchUserProps = {
+  id?: string | undefined;
+  first_name?: string | null;
+  last_name?: string | null;
+  email?: string | null;
+  role?: string | null;
+  password?: string | null;
+  create_at?: string | null;
+}
+
+export type SelectedUserEmail = {
+  email: string;
 }

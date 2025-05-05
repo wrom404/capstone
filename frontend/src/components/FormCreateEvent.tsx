@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select";
+import { options, organizerPositions, sponsorTypes } from "@/constant/constant";
 import { Button } from "@/src/components/ui/button";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import DatePicker from "react-datepicker";
@@ -23,16 +24,24 @@ import { type Event } from "@/types/types";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { CalendarPlus2, Plus, Trash2 } from "lucide-react";
+import UserModal from "./UserModal";
+import useFetchUsers from "@/hooks/user/useFetchUsers";
+import { type FetchUserProps, type SelectedUserEmail } from "@/types/types";
 
 const FormCreateEvent = () => {
   const {
     mutate: createEvent,
-    isPending,
-    isError,
+    isPending: isCreatingEvent,
+    isError: isCreatingEventError,
     error,
     isSuccess,
     data,
   } = useCreateEvent();
+  const {
+    data: fetchedUsers,
+    isPending: isFetchingUsers,
+    isError: isFetchingUsersError,
+  } = useFetchUsers();
 
   const [formEvent, setFormEvent] = useState<FormDataProps>({
     title: "",
@@ -56,6 +65,11 @@ const FormCreateEvent = () => {
   const [timeError, setTimeError] = useState<string>("");
   const [textFieldError, setTextFieldError] = useState<string>("");
   const [countError, setCountError] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [users, setUsers] = useState<FetchUserProps[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<SelectedUserEmail[]>([]);
+
+  console.log("selectedUsers: ", selectedUsers);
 
   // New state for managing a new sponsor entry
   const [newSponsor, setNewSponsor] = useState({
@@ -68,35 +82,11 @@ const FormCreateEvent = () => {
     position: "Staff",
   });
 
-  const options = [
-    { value: "Monday", label: "Monday" },
-    { value: "Tuesday", label: "Tuesday" },
-    { value: "Wednesday", label: "Wednesday" },
-    { value: "Thursday", label: "Thursday" },
-    { value: "Friday", label: "Friday" },
-    { value: "Saturday", label: "Saturday" },
-    { value: "Sunday", label: "Sunday" },
-  ];
-
-  const sponsorTypes = [
-    { value: "Principal", label: "Principal" },
-    { value: "Secondary", label: "Secondary" },
-    // { value: "Honorary", label: "Honorary" },
-  ];
-
-  const organizerPositions = [
-    { value: "Parishioner", label: "Parishioner" },
-    { value: "Staff", label: "Staff" },
-    { value: "Volunteer", label: "Volunteer" },
-    { value: "Committee Head", label: "Committee Head" },
-    { value: "Others", label: "Others" },
-  ];
-
   useEffect(() => {
     if (isSuccess && data && (data as Event)?.success) {
       console.log(data);
       toast.success("Event scheduled successfully");
-    } else if (isError && error) {
+    } else if (isCreatingEventError && error) {
       if (axios.isAxiosError(error)) {
         console.log("error: ", error.response?.data?.message);
         const errorMessage =
@@ -108,7 +98,14 @@ const FormCreateEvent = () => {
         toast.error(error.message); // this will appear "Date is fully booked. Please choose another date." or "Time slot already occupied, please choose another time."
       }
     }
-  }, [isSuccess, data, error, isError]);
+  }, [isSuccess, data, error, isCreatingEventError]);
+
+  useEffect(() => {
+    if (fetchedUsers && fetchedUsers.length > 0) {
+      console.log("fetchedUsers: ", fetchedUsers);
+      setUsers(fetchedUsers);
+    }
+  }, [fetchedUsers]);
 
   const handleOnCheckChange = (e: boolean) => {
     if (!formEvent.hasEndDate) {
@@ -176,7 +173,6 @@ const FormCreateEvent = () => {
       !formEvent.startTime ||
       !formEvent.endTime
     ) {
-      console.log("Please input the field");
       setTextFieldError("Please fill out the field");
       return;
     }
@@ -211,10 +207,6 @@ const FormCreateEvent = () => {
       endTime: formattedEndTime,
     });
 
-    // console.log("form event: ", formEvent)
-    // console.log("start date: ", formattedStartTime)
-    // console.log("end event: ", formattedEndTime)
-
     setFormEvent({
       title: "",
       description: "",
@@ -236,7 +228,11 @@ const FormCreateEvent = () => {
     });
   };
 
-  if (isPending) {
+  const handleClickOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  if (isFetchingUsers || isCreatingEvent) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-white">
         <div className="w-10 h-10 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
@@ -258,6 +254,14 @@ const FormCreateEvent = () => {
   if (countError) {
     toast.error(countError);
     setCountError("");
+  }
+
+  if (isFetchingUsersError && isCreatingEventError) {
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-white">
+        <div className="w-10 h-10 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
@@ -383,17 +387,26 @@ const FormCreateEvent = () => {
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label>
-              Client Email <span className="text-gray-500">*</span>
+              Email <span className="text-gray-500">*</span>
             </Label>
-            <Input
-              value={formEvent.clientEmail || ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, clientEmail: e.target.value })
-              }
-              type="text"
-              id="text"
-              className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
-            />
+            <div className="flex  space-x-4">
+              <Input
+                value={formEvent.clientEmail || ""}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFormEvent({ ...formEvent, clientEmail: e.target.value })
+                }
+                type="text"
+                id="text"
+                className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
+              />
+              <button
+                className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer px-3 py-1 rounded-md text-white text-sm font-semibold"
+                type="button"
+                onClick={handleClickOpenModal}
+              >
+                Select
+              </button>
+            </div>
           </div>
         </div>
 
@@ -582,7 +595,7 @@ const FormCreateEvent = () => {
                 </div>
                 <Button
                   type="button"
-                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer font-semibold"
                   onClick={handleAddOrganizer}
                 >
                   <Plus size={16} />
@@ -596,7 +609,7 @@ const FormCreateEvent = () => {
               checked={formEvent.isRecurring}
               onCheckedChange={handleOnCheckChange}
               id="terms"
-              className="cursor-pointer shadow border-1 border-gray-300"
+              className="cursor-pointer shadow border-1 border-gray-400"
             />
             <label
               htmlFor="terms"
@@ -682,6 +695,15 @@ const FormCreateEvent = () => {
           <CalendarPlus2 /> Schedule Event
         </Button>
       </div>
+      {isModalOpen && (
+        <UserModal
+          setSelectedUsers={setSelectedUsers}
+          selectedUsers={selectedUsers}
+          users={users}
+          setIsModalOpen={setIsModalOpen}
+          isModalOpen={isModalOpen}
+        />
+      )}
     </motion.form>
   );
 };

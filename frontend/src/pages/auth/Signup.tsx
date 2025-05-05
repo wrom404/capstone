@@ -159,7 +159,7 @@ const Register = () => {
               }
             >
               <SelectTrigger className="w-full border border-gray-300 shadow-none">
-                <SelectValue placeholder="Select your position" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Parish Office Personnel">
