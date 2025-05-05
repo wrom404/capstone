@@ -400,7 +400,7 @@ const FormCreateEvent = () => {
                 className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
               />
               <button
-                className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer px-3 py-1 rounded-md text-white text-sm font-semibold"
+                className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-1 rounded-lg cursor-pointer"
                 type="button"
                 onClick={handleClickOpenModal}
               >
@@ -521,7 +521,7 @@ const FormCreateEvent = () => {
                 </div>
                 <Button
                   type="button"
-                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-2 rounded-lg"
                   onClick={handleAddSponsor}
                 >
                   <Plus size={16} />
@@ -595,7 +595,7 @@ const FormCreateEvent = () => {
                 </div>
                 <Button
                   type="button"
-                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer font-semibold"
+                  className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-2 rounded-lg"
                   onClick={handleAddOrganizer}
                 >
                   <Plus size={16} />
@@ -625,7 +625,7 @@ const FormCreateEvent = () => {
                 <Select
                   isMulti
                   placeholder=""
-                  className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
+                  className="text-gray-700 border-1 border-gray-50 rounded-sm shadow-none"
                   options={options}
                   value={options.filter((option) =>
                     formEvent.recurringDays
@@ -649,7 +649,7 @@ const FormCreateEvent = () => {
                     setFormEvent({ ...formEvent, hasEndDate: e })
                   }
                   id="terms"
-                  className="shadow cursor-pointer border-1 border-gray-300"
+                  className="shadow cursor-pointer border-1 border-gray-400"
                 />
                 <label
                   htmlFor="terms"
@@ -690,9 +690,9 @@ const FormCreateEvent = () => {
       <div className="flex justify-end my-2 mt-4">
         <Button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer tracking-wide px-6 py-3 rounded-lg text-white flex items-center gap-2"
+          className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide px-4 py-2 text-base rounded-lg text-white flex items-center gap-2"
         >
-          <CalendarPlus2 /> Schedule Event
+          <CalendarPlus2 size={16} /> Schedule Event
         </Button>
       </div>
       {isModalOpen && (

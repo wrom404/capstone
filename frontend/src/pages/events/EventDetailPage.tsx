@@ -410,14 +410,14 @@ const EventDetailPage = () => {
                 <div className="">
                   <Button
                     type="submit"
-                    className="bg-indigo-600 hover:bg-indigo-700 font-semibold cursor-pointer"
+                    className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-2 px-4 text-base"
                     onClick={() => handleClickEvent(Number(events.id) || 0)}
                   >
                     Edit Event
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-red-600 hover:bg-red-700 font-semibold cursor-pointer ml-2.5"
+                    className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-2 px-4 text-base"
                     onClick={() => setIsModalOpen(true)}
                   >
                     Cancel Event
