@@ -18,7 +18,7 @@ const CustomCancelModal = ({
     return;
   }
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-10">
       <div className="bg-white rounded-lg shadow-lg p-6 w-[28rem]">
         <div className="flex gap-2 mb-4">
           <TriangleAlert className="text-red-600" />
@@ -28,13 +28,13 @@ const CustomCancelModal = ({
           <Textarea className="mb-4" placeholder="Reasons..." value={cancelMessage} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleOnChange(e.target.value)} />
         <div className="flex justify-end gap-4">
           <button
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer"
+            className="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer"
             onClick={onCancel}
           >
-            Cancel
+            Back
           </button>
           <button
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-base cursor-pointer"
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-base cursor-pointer"
             onClick={onConfirm}
           >
             Cancel Event

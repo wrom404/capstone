@@ -11,6 +11,7 @@ import {
   Tags,
   Handshake,
   UserCog,
+  Mail as MailIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type FormDataProps } from "@/types/types";
@@ -79,7 +80,7 @@ const EventDetailPage = () => {
     expectedAttendance: "",
     eventType: "",
     priestName: "",
-    clientEmail: "",
+    clientEmail: [],
     date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
     startTime: "", // "HH:MM:SS" format
     endTime: "", // "HH:MM:SS" format
@@ -108,7 +109,7 @@ const EventDetailPage = () => {
         expectedAttendance: eventData.expected_attendance || "",
         eventType: eventData.event_type || "",
         priestName: eventData.priest_name || "",
-        clientEmail: eventData.client_email || "",
+        clientEmail: eventData.client_email || [],
         date: formatDateFromISO(eventData.date || "") || "",
         startTime: eventData.start_time
           ? formatTimeFromISO(eventData.start_time)
@@ -398,11 +399,22 @@ const EventDetailPage = () => {
             )}
 
             {events.clientEmail && (
-              <div className="pt-4 border-t border-gray-100">
-                <p className="text-gray-600">
-                  <span className="font-medium text-gray-800">Email:</span>{" "}
-                  {events.clientEmail}
-                </p>
+              <div className="pt-4 border-t border-gray-100 flex">
+                <div className="">
+                  <MailIcon className="w-6 h-6 mr-3 text-indigo-600" />
+                </div>
+                <div className="">
+                  <p className="text-gray-600">
+                    <span className="font-medium text-gray-800">Email</span>{" "}
+                    {events.clientEmail &&
+                      events.clientEmail.length > 0 &&
+                      events.clientEmail.map((email, index) => (
+                        <span key={index} className="mr-2 block">
+                          {email}
+                        </span>
+                      ))}
+                  </p>
+                </div>
               </div>
             )}
             <div className="border-t pt-6 flex justify-end">
@@ -410,14 +422,14 @@ const EventDetailPage = () => {
                 <div className="">
                   <Button
                     type="submit"
-                    className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-2 px-4 text-base"
+                    className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-5 px-4 text-base"
                     onClick={() => handleClickEvent(Number(events.id) || 0)}
                   >
                     Edit Event
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-2 px-4 text-base"
+                    className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-5 px-4 text-base"
                     onClick={() => setIsModalOpen(true)}
                   >
                     Cancel Event

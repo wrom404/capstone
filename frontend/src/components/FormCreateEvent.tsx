@@ -70,8 +70,6 @@ const FormCreateEvent = () => {
   const [users, setUsers] = useState<FetchUserProps[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<SelectedUserEmail[]>([]);
 
-  console.log("selectedUsers: ", selectedUsers);
-
   // New state for managing a new sponsor entry
   const [newSponsor, setNewSponsor] = useState({
     sponsor_name: "",
@@ -82,6 +80,17 @@ const FormCreateEvent = () => {
     name: "",
     position: "Staff",
   });
+
+  // Effect to set the clientEmail field based on selected users
+  useEffect(() => {
+    if (selectedUsers.length > 0) {
+      const emails = selectedUsers.map((user) => user.email);
+      setFormEvent((prevFormEvent) => ({
+        ...prevFormEvent,
+        clientEmail: emails,
+      }));
+    }
+  }, [selectedUsers]);
 
   useEffect(() => {
     if (isSuccess && data && (data as Event)?.success) {
@@ -397,6 +406,7 @@ const FormCreateEvent = () => {
                 }
                 type="text"
                 id="text"
+                placeholder="Email"
                 className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
               />
               <button

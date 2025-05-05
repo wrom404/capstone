@@ -28,15 +28,11 @@ export async function createEvent(req, res) {
     organizers = [], // [{ name, position }]
   } = req.body;
 
-  const timeZone = "Asia/Manila"; // or your local timezone
-
-  const formattedDate = moment.tz(date, timeZone).format("MMMM D, YYYY");
-  const formattedStartTime = moment
-    .tz(`${date} ${startTime}`, "YYYY-MM-DD HH:mm", timeZone)
-    .format("h:mm A");
-  const formattedEndTime = moment
-    .tz(`${date} ${endTime}`, "YYYY-MM-DD HH:mm", timeZone)
-    .format("h:mm A");
+  const formattedStartTime = moment(startTime)
+    .tz("Asia/Manila")
+    .format("hh:mm A");
+  const formattedEndTime = moment(endTime).tz("Asia/Manila").format("hh:mm A");
+  const formattedDate = moment(date).tz("Asia/Manila").format("MMMM D, YYYY");
 
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
@@ -53,6 +49,9 @@ export async function createEvent(req, res) {
       <p style="color: #888; font-size: 0.9em;">This is an automated email. Please do not reply.</p>
     </div>
   `;
+
+  console.log("formattedStartTime: ", formattedStartTime);
+  console.log("formattedEndTime: ", formattedEndTime);
 
   if (!title || !startTime || !endTime || !eventType || !date || !venue) {
     return res
