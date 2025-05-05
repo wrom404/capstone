@@ -9,7 +9,7 @@ export type Event = {
   event_type?: string | null;
   expected_attendance?: string | null;
   priest_name?: string | null;
-  client_email?: string | null;
+  client_email?: string[] | null;
   date?: string | null; // ISO string (e.g., "2025-04-04T16:00:00.000Z")
   start_time?: string; // "HH:MM:SS" format
   end_time?: string; // "HH:MM:SS" format
@@ -21,6 +21,8 @@ export type Event = {
   created_at?: string;
   canceled_at?: string | null;
   chapel_name?: string; // Name of the chapel where the event will be held
+  send_reminder?: boolean | null;
+  reminder_sent?: boolean | null; // "HH:MM:SS" format
   sponsors?: {
     sponsor_name: string;
     sponsor_type: string; // "Principal" | "Secondary"
@@ -42,7 +44,7 @@ export type CalendarEvent = {
   venue: string;
   event_type: string;
   priest_name: string | null;
-  client_email: string | null;
+  client_email: string[] | null;
   date: string;
   start_time: string;
   end_time: string;
@@ -99,7 +101,7 @@ export type FormDataProps = {
   description: string;
   venue: string;
   expectedAttendance: string;
-  clientEmail?: string;
+  clientEmail?: string[];
   date: string | null; // You will store the date as a string (ISO 8601 formatted)
   startTime: string | null; // You store the time in HH:mm format as a string
   endTime: string | null; // You store the time in HH:mm format as a string
@@ -109,6 +111,8 @@ export type FormDataProps = {
   endDate?: string | null; // You store the endDate as ISO 8601 formatted string or null
   chapelName?: string; // Name of the chapel where the event will be held
   status?: string | null;
+  reminderSent?: boolean;
+  sendReminder?: boolean;
   sponsors: {
     sponsor_name: string;
     sponsor_type: string; // "Principal" | "Secondary"
@@ -144,7 +148,7 @@ export interface CanceledEvent {
   priest_name: null;
   description: string;
   venue: string;
-  client_email: null;
+  client_email: string[] | null;
   date: Date;
   start_time: Date;
   end_time: Date;
@@ -152,6 +156,10 @@ export interface CanceledEvent {
   is_recurring: boolean;
   recurring_days: [];
   has_end_date: boolean;
+  chapel_name?: string;
+  expected_attendance?: string;
+  send_reminder?: boolean;
+  reminder_sent?: boolean;
   end_date: null;
   canceled_at: Date;
   reason: string;

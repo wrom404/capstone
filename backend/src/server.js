@@ -6,7 +6,8 @@ import eventRoutes from "./routes/event.routes.js";
 import logger from "./middleware/logger.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import "./utils/updateEventStatus.js";
+import "./jobs/updateEventStatus.js";
+import "./jobs/sendReminderEmails.js";
 
 dotenv.config();
 const app = express();

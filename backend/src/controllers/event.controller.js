@@ -2,7 +2,7 @@ import pool from "../config/db.js";
 import trimValue from "../utils/trim.js";
 import moment from "moment-timezone";
 import sendSms from "../utils/sendSms.js";
-import { sendEmailNotification } from "../utils/sendEmailNotification .js";
+import { sendEmailNotification } from "../utils/sendEmailNotification.js";
 import formatToManilaTime from "../utils/formatToManilaTime.js";
 
 // updated
@@ -23,6 +23,7 @@ export async function createEvent(req, res) {
     hasEndDate,
     endDate,
     chapelName,
+    sendReminder,
     sponsors = [], // [{ sponsor_name, sponsor_type }]
     organizers = [], // [{ name, position }]
   } = req.body;
@@ -73,6 +74,8 @@ export async function createEvent(req, res) {
       });
     }
 
+    console.log("clientEmail: ", clientEmail);
+
     if (clientEmail) {
       // send email notification
       await sendEmailNotification(
@@ -119,8 +122,8 @@ export async function createEvent(req, res) {
     const eventInsert = await pool.query(
       `INSERT INTO events 
         (title, event_type, priest_name, description, venue, expected_attendance, client_email, 
-         date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, chapel_name)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+         date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, chapel_name, send_reminder)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
        RETURNING id`,
       [
         title,
@@ -138,6 +141,7 @@ export async function createEvent(req, res) {
         hasEndDate,
         endDate,
         chapelName,
+        sendReminder,
       ]
     );
 

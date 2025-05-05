@@ -40,7 +40,7 @@ interface FormDataProps {
   expectedAttendance: string;
   eventType: string;
   priestName: string;
-  clientEmail: string;
+  clientEmail: string[];
   date: string;
   startTime: string;
   endTime: string;
@@ -104,7 +104,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     expectedAttendance: "",
     eventType: "",
     priestName: "",
-    clientEmail: "",
+    clientEmail: [],
     date: "",
     startTime: "",
     endTime: "",
@@ -168,7 +168,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         expectedAttendance: eventData.expected_attendance || "",
         eventType: eventData.event_type || "",
         priestName: eventData.priest_name || "",
-        clientEmail: eventData.client_email || "",
+        clientEmail: eventData.client_email || [],
         date: formatDateFromISO(eventData.date || "") || "",
         startTime: eventData.start_time
           ? formatTimeFromISO(eventData.start_time)
@@ -408,7 +408,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
             <Input
               value={formEvent.clientEmail || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, clientEmail: e.target.value })
+                setFormEvent({ ...formEvent, clientEmail: [e.target.value] })
               }
               type="text"
               id="text"

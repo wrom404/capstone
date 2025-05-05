@@ -50,7 +50,7 @@ const FormCreateEvent = () => {
     expectedAttendance: "",
     eventType: "",
     priestName: "",
-    clientEmail: "",
+    clientEmail: [],
     date: "", // ISO string (e.g., "2025-04-04T16:00:00.000Z")
     startTime: "", // "HH:MM:SS" format
     endTime: "", // "HH:MM:SS" format
@@ -58,6 +58,7 @@ const FormCreateEvent = () => {
     recurringDays: [],
     hasEndDate: false,
     endDate: "",
+    sendReminder: false,
     chapelName: "", // New field for chapel name
     sponsors: [], // New field for sponsors array
     organizers: [], // New field for organizers array
@@ -167,7 +168,6 @@ const FormCreateEvent = () => {
     if (
       !formEvent.title ||
       !formEvent.eventType ||
-      !formEvent.description ||
       !formEvent.venue ||
       !formEvent.date ||
       !formEvent.startTime ||
@@ -214,7 +214,7 @@ const FormCreateEvent = () => {
       expectedAttendance: "",
       eventType: "",
       priestName: "",
-      clientEmail: "",
+      clientEmail: [],
       date: "",
       startTime: "",
       endTime: "",
@@ -393,7 +393,7 @@ const FormCreateEvent = () => {
               <Input
                 value={formEvent.clientEmail || ""}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormEvent({ ...formEvent, clientEmail: e.target.value })
+                  setFormEvent({ ...formEvent, clientEmail: [e.target.value] })
                 }
                 type="text"
                 id="text"
@@ -407,6 +407,23 @@ const FormCreateEvent = () => {
                 Select
               </button>
             </div>
+          </div>
+
+          <div className="flex items-center space-x-2 pt-4 pb-3">
+            <Checkbox
+              checked={formEvent.sendReminder}
+              onCheckedChange={(e) =>
+                setFormEvent({ ...formEvent, sendReminder: !!e })
+              }
+              id="sendReminder"
+              className="cursor-pointer shadow border-1 border-gray-400"
+            />
+            <label
+              htmlFor="sendReminder"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            >
+              Send reminder?
+            </label>
           </div>
         </div>
 

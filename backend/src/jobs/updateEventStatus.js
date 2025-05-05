@@ -36,7 +36,6 @@ const updateEventStatus = async () => {
     `;
     const completedResult = await pool.query(completedQuery, [now]);
     console.log(`Updated ${completedResult.rowCount} events to "completed".`);
-
   } catch (error) {
     console.error("Error updating event statuses:", error);
   }
@@ -46,7 +45,6 @@ const updateEventStatus = async () => {
 cron.schedule("* * * * *", updateEventStatus);
 
 console.log("Scheduled event status update job is running every minute.");
-
 
 // Non-recurring events: Updates to "completed" if end_time has passed.
 // Recurring events without an end date: Remains "scheduled", even if the current date has passed.

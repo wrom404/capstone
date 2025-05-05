@@ -80,6 +80,7 @@ export const deleteEvent = async (id: number): Promise<Event | string> => {
 }
 
 export const createEvent = async (events: FormDataProps): Promise<Event | string> => {
+  console.log("events: ", events)
   try {
     const response = await axios.post('http://localhost:4000/api/event/create-event', events);
 
