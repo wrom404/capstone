@@ -51,7 +51,7 @@ const Page = () => {
   console.log("Props passed to LineChartComponent:", eventLastMonth);
 
   return (
-    <div className="h-full pb-6">
+    <div className="h-full pb-12">
       <div className="mb-6">
         <h2 className="text-gray-800 font-bold text-2xl">Dashboard</h2>
         <p className="text-sm text-gray-700">
@@ -61,12 +61,12 @@ const Page = () => {
 
       <EventCard statusCount={statusCount} />
 
-      <div className="flex flex-wrap gap-6 mt-6">
+      <div className="flex flex-wrap gap-6 mt-6 max-h-96 h-full">
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="w-full sm:w-[48%] border rounded-xl shadow-xs flex flex-col"
+          className="w-full sm:w-[48%] flex flex-col"
         >
           <LineChartComponent fetchedEvents={recentEvent ?? []} />
         </motion.div>
@@ -75,17 +75,8 @@ const Page = () => {
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="w-full sm:w-[50%] border rounded-xl shadow-xs flex flex-col"
+          className="w-full sm:w-[50%] flex flex-col"
         >
-          <div className="p-6">
-            <h2 className="text-gray-800 font-semibold text-base">
-              Event Type Distribution
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Displays the number of events for each event type in the previous
-              month.
-            </p>
-          </div>
           <BarChartComponent fetchedEvents={eventLastMonth ?? []} />
         </motion.div>
       </div>

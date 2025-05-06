@@ -35,8 +35,6 @@ const chartConfig = {
 function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
   const [timeRange, setTimeRange] = useState("90d");
 
-  console.log("Fetched events:", fetchedEvents);
-
   const aggregatedData = fetchedEvents.reduce((acc, event) => {
     const dateKey = new Date(event.date ?? "").toISOString().split("T")[0];
     if (!acc[dateKey]) {
@@ -50,8 +48,6 @@ function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
   const dailyEventCounts = Object.values(aggregatedData).sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
-
-  console.log("Daily event counts:", dailyEventCounts);
 
   const filteredData = dailyEventCounts.filter((item) => {
     const date = new Date(item.date);
@@ -68,7 +64,7 @@ function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
   });
 
   return (
-    <Card className="border-none">
+    <Card className="border border-gray-200 shadow-xs">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row border-none">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Event Count Over Time</CardTitle>
@@ -97,7 +93,7 @@ function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      <CardContent className="px-2 sm:px-6">
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"

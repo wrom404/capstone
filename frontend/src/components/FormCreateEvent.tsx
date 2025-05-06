@@ -244,7 +244,7 @@ const FormCreateEvent = () => {
   if (isFetchingUsers || isCreatingEvent) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-white">
-        <div className="w-10 h-10 border-4 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -268,7 +268,7 @@ const FormCreateEvent = () => {
   if (isFetchingUsersError && isCreatingEventError) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-white">
-        <div className="w-10 h-10 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
