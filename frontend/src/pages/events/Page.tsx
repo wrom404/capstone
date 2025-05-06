@@ -68,28 +68,20 @@ const Page = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="w-full sm:w-[48%] border rounded-xl shadow-xs flex flex-col"
         >
-          <div className="p-6">
-            <h2 className="text-gray-800 font-semibold text-base">
-              Monthly Event Activity
-            </h2>
-            <p className="text-gray-600 text-sm mt-1">
-              Shows the number of events on specific dates this month.
-            </p>
-          </div>
-          <LineChartComponent fetchedEvents={eventLastMonth ?? []} />
+          <LineChartComponent fetchedEvents={recentEvent ?? []} />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="w-full sm:w-[48%] border rounded-xl shadow-xs flex flex-col"
+          className="w-full sm:w-[50%] border rounded-xl shadow-xs flex flex-col"
         >
           <div className="p-6">
             <h2 className="text-gray-800 font-semibold text-base">
               Event Type Distribution
             </h2>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-gray-500 text-sm mt-1">
               Displays the number of events for each event type in the previous
               month.
             </p>

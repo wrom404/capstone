@@ -1,8 +1,7 @@
 import pool from "../config/db.js";
 import trimValue from "../utils/trim.js";
 import moment from "moment-timezone";
-import sendSms from "../utils/sendSms.js";
-import { sendEmailNotification } from "../utils/sendEmailNotification.js";
+import { sendEmailNotification } from "../services/sendEmailNotification.js";
 import formatToManilaTime from "../utils/formatToManilaTime.js";
 
 // updated
@@ -713,7 +712,7 @@ export async function getEventsStatusCount(req, res) {
 export async function getRecentEvents(req, res) {
   try {
     const { rows } = await pool.query(
-      "SELECT * FROM events WHERE date BETWEEN NOW() - INTERVAL '3 months' AND NOW()"
+      "SELECT * FROM events WHERE date BETWEEN NOW() - INTERVAL '3 months' AND NOW()" // Get events within the last 3 months
     );
 
     return res.status(200).json({ success: true, data: rows });

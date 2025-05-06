@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 import cron from "node-cron";
-import { sendEmailNotification } from "../utils/sendEmailNotification.js"; // Adjust the import path as necessary
+import { sendEmailNotification } from "../services/sendEmailNotification.js"; // Adjust the import path as necessary
 import moment from "moment-timezone";
 
 const sendReminderEmails = async () => {

@@ -1,5 +1,5 @@
 function trimValue(stringValue) {
-  return stringValue.trim();
+  return stringValue?.trim();
 }
 
 export default trimValue;

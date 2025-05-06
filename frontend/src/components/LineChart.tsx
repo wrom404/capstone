@@ -1,89 +1,164 @@
-import { useMemo } from "react";
-import moment from "moment";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Event } from "@/types/types";
+
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { type Event } from "@/types/types";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/src/components/ui/chart";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/ui/select";
+import { useState } from "react";
 
-const CustomTooltip = ({
-  active = false,
-  payload = [],
-}: {
-  active?: boolean;
-  payload?: { value: number }[];
-}) => {
-  if (active && payload?.length) {
-    return (
-      <div className="bg-white p-2 border rounded shadow">
-        <p className="text-gray-700 text-sm">
-          {`Events: `}
-          <span className="font-semibold">{payload[0]?.value ?? 0}</span>
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
+const chartConfig = {
+  eventCount: {
+    label: "Event Count",
+    color: "",
+  },
+} satisfies ChartConfig;
 
-const LineChartComponent = ({ fetchedEvents }: { fetchedEvents: Event[] }) => {
-  const transformedData = useMemo(() => {
-    if (!fetchedEvents || !Array.isArray(fetchedEvents)) return [];
+function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
+  const [timeRange, setTimeRange] = useState("90d");
 
-    const eventCounts: Record<number, number> = {};
-    fetchedEvents.forEach((event) => {
-      if (!event.date) return; // Ensure date is valid
+  console.log("Fetched events:", fetchedEvents);
 
-      const day = moment(event.date).date();
-      eventCounts[day] = (eventCounts[day] || 0) + 1;
-    });
+  const aggregatedData = fetchedEvents.reduce((acc, event) => {
+    const dateKey = new Date(event.date ?? "").toISOString().split("T")[0];
+    if (!acc[dateKey]) {
+      acc[dateKey] = { date: dateKey, eventCount: 1 };
+    } else {
+      acc[dateKey].eventCount += 1;
+    }
+    return acc;
+  }, {} as Record<string, { date: string; eventCount: number }>);
 
-    return Object.keys(eventCounts).map((day) => ({
-      date: Number(day),
-      events: eventCounts[Number(day)],
-    }));
-  }, [fetchedEvents]);
-
-  console.log(
-    "Final transformedData for Recharts:",
-    JSON.stringify(transformedData, null, 2)
+  const dailyEventCounts = Object.values(aggregatedData).sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
-  const currentMonth = moment().format("MMM");
+  console.log("Daily event counts:", dailyEventCounts);
+
+  const filteredData = dailyEventCounts.filter((item) => {
+    const date = new Date(item.date);
+    const referenceDate = new Date();
+    let daysToSubtract = 90;
+    if (timeRange === "30d") {
+      daysToSubtract = 30;
+    } else if (timeRange === "7d") {
+      daysToSubtract = 7;
+    }
+    const startDate = new Date(referenceDate);
+    startDate.setDate(startDate.getDate() - daysToSubtract);
+    return date >= startDate;
+  });
 
   return (
-    <ResponsiveContainer
-      width="100%"
-      height={300}
-      className="!w-full !h-[300px]" // force full width & height on mobile
-    >
-      <LineChart
-        data={transformedData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="date"
-          tickFormatter={(day) =>
-            day % 2 === 0 ? `${day} ${currentMonth}` : ""
-          }
-        />
-        <YAxis domain={[0, 10]} ticks={[2, 4, 6, 8, 10]} />
-        <Tooltip content={<CustomTooltip />} />
-        <Line
-          type="monotone"
-          dataKey="events"
-          stroke="oklch(0.511 0.262 276.966)"
-          dot={{ r: 5 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <Card className="border-none">
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row border-none">
+        <div className="grid flex-1 gap-1 text-center sm:text-left">
+          <CardTitle>Event Count Over Time</CardTitle>
+          <CardDescription>
+            Showing the number of events over the selected time period. Date
+          </CardDescription>
+        </div>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger
+            className="w-[160px] rounded-lg sm:ml-auto"
+            aria-label="Select a value"
+          >
+            <SelectValue />
+          </SelectTrigger>
+
+          <SelectContent className="rounded-xl">
+            <SelectItem value="90d" className="rounded-lg">
+              Last 3 months
+            </SelectItem>
+            <SelectItem value="30d" className="rounded-lg">
+              Last 30 days
+            </SelectItem>
+            <SelectItem value="7d" className="rounded-lg">
+              Last 7 days
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </CardHeader>
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
+        >
+          <AreaChart data={filteredData}>
+            <defs>
+              <linearGradient id="fillEventCount" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="oklch(51.1% 0.262 276.966)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="oklch(51.1% 0.262 276.966)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              minTickGap={32}
+              tickFormatter={(value) => {
+                const date = new Date(value);
+                return date.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                });
+              }}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    });
+                  }}
+                  indicator="dot"
+                />
+              }
+            />
+            <Area
+              dataKey="eventCount"
+              type="natural"
+              fill="url(#fillEventCount)"
+              stroke="oklch(51.1% 0.262 276.966)"
+              stackId="a"
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+          </AreaChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
-};
+}
 
 export default LineChartComponent;

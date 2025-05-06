@@ -60,7 +60,7 @@ const BarChartComponent = ({ fetchedEvents }: { fetchedEvents: Event[] }) => {
     <ResponsiveContainer
       className="mt-2 border-none w-fit rounded-xl shadow-none flex items-center justify-center"
       width={"100%"}
-      height={300}
+      height={"100%"}
     >
       <BarChart
         data={chartData}
