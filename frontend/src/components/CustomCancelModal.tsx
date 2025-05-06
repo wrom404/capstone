@@ -6,12 +6,12 @@ const CustomCancelModal = ({
   onConfirm,
   onCancel,
   cancelMessage,
-  handleOnChange
+  handleOnChange,
 }: {
   isModalOpen: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  cancelMessage: string,
+  cancelMessage: string;
   handleOnChange: (reason: string) => void;
 }) => {
   if (!isModalOpen) {
@@ -24,8 +24,15 @@ const CustomCancelModal = ({
           <TriangleAlert className="text-red-600" />
           <h2 className="text-lg font-">Cancel Event</h2>
         </div>
-          <h2 className="mb-2">Reason</h2>
-          <Textarea className="mb-4" placeholder="Reasons..." value={cancelMessage} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleOnChange(e.target.value)} />
+        <h2 className="mb-2">Reason</h2>
+        <Textarea
+          className="mb-4"
+          placeholder="Reasons..."
+          value={cancelMessage}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            handleOnChange(e.target.value)
+          }
+        />
         <div className="flex justify-end gap-4">
           <button
             className="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer"

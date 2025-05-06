@@ -26,11 +26,11 @@ const sendReminderEmails = async () => {
     console.log("eventsToRemind: ", eventsToRemind);
 
     for (const event of eventsToRemind) {
-      const htmlContent = `
+      const htmlContentReminder = `
         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
           <h2 style="color: #e67e22;">⏰ Event Reminder</h2>
           <p>Hello,</p>
-          <p>This is a reminder that your scheduled event will begin soon:</p>
+          <p>This is a reminder from St. Isidore Parish. Please note that your scheduled event will begin soon:</p>
           <ul>
             <li><strong>Event:</strong> ${event.title}</li>
             <li><strong>Start Time:</strong> ${moment(event.start_time).format(
@@ -40,10 +40,11 @@ const sendReminderEmails = async () => {
           <p style="color: #888; font-size: 0.9em;">This is an automated reminder. Please do not reply.</p>
         </div>
       `;
+
       await sendEmailNotification(
         event.client_email,
         `⏰ Reminder: "${event.title}" is starting soon`,
-        htmlContent
+        htmlContentReminder
       );
 
       await pool.query(`UPDATE events SET reminder_sent = TRUE WHERE id = $1`, [

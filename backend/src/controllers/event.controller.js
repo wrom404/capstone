@@ -34,7 +34,7 @@ export async function createEvent(req, res) {
   const formattedEndTime = moment(endTime).tz("Asia/Manila").format("hh:mm A");
   const formattedDate = moment(date).tz("Asia/Manila").format("MMMM D, YYYY");
 
-  const htmlContent = `
+  const htmlContentNotification = `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
       <h2 style="color: #2c3e50;">📅 Parish Event Scheduled</h2>
       <p>Hello,</p>
@@ -80,7 +80,7 @@ export async function createEvent(req, res) {
       await sendEmailNotification(
         clientEmail,
         `Your Event Request: ${eventType} on ${date}`,
-        htmlContent
+        htmlContentNotification
       );
     }
 
@@ -552,6 +552,30 @@ export async function cancelEvent(req, res) {
         success: false,
         message: "Event not found or already canceled.",
       });
+    }
+
+    console.log("result: ", result);
+    console.log("result.rows[0]: ", result.rows[0]);
+    console.log("result.rows[0].client_email: ", result.rows[0].client_email);
+
+    if (result.rows[0].client_email) {
+      const htmlContentCancelNotification = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
+          <h2 style="color: #e67e22;">⏰ Event Reminder</h2>
+          <p>Hello,</p>
+          <p>This is a reminder from St. Isidore Parish. Your scheduled event is now canceled:</p>
+          <ul>
+            <li><strong>Event:</strong> ${result.rows[0]?.title}</li>
+          </ul>
+          <p style="color: #888; font-size: 0.9em;">This is an automated reminder. Please do not reply.</p>
+        </div>
+      `;
+
+      sendEmailNotification(
+        result.rows[0].client_email,
+        "Event Canceled",
+        htmlContentCancelNotification
+      );
     }
 
     console.log(`Event ID ${id} successfully marked as canceled.`);

@@ -182,7 +182,7 @@ const FormCreateEvent = () => {
       !formEvent.startTime ||
       !formEvent.endTime
     ) {
-      setTextFieldError("Please fill out the field");
+      setTextFieldError("Please fill out the required field");
       return;
     }
 
@@ -244,7 +244,7 @@ const FormCreateEvent = () => {
   if (isFetchingUsers || isCreatingEvent) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-white">
-        <div className="w-10 h-10 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -351,7 +351,7 @@ const FormCreateEvent = () => {
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label htmlFor="message">Description</Label>
+            <Label htmlFor="message">Description <span className="text-gray-500">*</span></Label>
             <Textarea
               value={formEvent.description || ""}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -375,7 +375,7 @@ const FormCreateEvent = () => {
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Expected attendance</Label>
+            <Label>Expected attendance <span className="text-gray-500">*</span></Label>
             <CustomSelect
               value={formEvent.expectedAttendance || ""}
               onValueChange={(e) =>
@@ -406,7 +406,6 @@ const FormCreateEvent = () => {
                 }
                 type="text"
                 id="text"
-                placeholder="Email"
                 className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
               />
               <button
@@ -717,7 +716,7 @@ const FormCreateEvent = () => {
       <div className="flex justify-end my-2 mt-4">
         <Button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide px-4 py-2 text-base rounded-lg text-white flex items-center gap-2"
+          className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide px-4 py-5 text-base rounded-lg text-white flex items-center gap-2"
         >
           <CalendarPlus2 size={16} /> Schedule Event
         </Button>
