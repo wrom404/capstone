@@ -24,7 +24,7 @@ import { type Event } from "@/types/types";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { CalendarPlus2, Plus, Trash2 } from "lucide-react";
-import UserModal from "./UserModal";
+import UserModal from "./UserEmailModal";
 import useFetchUsers from "@/hooks/user/useFetchUsers";
 import { type FetchUserProps, type SelectedUserEmail } from "@/types/types";
 

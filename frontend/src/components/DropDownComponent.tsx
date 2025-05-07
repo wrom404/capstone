@@ -6,16 +6,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
-import {
-  ChevronDown,
-  ChevronUp,
-  LogOut,
-  UserRound,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, LogOut, UserRound } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export function DropdownMenuCheckboxes() {
+export function DropdownMenuCheckboxes({
+  setIsUserProfileModalOpen,
+  isUserProfileModalOpen,
+}: {
+  setIsUserProfileModalOpen: (isOpen: boolean) => void;
+  isUserProfileModalOpen: boolean;
+}) {
+  // const { showStatusBar, setShowStatusBar } = useUserStore(); // Assuming you have a store to manage the status bar visibility
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   return (
     <DropdownMenu open={isDropDownOpen} onOpenChange={setIsDropDownOpen}>
@@ -38,7 +40,11 @@ export function DropdownMenuCheckboxes() {
         <DropdownMenuLabel>Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
-        // checked={showStatusBar}
+          // checked={showStatusBar}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevents the dropdown from closing when clicking this item
+            setIsUserProfileModalOpen(!isUserProfileModalOpen); // Toggle user profile modal open state
+          }}
         >
           <UserRound className="text-indigo-600" /> Profile
         </DropdownMenuCheckboxItem>

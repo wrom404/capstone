@@ -127,13 +127,13 @@ export type FormDataProps = {
 };
 
 export type UserProps = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  role: string;
-  create_at: Date;
+  id?: number;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  password?: string;
+  role?: string;
+  create_at?: Date;
 }
 
 export type UnAvailableDateProps = {

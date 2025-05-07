@@ -1,12 +1,12 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import useCurrentUser from "@/hooks/user/useCurrentUser";
-
-// import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import UserProfileModal from "./UserProfileModal";
 
 import { DropdownMenuCheckboxes } from "./DropDownComponent"; // Import the props type
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useUserStore from "@/store/useUserStore";
+import { UserProps } from "@/types/types";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +15,17 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const { isPending, data: user, error } = useCurrentUser();
   const { setUserRole } = useUserStore();
+  const [isUserProfileModalOpen, setIsUserProfileModalOpen] =
+    useState<boolean>(false);
+  const [userData, setUserData] = useState<UserProps>({
+    id: 0,
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    role: "",
+    create_at: new Date(),
+  });
 
   useEffect(() => {
     if (user?.role) {
@@ -22,9 +33,22 @@ const Layout = ({ children }: LayoutProps) => {
     }
   }, [user, setUserRole]);
 
+  useEffect(() => {
+    if (user) {
+      setUserData(user);
+    }
+  }, [user]);
+
   if (error) {
     console.log(error);
   }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("User data submitted: ", userData);
+    // Add your submit logic here
+  };
+
   return (
     <SidebarProvider className="w-full">
       <div className="flex h-screen w-full">
@@ -50,7 +74,10 @@ const Layout = ({ children }: LayoutProps) => {
                     </div>
                     <div className="text-gray-500 text-xs">{user?.email}</div>
                   </div>
-                  <DropdownMenuCheckboxes />
+                  <DropdownMenuCheckboxes
+                    setIsUserProfileModalOpen={setIsUserProfileModalOpen}
+                    isUserProfileModalOpen={isUserProfileModalOpen}
+                  />
                 </div>
               )}
             </div>
@@ -58,6 +85,15 @@ const Layout = ({ children }: LayoutProps) => {
           <main className="flex-1 p-6">{children}</main>
         </div>
       </div>
+      {isUserProfileModalOpen && user && (
+        <UserProfileModal
+          handleSubmit={handleSubmit}
+          setUserData={setUserData}
+          userData={userData}
+          isUserProfileMOdalOpen={isUserProfileModalOpen}
+          setIsUserProfileModalOpen={setIsUserProfileModalOpen}
+        />
+      )}
     </SidebarProvider>
   );
 };
