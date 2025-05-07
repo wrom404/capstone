@@ -351,7 +351,9 @@ const FormCreateEvent = () => {
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label htmlFor="message">Description <span className="text-gray-500">*</span></Label>
+            <Label htmlFor="message">
+              Description <span className="text-gray-500">*</span>
+            </Label>
             <Textarea
               value={formEvent.description || ""}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -375,7 +377,9 @@ const FormCreateEvent = () => {
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Expected attendance <span className="text-gray-500">*</span></Label>
+            <Label>
+              Expected attendance <span className="text-gray-500">*</span>
+            </Label>
             <CustomSelect
               value={formEvent.expectedAttendance || ""}
               onValueChange={(e) =>

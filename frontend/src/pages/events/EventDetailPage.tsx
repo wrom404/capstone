@@ -398,7 +398,7 @@ const EventDetailPage = () => {
               </div>
             )}
 
-            {events.clientEmail && (
+            {events.clientEmail && events.clientEmail.length > 0 && (
               <div className="pt-4 border-t border-gray-100 flex">
                 <div className="">
                   <MailIcon className="w-6 h-6 mr-3 text-indigo-600" />

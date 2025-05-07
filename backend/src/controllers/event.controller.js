@@ -363,12 +363,6 @@ export async function updateEvent(req, res) {
       .json({ success: false, message: "All required fields must be filled." });
   }
 
-  const trimmedTitle = title && trimValue(title);
-  const trimmedVenue = venue && trimValue(venue);
-  const trimmedPriestName = priestName && trimValue(priestName);
-  const trimmedDescription = description && trimValue(description);
-  const trimmedClientEmail = clientEmail && trimValue(clientEmail);
-
   // const client = await pool.connect();
   try {
     await pool.query("BEGIN");
@@ -383,12 +377,12 @@ export async function updateEvent(req, res) {
        WHERE id = $15
        RETURNING *`,
       [
-        trimmedTitle,
+        title,
         eventType,
-        trimmedPriestName,
-        trimmedDescription,
-        trimmedVenue,
-        trimmedClientEmail,
+        priestName,
+        description,
+        venue,
+        clientEmail,
         date,
         startTime,
         endTime,
