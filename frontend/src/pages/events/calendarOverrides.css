@@ -1,0 +1,282 @@
+/* calendarOverrides.css */
+
+/* Base styles for light mode (or defaults) */
+.rbc-calendar {
+  background-color: white;
+  color: black;
+  border: 1px solid #e2e8f0;
+}
+
+.rbc-month-view {
+  border: 1px solid #e2e8f0;
+}
+
+.rbc-header {
+  color: black;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.rbc-month-row {
+  border-top: 1px solid #e2e8f0;
+}
+
+.rbc-month-row + .rbc-month-row {
+  border-top: 1px solid #e2e8f0;
+}
+
+.rbc-day-bg {
+  border-left: 1px solid #e2e8f0;
+}
+
+.rbc-day-bg:first-child {
+  border-left: none;
+}
+
+.rbc-date-cell {
+  color: black;
+}
+
+.rbc-off-range-day {
+  color: #9ca3af;
+}
+
+.rbc-today {
+  background-color: #eff6ff;
+}
+
+.rbc-toolbar button {
+  color: black;
+}
+
+.rbc-toolbar button:hover,
+.rbc-toolbar button:focus {
+  background-color: #f3f4f6;
+}
+
+.rbc-event {
+  background-color: #e0f2fe;
+  color: black;
+  border: 1px solid #9eceff;
+  font-weight: 500;
+}
+
+.rbc-selected {
+  background-color: #bfdbfe;
+}
+
+/* Dark mode overrides with higher specificity */
+.dark .rbc-calendar {
+  background-color: #18181b; /* zinc-900 */
+  color: #f0f0f0;
+  border: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-month-view {
+  border: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-month-header {
+  border-bottom: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-header {
+  color: #cbd5e0;
+  border-bottom: 1px solid oklch(27.8% 0.033 256.848) !important;
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-row-bg {
+  border-bottom: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-month-row {
+  border-top: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-month-row + .rbc-month-row {
+  border-top: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-day-bg {
+  border-left: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-day-bg:first-child {
+  border-left: none;
+}
+
+/* Override default white backgrounds */
+.dark .rbc-month-view,
+.dark .rbc-time-view,
+.dark .rbc-agenda-view {
+  background-color: #18181b; /* zinc-900 */
+  border-color: oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-month-view .rbc-header,
+.dark .rbc-time-view .rbc-header {
+  border-bottom: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-month-view .rbc-day-bg {
+  border-right: none; /* Remove default right borders */
+}
+
+.dark .rbc-date-cell {
+  color: #cbd5e0;
+}
+
+.dark .rbc-off-range-day {
+  color: #718096;
+}
+
+.dark .rbc-today {
+  background-color: #27272a; /* zinc-800 */
+  color: #f0f0f0;
+}
+
+.dark .rbc-toolbar button {
+  color: #cbd5e0;
+}
+
+.dark .rbc-toolbar button:hover,
+.dark .rbc-toolbar button:focus {
+  background-color: #3f3f46; /* zinc-700 */
+  color: #f0f0f0;
+}
+
+/* Fixed event colors that preserve category identification in dark mode */
+/* Event colors by category for dark mode - preserve original colors but make them more suitable for dark theme */
+.dark .rbc-event {
+  border: 1px solid oklch(27.8% 0.033 256.848) !important;
+  font-weight: 600 !important;
+}
+
+/* Mass events - darker green */
+.dark .rbc-event[style*="background-color: rgb(212, 237, 218)"] {
+  background-color: #1e3a23 !important;
+  color: oklch(79.2% 0.209 151.711) !important;
+}
+
+/* Wedding events - darker pink */
+.dark .rbc-event[style*="background-color: rgb(252, 213, 206)"] {
+  background-color: #3d1c24 !important;
+  color: oklch(71.8% 0.202 349.761) !important;
+}
+
+/* Baptism events - darker blue */
+.dark .rbc-event[style*="background-color: rgb(207, 226, 243)"] {
+  background-color: #1e2b3d !important;
+  color: oklch(70.7% 0.165 254.624) !important;
+}
+
+/* Funeral events - darker gray */
+.dark .rbc-event[style*="background-color: rgb(248, 249, 250)"] {
+  background-color: #27272a !important;
+  color: oklch(70.7% 0.022 261.325) !important;
+}
+
+/* Confession events - darker purple */
+.dark .rbc-event[style*="background-color: rgb(226, 211, 243)"] {
+  background-color: #2e1065 !important;
+  color: oklch(71.4% 0.203 305.504) !important;
+}
+
+/* Meeting events - darker orange/amber */
+.dark .rbc-event[style*="background-color: rgb(255, 229, 180)"] {
+  background-color: #451a03 !important;
+  color: oklch(82.8% 0.189 84.429) !important;
+}
+
+/* Others events - darker beige */
+.dark .rbc-event[style*="background-color: rgb(247, 247, 233)"] {
+  background-color: #292524 !important;
+  color: #e7e5e4 !important;
+}
+
+.dark .rbc-selected {
+  background-color: #4a5568 !important;
+}
+
+/* Time view specific styles */
+.dark .rbc-time-view,
+.dark .rbc-time-header {
+  border: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-time-header-content {
+  border-left: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-time-header-gutter {
+  background-color: #18181b; /* zinc-900 */
+  border-right: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-time-gutter {
+  background-color: #18181b; /* zinc-900 */
+  border-right: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-time-content {
+  border-top: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-time-content > .rbc-time-column:not(:first-child) {
+  border-left: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+.dark .rbc-time-slot {
+  border-top: 1px solid oklch(27.8% 0.033 256.848);
+  background-color: #18181b; /* zinc-900 */
+}
+
+/* Agenda view specific styles */
+.dark .rbc-agenda-view table {
+  border: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-agenda-view table tbody > tr > td {
+  border-top: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+.dark .rbc-agenda-view table .rbc-agenda-time-cell {
+  border-right: 1px solid oklch(27.8% 0.033 256.848);
+}
+
+/* Force a consistent border color throughout the calendar */
+.dark .rbc-calendar *,
+.dark .rbc-calendar *:before,
+.dark .rbc-calendar *:after {
+  border-color: oklch(27.8% 0.033 256.848) !important;
+}
+
+/* Override any inline styles that might be applied */
+.dark [style*="border"] {
+  border-color: oklch(27.8% 0.033 256.848) !important;
+}
+
+/* Additional fixes for any remaining white backgrounds */
+.dark .rbc-row,
+.dark .rbc-row-segment,
+.dark .rbc-row-content {
+  background-color: #18181b; /* zinc-900 */
+}
+
+/* Additional specific fixes for cell backgrounds */
+.dark .rbc-date-cell,
+.dark .rbc-row-bg .rbc-day-bg {
+  background-color: #18181b !important; /* zinc-900 with !important to override inline styles */
+}
+
+/* Make sure all text is visible */
+.dark .rbc-calendar {
+  color: #e4e4e7 !important; /* zinc-200 */
+}

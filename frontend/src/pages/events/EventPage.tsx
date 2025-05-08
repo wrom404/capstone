@@ -126,12 +126,14 @@ const EventPage = () => {
   }
 
   return (
-    <div className="px-2 md:px-8 py-4">
+    <div className="px-2 md:px-8 py-4 dark:bg-zinc-900">
       {/* Header and filters */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
         <div className="mb-4 md:mb-0">
-          <h2 className="text-2xl text-gray-800 font-bold">Events</h2>
-          <p className="text-sm text-gray-700">
+          <h2 className="text-2xl text-gray-800 font-bold dark:text-gray-200">
+            Events
+          </h2>
+          <p className="text-sm text-gray-700 dark:text-gray-400 mt-2">
             Manage and track scheduled, upcoming, and completed events with
             ease.
           </p>
@@ -139,7 +141,7 @@ const EventPage = () => {
         <div className="flex flex-col md:flex-row md:items-center gap-2">
           <input
             type="text"
-            className="border border-gray-300 py-1 px-3 w-full md:w-auto"
+            className="border border-gray-300 py-1 px-3 w-full md:w-auto dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
             placeholder="Search..."
             value={searchQuery}
             onChange={handleSearchChange}
@@ -148,7 +150,7 @@ const EventPage = () => {
             name="category"
             onChange={handleSelectChange}
             value={selectedCategory}
-            className="border border-gray-300 px-3 py-1 w-full md:w-auto"
+            className="border border-gray-300 px-3 py-1 w-full md:w-auto dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
           >
             <option value="">Filter</option>
             <option value="mass">Mass</option>
@@ -174,12 +176,12 @@ const EventPage = () => {
 
       {/* Pagination */}
       <div className="flex flex-col md:flex-row justify-between items-center mt-6 text-gray-800 text-sm gap-4">
-        <div className="flex items-center">
+        <div className="flex items-center dark:text-gray-400">
           <span>Items per page:</span>
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="border border-gray-300 px-2 py-1 ml-2 cursor-pointer"
+            className="border border-gray-300 px-2 py-1 ml-2 cursor-pointer dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
           >
             {[10, 20, 30].map((size) => (
               <option key={size} value={size}>
@@ -193,17 +195,17 @@ const EventPage = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="border border-gray-300 px-3 py-1 mr-2 cursor-pointer disabled:opacity-50"
+            className="border border-gray-300 px-3 py-1 mr-2 cursor-pointer disabled:opacity-50 dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
           >
             <IoIosArrowBack size={20} />
           </button>
-          <span>
+          <span className="text-gray-800 dark:text-gray-400">
             Page {currentPage} of {totalPages}
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="border border-gray-300 px-3 py-1 ml-2 cursor-pointer disabled:opacity-50"
+            className="border border-gray-300 px-3 py-1 ml-2 cursor-pointer disabled:opacity-50 dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200" 
           >
             <IoIosArrowForward size={20} />
           </button>

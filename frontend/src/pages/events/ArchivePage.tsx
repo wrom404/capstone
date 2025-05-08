@@ -115,17 +115,19 @@ const ArchivePage = () => {
   }
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex justify-between dark:bg-zinc-900 items-center">
         <div className="mb-6">
-          <h2 className="text-2xl text-gray-800 font-bold">Canceled Events</h2>
-          <p className="text-sm text-gray-700">
+          <h2 className="text-2xl text-gray-800 font-bold dark:text-gray-300">
+            Canceled Events
+          </h2>
+          <p className="text-sm text-gray-700 dark:text-gray-400 mt-2">
             Manage and track canceled events with ease.
           </p>
         </div>
         <div className="mt-6">
           <input
             type="text"
-            className="border border-gray-300 py-1 px-3"
+            className="border border-gray-300 py-1 px-3 w-full md:w-auto dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
             placeholder="Search..."
             value={searchQuery}
             onChange={handleSearchChange}
@@ -134,7 +136,7 @@ const ArchivePage = () => {
             name="category"
             onChange={handleSelectChange}
             value={selectedCategory}
-            className="border px-3 py-1 mb-4 ml-4"
+            className="border px-3 py-1 mb-4 ml-4 dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
           >
             <option value="">Filter</option>
             <option value="mass">Mass</option>
@@ -151,13 +153,13 @@ const ArchivePage = () => {
         data={paginatedEvents || []}
         handleClickRestoreEvent={handleClickRestoreEvent}
       />
-      <div className="flex justify-between items-center mt-6 text-gray-800 text-sm">
+      <div className="flex justify-between items-center mt-6 text-gray-800 text-sm dark:text-gray-400">
         <div>
           <span>Items per page:</span>
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="border px-2 py-1 ml-2 cursor-pointer"
+            className="border px-2 py-1 ml-2 cursor-pointer dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
           >
             {[10, 20, 30].map((size) => (
               <option key={size} value={size}>
@@ -170,17 +172,17 @@ const ArchivePage = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="border px-3 py-1 mr-2 cursor-pointer"
+            className="border px-3 py-1 mr-2 cursor-pointer dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
           >
             <IoIosArrowBack size={20} />
           </button>
-          <span>
+          <span className="text-gray-800 dark:text-gray-400">
             Page {currentPage} of {totalPages}
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="border px-3 py-1 ml-2 cursor-pointer"
+            className="border px-3 py-1 ml-2 cursor-pointer dark:border-gray-800 dark:bg-zinc-900 dark:text-gray-200"
           >
             <IoIosArrowForward size={20} />
           </button>

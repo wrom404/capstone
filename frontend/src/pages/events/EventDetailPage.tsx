@@ -184,30 +184,32 @@ const EventDetailPage = () => {
     >
       <main className="container mx-auto px-4 pb-8">
         <button
-          className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6 transition-colors cursor-pointer"
+          className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6 transition-colors cursor-pointer dark:text-indigo-400 dark:hover:text-indigo-300"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Events
         </button>
 
-        <div className="bg-white rounded-xl border overflow-hidden">
+        <div className="bg-white rounded-xl border overflow-hidden dark:bg-zinc-900 dark:border-zinc-800">
           {/* Event Header */}
-          <div className=" p-6 border-b border-indigo-100">
+          <div className=" p-6 border-b border-indigo-100 dark:border-gray-700 bg-indigo-50 dark:bg-zinc-900">
             <div className="flex justify-between items-start">
               <div className="pr-6">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-200">
                   {events.title}
                 </h2>
-                <p className="text-gray-600 mt-2">{events.description}</p>
+                <p className="text-gray-600 mt-2 dark:text-gray-300">
+                  {events.description}
+                </p>
               </div>
               <span
                 className={`px-4 py-2 rounded-full text-sm font-medium ${
                   events.status === "upcoming"
-                    ? "bg-green-50 text-green-600"
+                    ? "bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300"
                     : events.status === "completed"
-                    ? "bg-yellow-50 text-yellow-600"
-                    : "bg-indigo-50 text-indigo-600"
+                    ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-200"
+                    : "bg-indigo-50 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200"
                 }`}
               >
                 {events.status &&
@@ -223,10 +225,12 @@ const EventDetailPage = () => {
             <div className="flex">
               <div className="flex-1 space-y-6">
                 <div className="flex text-gray-700">
-                  <Calendar className="w-6 h-6 mr-3 text-indigo-600" />
+                  <Calendar className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                   <div>
-                    <p className="font-medium text-gray-800 text-base">Date</p>
-                    <p>
+                    <p className="font-medium text-gray-800 text-base dark:text-gray-300">
+                      Date
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
                       {events.date &&
                         new Date(events.date).toLocaleDateString("en-US", {
                           weekday: "long",
@@ -246,11 +250,13 @@ const EventDetailPage = () => {
                   </div>
                 </div>
 
-                <div className="flex text-gray-700">
-                  <Clock className="w-6 h-6 mr-3 text-indigo-600" />
+                <div className="flex text-gray-700 dark:text-gray-400">
+                  <Clock className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                   <div>
-                    <p className="font-medium text-gray-800 text-base">Time</p>
-                    <p>
+                    <p className="font-medium text-gray-800 text-base dark:text-gray-300">
+                      Time
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
                       {events.startTime &&
                         events.date &&
                         new Date(
@@ -276,12 +282,12 @@ const EventDetailPage = () => {
 
                 {events.isRecurring && (
                   <div className="flex text-gray-700 max-w-lg">
-                    <Repeat className="w-6 h-6 mr-3 text-indigo-600" />
+                    <Repeat className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                     <div>
-                      <p className="font-medium text-gray-800">
+                      <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
                         Recurring Schedule
                       </p>
-                      <p>
+                      <p className="text-gray-600 dark:text-gray-400">
                         {events.recurringDays?.map((day, index) => (
                           <span key={day}>
                             {day}
@@ -297,10 +303,10 @@ const EventDetailPage = () => {
                 )}
               </div>
               <div className="flex-1 space-y-6">
-                <div className="flex text-gray-700">
-                  <Tags className="w-6 h-6 mr-3 text-indigo-600" />
+                <div className="flex text-gray-700 dark:text-gray-400">
+                  <Tags className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                   <div>
-                    <p className="font-medium text-gray-800 text-base">
+                    <p className="font-medium text-gray-800 text-base dark:text-gray-300">
                       Category
                     </p>
                     <p>{events.eventType}</p>
@@ -321,20 +327,22 @@ const EventDetailPage = () => {
             </div>
 
             {/* Location and Attendance Section */}
-            <div className="flex pt-4 border-t border-gray-100">
+            <div className="flex pt-4 border-t border-gray-100 dark:border-gray-700">
               <div className="flex-1 space-y-6">
-                <div className="flex text-gray-700">
-                  <MapPin className="w-6 h-6 mr-3 text-indigo-600" />
+                <div className="flex text-gray-700 dark:text-gray-400">
+                  <MapPin className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                   <div>
-                    <p className="font-medium text-gray-800">Venue</p>
+                    <p className="font-medium text-gray-800 dark:text-gray-300">
+                      Venue
+                    </p>
                     <p>{events.venue}</p>
                   </div>
                 </div>
 
-                <div className="flex text-gray-700">
-                  <Users className="w-6 h-6 mr-3 text-indigo-600" />
+                <div className="flex text-gray-700 dark:text-gray-400">
+                  <Users className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                   <div>
-                    <p className="font-medium text-gray-800">
+                    <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
                       Expected Attendance
                     </p>
                     <p>{events.expectedAttendance} people</p>
@@ -343,17 +351,17 @@ const EventDetailPage = () => {
               </div>
               <div className="flex-1 space-y-6">
                 {events.sponsors.length > 0 && (
-                  <div className="flex pt-4 border-gray-100">
-                    <Handshake className="w-6 h-6 mr-3 text-indigo-600" />
+                  <div className="flex pt-4 border-gray-100 dark:border-gray-700">
+                    <Handshake className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                     <div className="">
-                      <p className="font-medium text-gray-800 mb-1">
+                      <p className="font-medium text-gray-800 mb-1 dark:text-gray-300">
                         Sponsors:
                       </p>
-                      <ul className="list-disc list-inside text-gray-600">
+                      <ul className="list-disc list-inside text-gray-600 dark:text-gray-400">
                         {events.sponsors.map((sponsor, index) => (
                           <li key={index}>
                             {sponsor.sponsor_name}{" "}
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
                               ({sponsor.sponsor_type})
                             </span>
                           </li>
@@ -364,17 +372,17 @@ const EventDetailPage = () => {
                 )}
 
                 {events.organizers.length > 0 && (
-                  <div className="flex pt-4 border-gray-100">
-                    <UserCog className="w-6 h-6 mr-3 text-indigo-600" />
+                  <div className="flex pt-4 border-gray-100 dark:border-gray-700">
+                    <UserCog className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                     <div className="">
-                      <p className="font-medium text-gray-800 mb-1">
+                      <p className="font-medium text-gray-800 mb-1 dark:text-gray-300">
                         Organizers:
                       </p>
-                      <ul className="list-disc list-inside text-gray-600">
+                      <ul className="list-disc list-inside text-gray-600 dark:text-gray-400">
                         {events.organizers.map((organizer, index) => (
                           <li key={index}>
                             {organizer.name}{" "}
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
                               ({organizer.position})
                             </span>
                           </li>
@@ -388,9 +396,9 @@ const EventDetailPage = () => {
 
             {/* Additional Details Section */}
             {events.priestName && (
-              <div className="pt-4 border-t border-gray-100">
-                <p className="text-gray-600">
-                  <span className="font-medium text-gray-800">
+              <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex">
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium text-gray-800 dark:text-gray-300">
                     Officiated by:
                   </span>{" "}
                   {events.priestName}
@@ -399,17 +407,22 @@ const EventDetailPage = () => {
             )}
 
             {events.clientEmail && events.clientEmail.length > 0 && (
-              <div className="pt-4 border-t border-gray-100 flex">
+              <div className="pt-4 border-t border-gray-100 flex dark:border-gray-700">
                 <div className="">
-                  <MailIcon className="w-6 h-6 mr-3 text-indigo-600" />
+                  <MailIcon className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                 </div>
                 <div className="">
-                  <p className="text-gray-600">
-                    <span className="font-medium text-gray-800">Email</span>{" "}
+                  <p className="text-gray-600 dark:text-gray-400">
+                    <span className="font-medium text-gray-800 dark:text-gray-300">
+                      Email
+                    </span>{" "}
                     {events.clientEmail &&
                       events.clientEmail.length > 0 &&
                       events.clientEmail.map((email, index) => (
-                        <span key={index} className="mr-2 block">
+                        <span
+                          key={index}
+                          className="mr-2 block dark:text-gray-400"
+                        >
                           {email}
                         </span>
                       ))}
@@ -417,19 +430,19 @@ const EventDetailPage = () => {
                 </div>
               </div>
             )}
-            <div className="border-t pt-6 flex justify-end">
+            <div className="border-t pt-6 flex justify-end dark:border-gray-700">
               {userRole && adminRoles.includes(userRole) && (
                 <div className="">
                   <Button
                     type="submit"
-                    className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-5 px-4 text-base"
+                    className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-5 px-4 text-base dark:bg-indigo-700 dark:hover:bg-indigo-800 text-gray-50"
                     onClick={() => handleClickEvent(Number(events.id) || 0)}
                   >
                     Edit Event
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-5 px-4 text-base"
+                    className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-5 px-4 text-base dark:bg-red-700 dark:hover:bg-red-800 text-gray-50 font-medium"
                     onClick={() => setIsModalOpen(true)}
                   >
                     Cancel Event

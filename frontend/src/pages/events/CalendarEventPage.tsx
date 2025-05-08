@@ -10,10 +10,31 @@ import useFetchUnAvailableDate from "@/hooks/events/useFetchCountEvent";
 import filterUnAvailableDate from "@/utils/filterUnAvailableDate";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import "./calendarOverrides.css";
+
 
 const localizer = momentLocalizer(moment);
 
 const CalendarEventPage = () => {
+
+  const [isDarkMode, setIsDarkMode] = useState(
+    document.documentElement.classList.contains("dark")
+  );
+  
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    });
+  
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  
+    return () => observer.disconnect();
+  }, []);
+
+  
   const {
     isPending: isFetchingEvents,
     data: fetchedEvents,
@@ -57,22 +78,35 @@ const CalendarEventPage = () => {
     const matchingEvent = eventCount.find(
       (event) => moment(event.date).format("YYYY-MM-DD") === dateString
     );
-
+  
     const count = matchingEvent ? parseInt(matchingEvent.count, 10) : 0;
     const isLimitReached = count >= 10;
-
+  
     return {
       style: {
-        backgroundColor: isLimitReached ? "#f0f0f0" : "white",
-        color: isLimitReached ? "white" : "black",
+        backgroundColor: isLimitReached
+          ? "#f0f0f0"
+          : isDarkMode
+          ? "oklch(21% 0.006 285.885)"
+          : "white",
+        color: isLimitReached
+          ? "white"
+          : isDarkMode
+          ? "white"
+          : "black",
         fontWeight: dateString === todayString ? "bold" : "normal",
         cursor: isLimitReached ? "not-allowed" : "pointer",
-        border: dateString === todayString ? "1px solid #2563eb" : undefined, // Fix: use undefined instead of false
+        border:
+          dateString === todayString ? "1px solid #2563eb" : undefined,
         borderLeft:
-          dateString !== todayString ? "1px solid #ddd" : "2px solid #1e3a8a", // Fix: use undefined instead of false
+          dateString !== todayString
+            ? "1px solid #ddd"
+            : "2px solid #1e3a8a",
       },
     };
   };
+  
+  
 
   // Format the events for the calendar
   const myCalendarEvents = formatForCalendar(events);
@@ -121,7 +155,7 @@ const CalendarEventPage = () => {
         color,
         padding: "2px",
         fontSize: "14px",
-        border: "1px solid #ddd",
+        // border: "1px solid #ddd",
         fontWeight: "600",
       },
     };
@@ -177,7 +211,7 @@ const CalendarEventPage = () => {
           dayPropGetter={dayPropGetter}
         />
       </div>
-      <div className="mt-6">
+      <div className="mt-6 dark:bg-zinc-900 bg-white p-4 rounded-lg">
         <h3 className="text-lg font-semibold mb-4 text-gray-600">
           Event Legend
         </h3>

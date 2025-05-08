@@ -105,8 +105,10 @@ const User = () => {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl text-gray-800 font-bold">User Management</h2>
-        <p className="text-sm text-gray-700">
+        <h2 className="text-2xl text-gray-800 font-bold dark:text-gray-300">
+          User Management
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-400 mt-2">
           Easily view and manage users, including their name, email, and role.
         </p>
       </div>
@@ -115,27 +117,27 @@ const User = () => {
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white border rounded-lg overflow-hidden"
+        className="bg-white border rounded-lg overflow-hidden dark:bg-zinc-800 dark:border-zinc-800"
       >
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-indigo-50">
+          <table className="min-w-full divide-y">
+            <thead className="bg-indigo-50 dark:bg-zinc-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">
                   User
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">
                   Role / Position
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 dark:bg-zinc-900 dark:divide-zinc-800">
               {users &&
                 users.map((user, index) => (
                   <motion.tr
@@ -143,15 +145,17 @@ const User = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     key={user.id}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-gray-50 dark:hover:bg-zinc-800 cursor-pointer dark:text-gray-200"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center">
                         {`${user.first_name} ${user.last_name}`}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">{user.email}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {user.email}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -159,20 +163,20 @@ const User = () => {
                           <Shield
                             className={`w-4 h-4 ${
                               user.role === "Head Administrator"
-                                ? "text-purple-500"
-                                : "text-cyan-500"
+                                ? "text-purple-500 dark:text-purple-400"
+                                : "text-cyan-500 dark:text-cyan-400"
                             } mr-1`}
                           />
                         ) : (
-                          <UserIcon className="w-4 h-4 text-blue-500 mr-1" />
+                          <UserIcon className="w-4 h-4 text-blue-500 mr-1 dark:text-blue-400" />
                         )}
                         <span
                           className={`text-sm ${
                             user.role === "Head Administrator"
-                              ? "text-purple-700"
+                              ? "text-purple-700 dark:text-purple-400"
                               : user.role === "Administrator"
-                              ? "text-cyan-700"
-                              : "text-blue-700"
+                              ? "text-cyan-700 dark:text-cyan-400"
+                              : "text-blue-700 dark:text-blue-400"
                           }`}
                         >
                           {user.role &&
@@ -186,13 +190,13 @@ const User = () => {
                         <>
                           <button
                             onClick={() => handleClickEdit(user.id || "")}
-                            className="text-green-600 hover:text-green-900 transition-colors duration-200 cursor-pointer"
+                            className="text-green-600 hover:text-green-900 transition-colors duration-200 cursor-pointer dark:text-green-500 dark:hover:text-green-600"
                           >
                             <SquarePen className="w-5 h-5" />
                           </button>
                           <button
                             onClick={() => handleClickDelete(user.id || "")}
-                            className="text-red-600 hover:text-red-900 transition-colors duration-200 cursor-pointer ml-2"
+                            className="text-red-600 hover:text-red-900 transition-colors duration-200 cursor-pointer ml-2 dark:text-red-500 dark:hover:text-red-600"
                           >
                             <Trash2 className="w-5 h-5" />
                           </button>

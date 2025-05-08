@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Save, Plus, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
+import moment from "moment-timezone";
 
 // Sponsor and Organizer interfaces
 interface Sponsor {
@@ -138,9 +139,8 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
   // Format the date and time from ISO string
   const formatDateFromISO = (isoString: string) => {
     if (!isoString) return "";
-    return isoString.split("T")[0];
+    return moment.tz(isoString, "Asia/Manila").format("YYYY-MM-DD");
   };
-
   // Format time from ISO string (HH:MM)
   const formatTimeFromISO = (isoString: string) => {
     if (!isoString) return "";
@@ -280,7 +280,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       onSubmit={handleSubmitForm}
-      className="border border-gray-300 rounded-lg p-6 w-full"
+      className="border border-gray-300 rounded-lg p-6 w-full dark:bg-zinc-900 dark:border-gray-800"
     >
       <h2 className="text-2xl font-bold mt-2 mb-3">Edit Event</h2>
 
@@ -288,7 +288,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         {/* First Column */}
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Event</Label>
+            <Label className="dark:text-gray-300">Event</Label>
             <Input
               type="text"
               id="text"
@@ -296,19 +296,19 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, title: e.target.value })
               }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              className="shadow-none border bg-white border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Category</Label>
+            <Label className="dark:text-gray-300">Category</Label>
             <CustomSelect
               value={formEvent.eventType || ""}
               onValueChange={(e) =>
                 setFormEvent({ ...formEvent, eventType: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-300 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -329,7 +329,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
             formEvent.eventType === "funeral" ||
             formEvent.eventType === "confession") && (
             <div className="grid w-full items-center gap-1.5 py-2.5">
-              <Label>
+              <Label className="dark:text-gray-300">
                 Priest Name<span className="text-gray-500">*</span>
               </Label>
               <Input
@@ -339,20 +339,20 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, priestName: e.target.value })
                 }
-                className="shadow-none border border-gray-300 focus:ring-1 w-full"
+                className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
               />
             </div>
           )}
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Chapel Name</Label>
+            <Label className="dark:text-gray-300">Chapel Name</Label>
             <Input
               type="text"
               value={formEvent.chapelName || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, chapelName: e.target.value })
               }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
 
@@ -364,12 +364,12 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 setFormEvent({ ...formEvent, description: e.target.value })
               }
               id="message"
-              className="border-gray-300 w-full"
+              className="border-gray-300 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700 shadow-none focus:ring-1"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Venue</Label>
+            <Label className="dark:text-gray-300">Venue</Label>
             <Input
               value={formEvent.venue || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -377,19 +377,19 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               }
               type="text"
               id="text"
-              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Expected attendance</Label>
+            <Label className="dark:text-gray-300">Expected attendance</Label>
             <CustomSelect
               value={formEvent.expectedAttendance || ""}
               onValueChange={(e) =>
                 setFormEvent({ ...formEvent, expectedAttendance: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-300 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -402,7 +402,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>
+            <Label className="dark:text-gray-300">
               Client Email <span className="text-gray-50">*</span>
             </Label>
             <Input
@@ -412,7 +412,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               }
               type="text"
               id="text"
-              className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
+              className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
         </div>
@@ -434,16 +434,16 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               // minDate={new Date()}
               isClearable
               dateFormat="yyyy/MM/dd"
-              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Time</Label>
+            <Label className="dark:text-gray-300">Time</Label>
             <div className="flex gap-4">
               <input
                 type="time"
-                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                 onChange={(e) =>
                   setFormEvent((prev) => ({
                     ...prev,
@@ -456,7 +456,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               <span className="flex items-center">to</span>
               <input
                 type="time"
-                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                 onChange={(e) =>
                   setFormEvent((prev) => ({
                     ...prev,
@@ -469,14 +469,16 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
           </div>
 
           {/* Sponsors Section */}
-          <div className="mt-6 mb-4">
-            <Label className="text-md font-semibold">Sponsors</Label>
+          <div className="mt-6 mb-4 dark:bg-zinc-900 ">
+            <Label className="text-md font-semibold dark:text-gray-300">
+              Sponsors
+            </Label>
 
-            <div className="mt-2 space-y-2">
+            <div className="mt-2 space-y-2 dark:bg-zinc-900">
               {formEvent.sponsors.map((sponsor, index) => (
                 <div
                   key={index}
-                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                  className="flex items-center bg-gray-50 p-2 rounded-md dark:bg-zinc-900 dark:border-gray-7  00"
                 >
                   <div className="flex-1">
                     <p className="font-medium">{sponsor.sponsor_name}</p>
@@ -487,7 +489,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   <Button
                     type="button"
                     variant="ghost"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:bg-zinc-900 dark:text-red-500 dark:hover:bg-zinc-800 dark:hover:text-red-600"
                     onClick={() => handleRemoveSponsor(index)}
                   >
                     <Trash2 size={16} />
@@ -496,11 +498,11 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               ))}
             </div>
 
-            <div className="mt-3 p-3 border border-gray-300 rounded-md">
+            <div className="mt-3 p-3 border border-gray-300 rounded-md dark:bg-zinc-900 dark:border-gray-800">
               <h4 className="font-medium text-sm mb-2">Add Sponsor</h4>
               <div className="flex items-end gap-2">
                 <div className="flex-1">
-                  <Label className="text-xs">Name</Label>
+                  <Label className="text-xs dark:text-gray-300">Name</Label>
                   <Input
                     type="text"
                     value={newSponsor.sponsor_name}
@@ -536,7 +538,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 </div>
                 <Button
                   type="button"
-                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer dark:bg-indigo-700 dark:hover:bg-indigo-800"
                   onClick={handleAddSponsor}
                 >
                   <Plus size={16} />
@@ -553,7 +555,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               {formEvent.organizers.map((organizer, index) => (
                 <div
                   key={index}
-                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                  className="flex items-center bg-gray-50 p-2 rounded-md dark:bg-zinc-900 dark:border-gray-800"
                 >
                   <div className="flex-1">
                     <p className="font-medium">{organizer.name}</p>
@@ -564,7 +566,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                   <Button
                     type="button"
                     variant="ghost"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-zinc-800 dark:hover:text-red-600"
                     onClick={() => handleRemoveOrganizer(index)}
                   >
                     <Trash2 size={16} />
@@ -573,7 +575,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               ))}
             </div>
 
-            <div className="mt-3 p-3 border border-gray-300 rounded-md">
+            <div className="mt-3 p-3 border border-gray-300 rounded-md dark:bg-zinc-900 dark:border-gray-800">
               <h4 className="font-medium text-sm mb-2">Add Organizer</h4>
               <div className="flex items-end gap-2">
                 <div className="flex-1">
@@ -610,7 +612,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 </div>
                 <Button
                   type="button"
-                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                  className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer dark:bg-indigo-700 dark:hover:bg-indigo-800"
                   onClick={handleAddOrganizer}
                 >
                   <Plus size={16} />
@@ -623,7 +625,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
               checked={formEvent.isRecurring}
               onCheckedChange={handleOnCheckChange}
               id="terms"
-              className="cursor-pointer shadow border-1 border-gray-400"
+              className="cursor-pointer shadow border-1 border-gray-400 dark:border-gray-800 dark:bg-zinc-900 dark:focus:ring-gray-700"
             />
             <label
               htmlFor="terms"
@@ -636,11 +638,13 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
           {formEvent.isRecurring && (
             <div className="">
               <div className="grid w-full items-center gap-1.5 py-2.5">
-                <Label>Select Recurring Days</Label>
+                <Label className="dark:text-gray-300">
+                  Select Recurring Days
+                </Label>
                 <Select
                   isMulti
                   placeholder=""
-                  className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none"
+                  className="text-gray-700 border-1 border-gray-300 rounded-sm shadow-none dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                   options={dayOptions}
                   value={dayOptions.filter(
                     (option) =>
@@ -664,7 +668,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                     setFormEvent({ ...formEvent, hasEndDate: e })
                   }
                   id="terms"
-                  className="shadow cursor-pointer border-1 border-gray-300"
+                  className="shadow cursor-pointer border-1 border-gray-300 dark:border-gray-800 dark:bg-zinc-900 dark:focus:ring-gray-700"
                 />
                 <label
                   htmlFor="terms"
@@ -686,7 +690,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
                 id="endDate"
                 minDate={new Date()}
                 dateFormat="yyyy/MM/dd"
-                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                 selected={
                   formEvent.endDate ? new Date(formEvent.endDate) : null
                 }
@@ -708,13 +712,13 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         <Button
           type="button"
           onClick={() => navigate(-1)}
-          className="py-5 hover:bg-gray-200 text-base bg-gray-100 rounded-lg text-gray-700 hover:text-gray-900 font-medium cursor-pointer tracking-wide mr-2"
+          className="py-5 hover:bg-gray-200 text-base bg-gray-100 rounded-lg text-gray-700 hover:text-gray-900 font-medium cursor-pointer tracking-wide mr-2 dark:bg-zinc-900 dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-gray-200"
         >
           Back
         </Button>
         <Button
           type="submit"
-          className="py-5 text-base bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide"
+          className="py-5 text-base bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white rounded-lg flex items-center justify-center"
         >
           <Save className="" /> Save Changes
         </Button>

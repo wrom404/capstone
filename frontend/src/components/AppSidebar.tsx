@@ -13,26 +13,30 @@ import { MdOutlineEventNote } from "react-icons/md";
 import { useLocation } from "react-router";
 import useUserStore from "@/store/useUserStore";
 import { roles as adminRoles } from "@/constant/constant";
+import { useTheme } from "@/hooks/theme/useTheme";
 
 export const AppSidebar = () => {
   const { userRole } = useUserStore();
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <Sidebar className="w-64 bg-white text-gray-800 h-screen p-4">
-      <h2 className="text-lg font-bold px-2 text-gray-800 bg-white flex gap-2.5">
+    <Sidebar className="dark:bg-zinc-900 w-64 bg-white text-gray-800 min-h-screen p-4">
+      <h2 className="dark:bg-zinc-900 dark:text-gray-400 text-lg font-bold px-2 bg-white flex gap-2.5">
         <div className=" border p-0.5 rounded-md">
-          <Church className="w-6 h-6 text-indigo-600" />
+          <Church className="dark:text-indigo-400 w-6 h-6 text-indigo-600" />
         </div>
-        <span className="text-xl font-bold text-gray-800">Parish Events</span>
+        <span className="dark:bg-zinc-900 dark:text-gray-300 text-xl font-bold text-gray-800">
+          Parish Events
+        </span>
       </h2>
-      <ul className="pt-4 bg-white h-full">
+      <ul className="dark:bg-zinc-900 dark:text-gray-400 pt-4 bg-white h-full space-y-2 overflow-hidden">
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/dashboard"
-              ? "bg-indigo-50 text-indigo-600 rounded-lg"
-              : "hover:bg-gray-50 text-gray-700"
-          }  rounded-lg flex items-center gap-2`}
+              ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
+              : "dark:hover:bg-zinc-800"
+          } rounded-lg flex items-center gap-2 hover:bg-gray-50`}
         >
           <LayoutDashboard size={20} />
           <Link to={"/dashboard"} className="font-semibold">
@@ -42,9 +46,9 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/calendar"
-              ? "bg-indigo-50 text-indigo-600 rounded-lg"
-              : "hover:bg-gray-50 text-gray-700"
-          }  rounded-lg flex items-center gap-2`}
+              ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
+              : "dark:hover:bg-zinc-800"
+          }  rounded-lg flex items-center gap-2 hover:bg-gray-50`}
         >
           <Calendar size={20} />
           <Link to={"/calendar"} className="font-semibold">
@@ -54,9 +58,9 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/event"
-              ? "bg-indigo-50 text-indigo-600 rounded-lg"
-              : "hover:bg-gray-50 text-gray-700"
-          }  rounded-lg flex items-center gap-2`}
+              ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
+              : "dark:hover:bg-zinc-800"
+          }  rounded-lg flex items-center gap-2 hover:bg-gray-50`}
         >
           <MdOutlineEventNote size={20} />{" "}
           <Link to={"/event"} className="font-semibold">
@@ -66,9 +70,9 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/archive"
-              ? "bg-indigo-50 text-indigo-600 rounded-lg"
-              : "hover:bg-gray-50 text-gray-700"
-          }  rounded-lg flex items-center gap-2`}
+              ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
+              : "dark:hover:bg-zinc-800"
+          }  rounded-lg flex items-center gap-2 hover:bg-gray-50`}
         >
           <Archive size={20} />
           <Link to={"/archive"} className="font-semibold">
@@ -80,9 +84,9 @@ export const AppSidebar = () => {
             <li
               className={`py-2 px-2 cursor-pointer ${
                 location.pathname === "/schedule"
-                  ? "bg-indigo-50 text-indigo-600 rounded-lg"
-                  : "hover:bg-gray-50 text-gray-700"
-              }  rounded-lg flex items-center gap-2`}
+                  ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
+                  : "dark:hover:bg-zinc-800"
+              }  rounded-lg flex items-center gap-2 hover:bg-gray-50`}
             >
               <CalendarPlus2 size={20} />
               <Link to={"/schedule"} className="font-semibold">
@@ -95,9 +99,9 @@ export const AppSidebar = () => {
           <li
             className={`py-2 px-2 cursor-pointer ${
               location.pathname === "/users"
-                ? "bg-indigo-50 text-indigo-600 rounded-lg"
-                : "hover:bg-gray-50 text-gray-700"
-            }  rounded-lg flex items-center gap-2`}
+                ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
+                : "dark:hover:bg-zinc-800"
+            }  rounded-lg flex items-center gap-2 hover:bg-gray-50`}
           >
             <Users size={20} />
             <Link to={"/users"} className="font-semibold">
@@ -108,9 +112,9 @@ export const AppSidebar = () => {
         <li
           className={`py-2 px-2 cursor-pointer ${
             location.pathname === "/logout"
-              ? "bg-indigo-50 text-indigo-600 rounded-lg"
-              : "hover:bg-gray-50 text-gray-700"
-          }  rounded-lg flex items-center gap-2`}
+              ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
+              : "dark:hover:bg-zinc-800"
+          }  rounded-lg flex items-center gap-2 hover:bg-gray-50`}
         >
           <LogOut size={20} />
           <Link to={"/logout"} className="font-semibold">
@@ -118,7 +122,14 @@ export const AppSidebar = () => {
           </Link>
         </li>
       </ul>
-      <div></div>
+      <div className="bg-white dark:bg-zinc-900 dark:text-gray-400 text-gray-600 p-2 rounded-lg flex flex-col items-start">
+        <button
+          onClick={toggleTheme}
+          className="cursor-pointer p-2 text-base rounded-lg w-full text-start bg-gray-50 dark:bg-zinc-800 dark:text-gray-400 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2 mt-4 font-semibold"
+        >
+          {theme === "light" ? "☀️ Light" : "🌙 Dark"}
+        </button>
+      </div>
     </Sidebar>
   );
 };

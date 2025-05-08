@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -43,32 +43,31 @@ const chartConfig: ChartConfig = {
   },
 };
 
-// Demo data with varying counts to demonstrate scaling
+// Define all expected categories - order them as shown in the screenshot
+const allCategories = [
+  "Wedding",
+  "Others",
+  "Baptism",
+  "Mass",
+  "Meeting",
+  "Funeral",
+  "Confession",
+];
 
 interface BarChartComponentProps {
   fetchedEvents?: Event[];
 }
 
 function BarChartComponent({ fetchedEvents }: BarChartComponentProps) {
-  // Use demo data for preview, or real data when available
-  const events = fetchedEvents?.length ? fetchedEvents : [];
-
-  // Define all expected categories - order them as shown in the screenshot
-  const allCategories = [
-    "Wedding",
-    "Others",
-    "Baptism",
-    "Mass",
-    "Meeting",
-    "Funeral",
-    "Confession",
-  ];
-
   // State to store processed data
   const [chartData, setChartData] = useState<CategoryData[]>([]);
 
-  useEffect(() => {
-    // Process data, ensuring case-insensitive handling
+  // Memoize the events data and formatted data to prevent unnecessary re-renders
+  const events = useMemo(() => {
+    return fetchedEvents?.length ? fetchedEvents : [];
+  }, [fetchedEvents]);
+
+  const formattedData = useMemo(() => {
     const categoryCountMap: Record<string, number> = {};
 
     // Initialize all categories with 0 count
@@ -98,12 +97,10 @@ function BarChartComponent({ fetchedEvents }: BarChartComponentProps) {
 
     console.log("Category counts:", categoryCountMap);
 
-    // Convert to array format for the chart
-    // Maintain the order of allCategories
-    const formattedData: CategoryData[] = allCategories.map((category) => ({
+    // Convert to array format for the chart and include displayCount
+    return allCategories.map((category) => ({
       category,
-      count: categoryCountMap[category],
-      // For display purposes: use a minimum height for zero/low values
+      count: categoryCountMap[category] || 0,
       displayCount:
         categoryCountMap[category] === 0
           ? 0.5
@@ -111,9 +108,11 @@ function BarChartComponent({ fetchedEvents }: BarChartComponentProps) {
           ? 1
           : categoryCountMap[category],
     }));
+  }, [events]); // Depend on 'events'
 
+  useEffect(() => {
     setChartData(formattedData);
-  }, [fetchedEvents]); // Depend only on fetchedEvents to avoid continuous rerendering
+  }, [formattedData]);
 
   // Custom tooltip that shows the actual count
   const CustomTooltip = ({
@@ -126,9 +125,13 @@ function BarChartComponent({ fetchedEvents }: BarChartComponentProps) {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-2 shadow rounded border border-gray-200">
-          <p className="font-medium">{data.category}</p>
-          <p className="text-sm text-gray-600">Count: {data.count}</p>
+        <div className="bg-white p-2 shadow rounded border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+          <p className="font-medium text-gray-900 dark:text-gray-100">
+            {data.category}
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Count: {data.count}
+          </p>
         </div>
       );
     }
@@ -136,10 +139,12 @@ function BarChartComponent({ fetchedEvents }: BarChartComponentProps) {
   };
 
   return (
-    <Card className="border border-gray-200 shadow-xs h-full">
+    <Card className="border border-gray-200 shadow-xs h-full dark:bg-zinc-900 dark:border-gray-800">
       <CardHeader className="mt-4">
-        <CardTitle>Event Category Count</CardTitle>
-        <CardDescription>
+        <CardTitle className="dark:text-gray-300">
+          Event Category Count
+        </CardTitle>
+        <CardDescription className="text-sm dark:text-gray-400">
           Showing total events category this month
         </CardDescription>
       </CardHeader>
@@ -176,7 +181,9 @@ function BarChartComponent({ fetchedEvents }: BarChartComponentProps) {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="leading-none text-muted-foreground">Event Category</div>
+        <div className="leading-none text-muted-foreground dark:text-gray-400">
+          Event Category
+        </div>
       </CardFooter>
     </Card>
   );

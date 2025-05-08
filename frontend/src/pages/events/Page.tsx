@@ -51,10 +51,12 @@ const Page = () => {
   console.log("Props passed to LineChartComponent:", eventLastMonth);
 
   return (
-    <div className="h-full pb-12">
+    <div className="darK:bg-zinc-900 h-full pb-12">
       <div className="mb-6">
-        <h2 className="text-gray-800 font-bold text-2xl">Dashboard</h2>
-        <p className="text-sm text-gray-700">
+        <h2 className="text-gray-800 font-bold text-2xl dark:text-gray-200">
+          Dashboard
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-400 mt-2">
           Visualize data, monitor progress, and gain insights.
         </p>
       </div>

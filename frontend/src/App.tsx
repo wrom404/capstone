@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   return (
-    <div>
+    <div className="dark:bg-zinc-900 min-h-screen h-full">
       <RoutePage />
       <Toaster />
     </div>

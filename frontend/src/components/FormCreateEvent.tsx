@@ -243,8 +243,8 @@ const FormCreateEvent = () => {
 
   if (isFetchingUsers || isCreatingEvent) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-white">
-        <div className="w-10 h-10 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex justify-center items-center bg-white dark:bg-zinc-900">
+        <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -279,14 +279,14 @@ const FormCreateEvent = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       onSubmit={handleSubmitForm}
-      className="border border-gray-300 rounded-lg p-6 w-full"
+      className="border border-gray-300 rounded-lg p-6 w-full dark:bg-zinc-900 dark:border-gray-800"
     >
       <h2 className="text-2xl font-bold mt-2 mb-3">Schedule Event</h2>
       <div className="flex flex-col lg:flex-row gap-8">
         {/* First Column */}
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Event</Label>
+            <Label className="dark:text-gray-300">Event</Label>
             <Input
               type="text"
               id="text"
@@ -294,18 +294,18 @@ const FormCreateEvent = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, title: e.target.value })
               }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700" 
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Category</Label>
+            <Label className="dark:text-gray-300">Category</Label>
             <CustomSelect
               value={formEvent.eventType || ""}
               onValueChange={(e) =>
                 setFormEvent({ ...formEvent, eventType: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-300 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -321,7 +321,7 @@ const FormCreateEvent = () => {
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>
+            <Label className="dark:text-gray-300">
               Priest<span className="text-gray-500">*</span>
             </Label>
             <Input
@@ -331,12 +331,12 @@ const FormCreateEvent = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, priestName: e.target.value })
               }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>
+            <Label className="dark:text-gray-300">
               Chapel Name<span className="text-gray-500">*</span>
             </Label>
             <Input
@@ -346,12 +346,12 @@ const FormCreateEvent = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, chapelName: e.target.value })
               }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label htmlFor="message">
+            <Label className="dark:text-gray-300" htmlFor="message">
               Description <span className="text-gray-500">*</span>
             </Label>
             <Textarea
@@ -360,11 +360,11 @@ const FormCreateEvent = () => {
                 setFormEvent({ ...formEvent, description: e.target.value })
               }
               id="message"
-              className="border-gray-300 w-full"
+              className="border-gray-300 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300"
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Venue</Label>
+            <Label className="dark:text-gray-300">Venue</Label>
             <Input
               value={formEvent.venue || ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -372,12 +372,12 @@ const FormCreateEvent = () => {
               }
               type="text"
               id="text"
-              className="shadow-none border border-gray-300 focus:ring-1 w-full"
+              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>
+            <Label className="dark:text-gray-300">
               Expected attendance <span className="text-gray-500">*</span>
             </Label>
             <CustomSelect
@@ -386,7 +386,7 @@ const FormCreateEvent = () => {
                 setFormEvent({ ...formEvent, expectedAttendance: e })
               }
             >
-              <SelectTrigger className="w-full border border-gray-300 shadow-none">
+              <SelectTrigger className="w-full border border-gray-300 shadow-none dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -399,7 +399,7 @@ const FormCreateEvent = () => {
           </div>
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>
+            <Label className="dark:text-gray-300">
               Email <span className="text-gray-500">*</span>
             </Label>
             <div className="flex  space-x-4">
@@ -410,10 +410,10 @@ const FormCreateEvent = () => {
                 }
                 type="text"
                 id="text"
-                className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full"
+                className="shadow-none border border-gray-300 focus:ring-0 focus:outline-none w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
               />
               <button
-                className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-1 rounded-lg cursor-pointer"
+                className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-1 rounded-lg cursor-pointer dark:bg-zinc-900 dark:border-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                 type="button"
                 onClick={handleClickOpenModal}
               >
@@ -429,11 +429,11 @@ const FormCreateEvent = () => {
                 setFormEvent({ ...formEvent, sendReminder: !!e })
               }
               id="sendReminder"
-              className="cursor-pointer shadow border-1 border-gray-400"
+              className="cursor-pointer shadow border-1 border-gray-400 dark:border-gray-800"
             />
             <label
               htmlFor="sendReminder"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer dark:text-gray-300"
             >
               Send reminder?
             </label>
@@ -443,7 +443,7 @@ const FormCreateEvent = () => {
         {/* Second Column */}
         <div className="flex-1">
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label htmlFor="message">
+            <Label className="dark:text-gray-300" htmlFor="message">
               Date <span className="text-xs text-gray-500">(YYY/MM/DD)</span>
             </Label>
             <DatePicker
@@ -457,24 +457,24 @@ const FormCreateEvent = () => {
               // minDate={new Date()}
               isClearable
               dateFormat="yyyy/MM/dd"
-              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700" 
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label>Time</Label>
+            <Label className="dark:text-gray-300">Time</Label>
             <div className="flex gap-4">
               <input
                 type="time"
-                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, startTime: e.target.value })
                 }
                 value={formEvent.startTime || ""}
               />
-              <span className="flex items-center">to</span>
+              <span className="flex items-center dark:text-gray-300">to</span>
               <input
                 type="time"
-                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm"
+                className="border border-gray-300 py-1.5 px-3 w-full rounded-md text-sm dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormEvent({ ...formEvent, endTime: e.target.value })
                 }
@@ -485,24 +485,24 @@ const FormCreateEvent = () => {
 
           {/* Sponsors Section */}
           <div className="mt-6 mb-4">
-            <Label className="text-md font-semibold">Sponsors</Label>
+            <Label className="text-md font-semibold dark:text-gray-300">Sponsors</Label>
 
             <div className="mt-2 space-y-2">
               {formEvent.sponsors.map((sponsor, index) => (
                 <div
                   key={index}
-                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                  className="flex items-center bg-gray-50 p-2 rounded-md dark:bg-zinc-900 dark:border-gray-800"
                 >
                   <div className="flex-1">
-                    <p className="font-medium">{sponsor.sponsor_name}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-medium dark:text-gray-300">{sponsor.sponsor_name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {sponsor.sponsor_type}
                     </p>
                   </div>
                   <Button
                     type="button"
                     variant="ghost"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:text-red-500 dark:hover:text-red-400 dark:hover:bg-zinc-800"
                     onClick={() => handleRemoveSponsor(index)}
                   >
                     <Trash2 size={16} />
@@ -511,11 +511,11 @@ const FormCreateEvent = () => {
               ))}
             </div>
 
-            <div className="mt-3 p-3 border border-gray-300 rounded-md">
-              <h4 className="font-medium text-sm mb-2">Add Sponsor</h4>
+            <div className="mt-3 p-3 border border-gray-300 rounded-md dark:bg-zinc-900 dark:border-gray-800">
+              <h4 className="font-medium text-sm mb-2 dark:text-gray-300">Add Sponsor</h4>
               <div className="flex items-end gap-2">
                 <div className="flex-1">
-                  <Label className="text-xs">Name</Label>
+                  <Label className="text-xs dark:text-gray-300">Name</Label>
                   <Input
                     type="text"
                     value={newSponsor.sponsor_name}
@@ -525,12 +525,12 @@ const FormCreateEvent = () => {
                         sponsor_name: e.target.value,
                       })
                     }
-                    className="text-sm"
+                    className="text-sm dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                     placeholder="Mr. & Mrs. Smith"
                   />
                 </div>
                 <div className="w-1/3">
-                  <Label className="text-xs">Type</Label>
+                  <Label className="text-xs dark:text-gray-300">Type</Label>
                   <CustomSelect
                     value={newSponsor.sponsor_type}
                     onValueChange={(e) =>
@@ -551,7 +551,7 @@ const FormCreateEvent = () => {
                 </div>
                 <Button
                   type="button"
-                  className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-2 rounded-lg"
+                  className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-2 rounded-lg dark:bg-zinc-900 dark:border-purple-700 dark:text-gray-300 dark:hover:bg-gray-700"
                   onClick={handleAddSponsor}
                 >
                   <Plus size={16} />
@@ -562,24 +562,24 @@ const FormCreateEvent = () => {
 
           {/* Organizers Section */}
           <div className="mt-6 mb-4">
-            <Label className="text-md font-semibold">Organizers</Label>
+            <Label className="text-md font-semibold dark:text-gray-300">Organizers</Label>
 
             <div className="mt-2 space-y-2">
               {formEvent.organizers.map((organizer, index) => (
                 <div
                   key={index}
-                  className="flex items-center bg-gray-50 p-2 rounded-md"
+                  className="flex items-center bg-gray-50 p-2 rounded-md dark:bg-zinc-900 dark:border-gray-800"
                 >
                   <div className="flex-1">
-                    <p className="font-medium">{organizer.name}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-medium dark:text-gray-300">{organizer.name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-300">
                       {organizer.position}
                     </p>
                   </div>
                   <Button
                     type="button"
                     variant="ghost"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:text-red-500 dar:hover:text-red-500 dark:hover:bg-zinc-800"
                     onClick={() => handleRemoveOrganizer(index)}
                   >
                     <Trash2 size={16} />
@@ -588,23 +588,23 @@ const FormCreateEvent = () => {
               ))}
             </div>
 
-            <div className="mt-3 p-3 border border-gray-300 rounded-md">
-              <h4 className="font-medium text-sm mb-2">Add Organizer</h4>
+            <div className="mt-3 p-3 border border-gray-300 rounded-md dark:bg-zinc-900 dark:border-gray-800">
+              <h4 className="font-medium text-sm mb-2 dark:text-gray-300">Add Organizer</h4>
               <div className="flex items-end gap-2">
                 <div className="flex-1">
-                  <Label className="text-xs">Name</Label>
+                  <Label className="text-xs dark:text-gray-300">Name</Label>
                   <Input
                     type="text"
                     value={newOrganizer.name}
                     onChange={(e) =>
                       setNewOrganizer({ ...newOrganizer, name: e.target.value })
                     }
-                    className="text-sm"
+                    className="text-sm dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                     placeholder="John Doe"
                   />
                 </div>
                 <div className="w-1/3">
-                  <Label className="text-xs">Position</Label>
+                  <Label className="text-xs dark:text-gray-300">Position</Label>
                   <CustomSelect
                     value={newOrganizer.position}
                     onValueChange={(e) =>
@@ -625,7 +625,7 @@ const FormCreateEvent = () => {
                 </div>
                 <Button
                   type="button"
-                  className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-2 rounded-lg"
+                  className="bg-white border border-purple-500 text-purple-600 hover:bg-purple-100 px-4 py-2 rounded-lg dark:bg-zinc-900 dark:border-purple-700 dark:text-gray-300 dark:hover:bg-gray-700"
                   onClick={handleAddOrganizer}
                 >
                   <Plus size={16} />
@@ -639,11 +639,11 @@ const FormCreateEvent = () => {
               checked={formEvent.isRecurring}
               onCheckedChange={handleOnCheckChange}
               id="terms"
-              className="cursor-pointer shadow border-1 border-gray-400"
+              className="cursor-pointer shadow border-1 border-gray-400 dark:border-gray-800"
             />
             <label
               htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer dark:text-gray-300"
             >
               Recurring Event?
             </label>
@@ -651,11 +651,11 @@ const FormCreateEvent = () => {
           {formEvent.isRecurring && (
             <div className="">
               <div className="grid w-full items-center gap-1.5 py-2.5">
-                <Label>Select Recurring Days</Label>
+                <Label className="dark:text-gray-300">Select Recurring Days</Label>
                 <Select
                   isMulti
                   placeholder=""
-                  className="text-gray-700 border-1 border-gray-50 rounded-sm shadow-none"
+                  className="text-gray-700 border-1 border-gray-50 rounded-sm shadow-none dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                   options={options}
                   value={options.filter((option) =>
                     formEvent.recurringDays
@@ -679,11 +679,11 @@ const FormCreateEvent = () => {
                     setFormEvent({ ...formEvent, hasEndDate: e })
                   }
                   id="terms"
-                  className="shadow cursor-pointer border-1 border-gray-400"
+                  className="shadow cursor-pointer border-1 border-gray-400 dark:border-gray-800"
                 />
                 <label
                   htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer dark:text-gray-300"
                 >
                   Has End Date?
                 </label>
@@ -692,7 +692,7 @@ const FormCreateEvent = () => {
           )}
           {formEvent.hasEndDate && (
             <div className="grid w-full items-center gap-1.5 py-2.5">
-              <Label htmlFor="endDate">
+              <Label className="dark:text-gray-300" htmlFor="endDate">
                 End Date{" "}
                 <span className="text-xs text-gray-500">(YYY/MM/DD)</span>
               </Label>
@@ -700,7 +700,7 @@ const FormCreateEvent = () => {
                 id="endDate"
                 minDate={new Date()}
                 dateFormat="yyyy/MM/dd"
-                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md"
+                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700" 
                 selected={
                   formEvent.endDate ? new Date(formEvent.endDate) : null
                 }
@@ -720,7 +720,7 @@ const FormCreateEvent = () => {
       <div className="flex justify-end my-2 mt-4">
         <Button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide px-4 py-5 text-base rounded-lg text-white flex items-center gap-2"
+          className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide px-4 py-5 text-base rounded-lg text-white flex items-center gap-2 dark:bg-indigo-700 dark:hover:bg-indigo-600"  
         >
           <CalendarPlus2 size={16} /> Schedule Event
         </Button>

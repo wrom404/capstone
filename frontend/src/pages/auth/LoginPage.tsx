@@ -42,7 +42,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen border border-red-300 flex flex-col md:flex-row">
+    <div className="bg-white min-h-screen flex flex-col md:flex-row">
       <div className="flex-1 flex flex-col md:gap-16 gap-10 items-center">
         <div className="mt-10 md:mt-12 lg:mt-18">
           <div className="flex items-center gap-2">

@@ -64,11 +64,13 @@ function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
   });
 
   return (
-    <Card className="border border-gray-200 shadow-xs">
+    <Card className="border border-gray-200 shadow-xs dark:border-gray-800 dark:bg-zinc-900">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row border-none">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Event Count Over Time</CardTitle>
-          <CardDescription>
+          <CardTitle className="dark:text-gray-300">
+            Event Count Over Time
+          </CardTitle>
+          <CardDescription className="dark:text-gray-400">
             Showing the number of events over the selected time period. Date
           </CardDescription>
         </div>
@@ -81,13 +83,13 @@ function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
           </SelectTrigger>
 
           <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
+            <SelectItem value="90d" className="rounded-lg dark:text-gray-400">
               Last 3 months
             </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
+            <SelectItem value="30d" className="rounded-lg dark:text-gray-400">
               Last 30 days
             </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
+            <SelectItem value="7d" className="rounded-lg dark:text-gray-400">
               Last 7 days
             </SelectItem>
           </SelectContent>
@@ -108,7 +110,7 @@ function LineChartComponent({ fetchedEvents }: { fetchedEvents: Event[] }) {
                 />
                 <stop
                   offset="95%"
-                  stopColor="oklch(51.1% 0.262 276.966)"
+                  stopColor="light:oklch(51.1% 0.262 276.966) dark:oklch(51.1% 0.262 276.966)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
