@@ -254,7 +254,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
 
   if (isFetchingEvent || isUpdatingEvent || isLoading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="min-h-screen flex justify-center items-center dark:bg-zinc-900">
         <div className="w-8 h-8 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );

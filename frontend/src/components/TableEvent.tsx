@@ -53,7 +53,7 @@ const TableEvent = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="cursor-pointer hover:bg-gray-50 border border-gray-300 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 dark:hover:bg-zinc-800"
+              className="cursor-pointer hover:bg-gray-50 border border-gray-300 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:bg-zinc-800"
               key={index}
               onClick={(e) => {
                 e.stopPropagation();

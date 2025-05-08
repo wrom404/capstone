@@ -58,7 +58,7 @@ function TableArchive({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               key={data.id}
-              className="cursor-pointer hover:bg-gray-50 border border-gray-300 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 dark:hover:bg-zinc-800"
+              className="cursor-pointer hover:bg-gray-50 border border-gray-300 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:bg-zinc-800"
             >
               <TableCell className="font-medium">{data.title || ""}</TableCell>
               <TableCell>{data.event_type || ""}</TableCell>

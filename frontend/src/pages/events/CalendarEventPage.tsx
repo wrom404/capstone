@@ -10,31 +10,28 @@ import useFetchUnAvailableDate from "@/hooks/events/useFetchCountEvent";
 import filterUnAvailableDate from "@/utils/filterUnAvailableDate";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import "./calendarOverrides.css";
-
+import "@/style/calendarOverrides.css";
 
 const localizer = momentLocalizer(moment);
 
 const CalendarEventPage = () => {
-
   const [isDarkMode, setIsDarkMode] = useState(
     document.documentElement.classList.contains("dark")
   );
-  
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDarkMode(document.documentElement.classList.contains("dark"));
     });
-  
+
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
-  
+
     return () => observer.disconnect();
   }, []);
 
-  
   const {
     isPending: isFetchingEvents,
     data: fetchedEvents,
@@ -78,10 +75,10 @@ const CalendarEventPage = () => {
     const matchingEvent = eventCount.find(
       (event) => moment(event.date).format("YYYY-MM-DD") === dateString
     );
-  
+
     const count = matchingEvent ? parseInt(matchingEvent.count, 10) : 0;
     const isLimitReached = count >= 10;
-  
+
     return {
       style: {
         backgroundColor: isLimitReached
@@ -89,24 +86,15 @@ const CalendarEventPage = () => {
           : isDarkMode
           ? "oklch(21% 0.006 285.885)"
           : "white",
-        color: isLimitReached
-          ? "white"
-          : isDarkMode
-          ? "white"
-          : "black",
+        color: isLimitReached ? "white" : isDarkMode ? "white" : "black",
         fontWeight: dateString === todayString ? "bold" : "normal",
         cursor: isLimitReached ? "not-allowed" : "pointer",
-        border:
-          dateString === todayString ? "1px solid #2563eb" : undefined,
+        border: dateString === todayString ? "1px solid #2563eb" : undefined,
         borderLeft:
-          dateString !== todayString
-            ? "1px solid #ddd"
-            : "2px solid #1e3a8a",
+          dateString !== todayString ? "1px solid #ddd" : "2px solid #1e3a8a",
       },
     };
   };
-  
-  
 
   // Format the events for the calendar
   const myCalendarEvents = formatForCalendar(events);
@@ -171,7 +159,7 @@ const CalendarEventPage = () => {
 
   if (isFetchingEvents || isUnAvailableDate) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="min-h-screen flex justify-center items-center dark:bg-zinc-900">
         <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -216,54 +204,47 @@ const CalendarEventPage = () => {
           Event Legend
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:gap-6 md:gap-2 gap-0">
-          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#d4edda" }} // Color for "Mass"
-            ></div>
-            <span className="text-sm text-gray-700">Mass</span>
+          <div className="flex items-center space-x-2 group dark:hover:bg-zinc-800 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div className="w-4 h-4 rounded-full bg-[#d4edda] dark:bg-[#14532d]"></div>
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              Mass
+            </span>
           </div>
-          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#fcd5ce" }} // Color for "Wedding"
-            ></div>
-            <span className="text-sm text-gray-700">Wedding</span>
+          <div className="flex items-center space-x-2 group dark:hover:bg-zinc-800 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div className="w-4 h-4 rounded-full bg-[#fcd5ce] dark:bg-[#842029]"></div>
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              Wedding
+            </span>
           </div>
-          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#cfe2f3" }} // Color for "Baptism"
-            ></div>
-            <span className="text-sm text-gray-700">Baptism</span>
+          <div className="flex items-center space-x-2 group dark:hover:bg-zinc-800 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div className="w-4 h-4 rounded-full bg-[#cfe2f3] dark:bg-[#084298]"></div>
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              Baptism
+            </span>
           </div>
-          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#f8f9fa" }} // Color for "Funeral"
-            ></div>
-            <span className="text-sm text-gray-700">Funeral</span>
+          <div className="flex items-center space-x-2 group dark:hover:bg-zinc-800 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div className="w-4 h-4 rounded-full bg-[#f8f9fa] dark:bg-[#495057]"></div>
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              Funeral
+            </span>
           </div>
-          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#e2d3f3" }} // Color for "Confession"
-            ></div>
-            <span className="text-sm text-gray-700">Confession</span>
+          <div className="flex items-center space-x-2 group dark:hover:bg-zinc-800 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div className="w-4 h-4 rounded-full bg-[#e2d3f3] dark:bg-[#5f378d]"></div>
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              Confession
+            </span>
           </div>
-          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#ffe5b4" }} // Color for "Meeting"
-            ></div>
-            <span className="text-sm text-gray-700">Meeting</span>
+          <div className="flex items-center space-x-2 group dark:hover:bg-zinc-800 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div className="w-4 h-4 rounded-full bg-[#ffe5b4] dark:bg-[#7f4300]"></div>
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              Meeting
+            </span>
           </div>
-          <div className="flex items-center space-x-2 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: "#f7f7e9" }} // Color for "Others"
-            ></div>
-            <span className="text-sm text-gray-700">Others</span>
+          <div className="flex items-center space-x-2 group dark:hover:bg-zinc-800 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <div className="w-4 h-4 rounded-full bg-[#f7f7e9] dark:*bg-[#495057]"></div>
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              Others
+            </span>
           </div>
         </div>
       </div>
