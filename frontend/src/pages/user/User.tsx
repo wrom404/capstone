@@ -75,7 +75,7 @@ const User = () => {
 
   const handleDelete = () => {
     if (selectedUserId) {
-      deleteUser(selectedUserId);
+      deleteUser(selectedUserId)
     }
   };
 

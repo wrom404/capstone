@@ -454,7 +454,7 @@ const FormCreateEvent = () => {
                   date: date ? date.toISOString() : null,
                 })
               }
-              // minDate={new Date()}
+              minDate={new Date()}
               isClearable
               dateFormat="yyyy/MM/dd"
               className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700" 
