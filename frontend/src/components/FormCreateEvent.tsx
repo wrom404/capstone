@@ -59,6 +59,9 @@ const FormCreateEvent = () => {
     hasEndDate: false,
     endDate: "",
     sendReminder: false,
+    wifeName: "",
+    husbandName: "",
+    childName: "",
     chapelName: "", // New field for chapel name
     sponsors: [], // New field for sponsors array
     organizers: [], // New field for organizers array
@@ -294,7 +297,7 @@ const FormCreateEvent = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormEvent({ ...formEvent, title: e.target.value })
               }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700" 
+              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -319,36 +322,111 @@ const FormCreateEvent = () => {
               </SelectContent>
             </CustomSelect>
           </div>
+          {formEvent.eventType === "wedding" && (
+            <div className="grid w-full items-center gap-1.5 py-2.5">
+              <Label className="dark:text-gray-300">Couple</Label>
+              <div className="flex gap-4">
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.husbandName || ""}
+                  placeholder="Husband Name"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, husbandName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.wifeName || ""}
+                  placeholder="Wife Name"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, wifeName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
+            </div>
+          )}
+          {formEvent.eventType === "baptism" && (
+            <>
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">Couple</Label>
+                <div className="flex gap-4">
+                  <Input
+                    type="text"
+                    id="text"
+                    value={formEvent.husbandName || ""}
+                    placeholder="Husband Name"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormEvent({
+                        ...formEvent,
+                        husbandName: e.target.value,
+                      })
+                    }
+                    className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                  />
+                  <Input
+                    type="text"
+                    id="text"
+                    value={formEvent.wifeName || ""}
+                    placeholder="Wife Name"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormEvent({ ...formEvent, wifeName: e.target.value })
+                    }
+                    className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                  />
+                </div>
+              </div>
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">Child</Label>
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.childName || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, childName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
+            </>
+          )}
 
-          <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label className="dark:text-gray-300">
-              Priest<span className="text-gray-500">*</span>
-            </Label>
-            <Input
-              type="text"
-              id="text"
-              value={formEvent.priestName || ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, priestName: e.target.value })
-              }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
-            />
-          </div>
+          {!["meeting", "others", ""].includes(formEvent.eventType) ? (
+            <>
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">
+                  Priest<span className="text-gray-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.priestName || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, priestName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
 
-          <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label className="dark:text-gray-300">
-              Chapel Name<span className="text-gray-500">*</span>
-            </Label>
-            <Input
-              type="text"
-              id="chapelName"
-              value={formEvent.chapelName || ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, chapelName: e.target.value })
-              }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
-            />
-          </div>
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">
+                  Chapel Name<span className="text-gray-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  id="chapelName"
+                  value={formEvent.chapelName || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, chapelName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
+            </>
+          ) : null}
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label className="dark:text-gray-300" htmlFor="message">
@@ -457,7 +535,7 @@ const FormCreateEvent = () => {
               minDate={new Date()}
               isClearable
               dateFormat="yyyy/MM/dd"
-              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700" 
+              className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
             />
           </div>
           <div className="grid w-full items-center gap-1.5 py-2.5">
@@ -485,7 +563,9 @@ const FormCreateEvent = () => {
 
           {/* Sponsors Section */}
           <div className="mt-6 mb-4">
-            <Label className="text-md font-semibold dark:text-gray-300">Sponsors</Label>
+            <Label className="text-md font-semibold dark:text-gray-300">
+              Sponsors
+            </Label>
 
             <div className="mt-2 space-y-2">
               {formEvent.sponsors.map((sponsor, index) => (
@@ -494,7 +574,9 @@ const FormCreateEvent = () => {
                   className="flex items-center bg-gray-50 p-2 rounded-md dark:bg-zinc-900 dark:border-gray-800"
                 >
                   <div className="flex-1">
-                    <p className="font-medium dark:text-gray-300">{sponsor.sponsor_name}</p>
+                    <p className="font-medium dark:text-gray-300">
+                      {sponsor.sponsor_name}
+                    </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       {sponsor.sponsor_type}
                     </p>
@@ -512,7 +594,9 @@ const FormCreateEvent = () => {
             </div>
 
             <div className="mt-3 p-3 border border-gray-300 rounded-md dark:bg-zinc-900 dark:border-gray-800">
-              <h4 className="font-medium text-sm mb-2 dark:text-gray-300">Add Sponsor</h4>
+              <h4 className="font-medium text-sm mb-2 dark:text-gray-300">
+                Add Sponsor
+              </h4>
               <div className="flex items-end gap-2">
                 <div className="flex-1">
                   <Label className="text-xs dark:text-gray-300">Name</Label>
@@ -562,7 +646,9 @@ const FormCreateEvent = () => {
 
           {/* Organizers Section */}
           <div className="mt-6 mb-4">
-            <Label className="text-md font-semibold dark:text-gray-300">Organizers</Label>
+            <Label className="text-md font-semibold dark:text-gray-300">
+              Organizers
+            </Label>
 
             <div className="mt-2 space-y-2">
               {formEvent.organizers.map((organizer, index) => (
@@ -571,7 +657,9 @@ const FormCreateEvent = () => {
                   className="flex items-center bg-gray-50 p-2 rounded-md dark:bg-zinc-900 dark:border-gray-800"
                 >
                   <div className="flex-1">
-                    <p className="font-medium dark:text-gray-300">{organizer.name}</p>
+                    <p className="font-medium dark:text-gray-300">
+                      {organizer.name}
+                    </p>
                     <p className="text-sm text-gray-500 dark:text-gray-300">
                       {organizer.position}
                     </p>
@@ -589,7 +677,9 @@ const FormCreateEvent = () => {
             </div>
 
             <div className="mt-3 p-3 border border-gray-300 rounded-md dark:bg-zinc-900 dark:border-gray-800">
-              <h4 className="font-medium text-sm mb-2 dark:text-gray-300">Add Organizer</h4>
+              <h4 className="font-medium text-sm mb-2 dark:text-gray-300">
+                Add Organizer
+              </h4>
               <div className="flex items-end gap-2">
                 <div className="flex-1">
                   <Label className="text-xs dark:text-gray-300">Name</Label>
@@ -651,7 +741,9 @@ const FormCreateEvent = () => {
           {formEvent.isRecurring && (
             <div className="">
               <div className="grid w-full items-center gap-1.5 py-2.5">
-                <Label className="dark:text-gray-300">Select Recurring Days</Label>
+                <Label className="dark:text-gray-300">
+                  Select Recurring Days
+                </Label>
                 <Select
                   isMulti
                   placeholder=""
@@ -700,7 +792,7 @@ const FormCreateEvent = () => {
                 id="endDate"
                 minDate={new Date()}
                 dateFormat="yyyy/MM/dd"
-                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700" 
+                className="text-sm border border-gray-300 focus:outline-1 focus:ring-1 focus:outline-gray-300 focus:ring-gray-300 w-full py-1.5 px-3 rounded-md dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                 selected={
                   formEvent.endDate ? new Date(formEvent.endDate) : null
                 }
@@ -720,7 +812,7 @@ const FormCreateEvent = () => {
       <div className="flex justify-end my-2 mt-4">
         <Button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide px-4 py-5 text-base rounded-lg text-white flex items-center gap-2 dark:bg-indigo-700 dark:hover:bg-indigo-600"  
+          className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer tracking-wide px-4 py-5 text-base rounded-lg text-white flex items-center gap-2 dark:bg-indigo-700 dark:hover:bg-indigo-600"
         >
           <CalendarPlus2 size={16} /> Schedule Event
         </Button>

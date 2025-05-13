@@ -23,6 +23,9 @@ export type Event = {
   chapel_name?: string; // Name of the chapel where the event will be held
   cancel_reason?: string | null;
   send_reminder?: boolean | null;
+  wife_name?: string | null;
+  husband_name?: string | null;
+  child_name?: string | null;
   reminder_sent?: boolean | null; // "HH:MM:SS" format
   sponsors?: {
     sponsor_name: string;
@@ -115,6 +118,9 @@ export type FormDataProps = {
   reminderSent?: boolean;
   sendReminder?: boolean;
   cancelReason?: string | null;
+  wifeName?: string | null;
+  husbandName?: string | null;
+  childName?: string | null;
   sponsors: {
     sponsor_name: string;
     sponsor_type: string; // "Principal" | "Secondary"

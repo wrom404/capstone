@@ -92,6 +92,9 @@ const EventDetailPage = () => {
     status: "",
     id: "",
     cancelReason: "",
+    wifeName: "",
+    husbandName: "",
+    childName: "",
     chapelName: "", // New field for chapel name
     sponsors: [], // New field for sponsors array
     organizers: [], // New field for organizers array
@@ -128,6 +131,9 @@ const EventDetailPage = () => {
         sponsors: eventData.sponsors || [],
         organizers: eventData.organizers || [],
         cancelReason: eventData?.cancel_reason || "",
+        wifeName: eventData.wife_name || "",
+        husbandName: eventData.husband_name || "",
+        childName: eventData.child_name || "",
       });
     }
   }, [fetchedEvent]);
@@ -366,6 +372,39 @@ const EventDetailPage = () => {
                 )}
               </div>
               <div className="flex-1 space-y-6">
+                {events.husbandName && events.wifeName && (
+                  <>
+                    <div className="flex text-gray-700 dark:text-gray-400">
+                      <Users className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                      <div>
+                        <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
+                          Husband
+                        </p>
+                        <p>{events.husbandName}</p>
+                      </div>
+                    </div>
+                    <div className="flex text-gray-700 dark:text-gray-400">
+                      <Users className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                      <div>
+                        <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
+                          Wife
+                        </p>
+                        <p>{events.wifeName}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
+                {events.childName && (
+                  <div className="flex text-gray-700 dark:text-gray-400">
+                    <Users className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                    <div>
+                      <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
+                        Child
+                      </p>
+                      <p>{events.childName}</p>
+                    </div>
+                  </div>
+                )}
                 {events.sponsors.length > 0 && (
                   <div className="flex pt-4 border-gray-100 dark:border-gray-700">
                     <Handshake className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />

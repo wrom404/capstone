@@ -23,6 +23,9 @@ export async function createEvent(req, res) {
     endDate,
     chapelName,
     sendReminder,
+    wifeName,
+    husbandName,
+    childName,
     sponsors = [], // [{ sponsor_name, sponsor_type }]
     organizers = [], // [{ name, position }]
   } = req.body;
@@ -120,8 +123,8 @@ export async function createEvent(req, res) {
     const eventInsert = await pool.query(
       `INSERT INTO events 
         (title, event_type, priest_name, description, venue, expected_attendance, client_email, 
-         date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, chapel_name, send_reminder)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+         date, start_time, end_time, is_recurring, recurring_days, has_end_date, end_date, chapel_name, send_reminder, wife_name, husband_name, child_name)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
        RETURNING id`,
       [
         title,
@@ -140,6 +143,9 @@ export async function createEvent(req, res) {
         endDate,
         chapelName,
         sendReminder,
+        wifeName,
+        husbandName,
+        childName,
       ]
     );
 
