@@ -58,10 +58,10 @@ const FormCreateEvent = () => {
     recurringDays: [],
     hasEndDate: false,
     endDate: "",
-    sendReminder: false,
     wifeName: "",
     husbandName: "",
     childName: "",
+    sendReminder: false,
     chapelName: "", // New field for chapel name
     sponsors: [], // New field for sponsors array
     organizers: [], // New field for organizers array
@@ -322,6 +322,7 @@ const FormCreateEvent = () => {
               </SelectContent>
             </CustomSelect>
           </div>
+
           {formEvent.eventType === "wedding" && (
             <div className="grid w-full items-center gap-1.5 py-2.5">
               <Label className="dark:text-gray-300">Couple</Label>
@@ -409,21 +410,20 @@ const FormCreateEvent = () => {
                   }
                   className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
                 />
-              </div>
-
-              <div className="grid w-full items-center gap-1.5 py-2.5">
-                <Label className="dark:text-gray-300">
-                  Chapel Name<span className="text-gray-500">*</span>
-                </Label>
-                <Input
-                  type="text"
-                  id="chapelName"
-                  value={formEvent.chapelName || ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFormEvent({ ...formEvent, chapelName: e.target.value })
-                  }
-                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
-                />
+                <div className="grid w-full items-center gap-1.5 py-2.5">
+                  <Label className="dark:text-gray-300">
+                    Chapel Name<span className="text-gray-500">*</span>
+                  </Label>
+                  <Input
+                    type="text"
+                    id="chapelName"
+                    value={formEvent.chapelName || ""}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormEvent({ ...formEvent, chapelName: e.target.value })
+                    }
+                    className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                  />
+                </div>
               </div>
             </>
           ) : null}

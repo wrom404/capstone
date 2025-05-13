@@ -52,6 +52,9 @@ interface FormDataProps {
   chapelName: string;
   sponsors: Sponsor[];
   organizers: Organizer[];
+  husbandName?: string;
+  wifeName?: string;
+  childName?: string;
 }
 
 const dayOptions = [
@@ -114,6 +117,9 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
     hasEndDate: false,
     endDate: "",
     chapelName: "",
+    husbandName: "",
+    wifeName: "",
+    childName: "",
     sponsors: [],
     organizers: [],
   });
@@ -323,38 +329,111 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
             </CustomSelect>
           </div>
 
-          {(formEvent.eventType === "mass" ||
-            formEvent.eventType === "wedding" ||
-            formEvent.eventType === "baptism" ||
-            formEvent.eventType === "funeral" ||
-            formEvent.eventType === "confession") && (
+          {formEvent.eventType === "wedding" && (
             <div className="grid w-full items-center gap-1.5 py-2.5">
-              <Label className="dark:text-gray-300">
-                Priest Name<span className="text-gray-500">*</span>
-              </Label>
-              <Input
-                type="text"
-                id="text"
-                value={formEvent.priestName || ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormEvent({ ...formEvent, priestName: e.target.value })
-                }
-                className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
-              />
+              <Label className="dark:text-gray-300">Couple</Label>
+              <div className="flex gap-4">
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.husbandName || ""}
+                  placeholder="Husband Name"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, husbandName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.wifeName || ""}
+                  placeholder="Wife Name"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, wifeName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
             </div>
           )}
+          {formEvent.eventType === "baptism" && (
+            <>
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">Couple</Label>
+                <div className="flex gap-4">
+                  <Input
+                    type="text"
+                    id="text"
+                    value={formEvent.husbandName || ""}
+                    placeholder="Husband Name"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormEvent({
+                        ...formEvent,
+                        husbandName: e.target.value,
+                      })
+                    }
+                    className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                  />
+                  <Input
+                    type="text"
+                    id="text"
+                    value={formEvent.wifeName || ""}
+                    placeholder="Wife Name"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormEvent({ ...formEvent, wifeName: e.target.value })
+                    }
+                    className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                  />
+                </div>
+              </div>
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">Child</Label>
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.childName || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, childName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
+            </>
+          )}
 
-          <div className="grid w-full items-center gap-1.5 py-2.5">
-            <Label className="dark:text-gray-300">Chapel Name</Label>
-            <Input
-              type="text"
-              value={formEvent.chapelName || ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormEvent({ ...formEvent, chapelName: e.target.value })
-              }
-              className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
-            />
-          </div>
+          {!["meeting", "others", ""].includes(formEvent.eventType) ? (
+            <>
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">
+                  Priest<span className="text-gray-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  id="text"
+                  value={formEvent.priestName || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, priestName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
+
+              <div className="grid w-full items-center gap-1.5 py-2.5">
+                <Label className="dark:text-gray-300">
+                  Chapel Name<span className="text-gray-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  id="chapelName"
+                  value={formEvent.chapelName || ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormEvent({ ...formEvent, chapelName: e.target.value })
+                  }
+                  className="shadow-none border border-gray-300 focus:ring-1 w-full dark:bg-zinc-900 dark:border-gray-800 dark:focus:ring-gray-700"
+                />
+              </div>
+            </>
+          ) : null}
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label htmlFor="message">Description</Label>

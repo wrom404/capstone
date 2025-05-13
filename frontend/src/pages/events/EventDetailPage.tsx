@@ -13,6 +13,8 @@ import {
   UserCog,
   Mail as MailIcon,
   MessageCircleMore,
+  UserRound,
+  Baby 
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type FormDataProps } from "@/types/types";
@@ -375,7 +377,7 @@ const EventDetailPage = () => {
                 {events.husbandName && events.wifeName && (
                   <>
                     <div className="flex text-gray-700 dark:text-gray-400">
-                      <Users className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                      <UserRound className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                       <div>
                         <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
                           Husband
@@ -384,7 +386,7 @@ const EventDetailPage = () => {
                       </div>
                     </div>
                     <div className="flex text-gray-700 dark:text-gray-400">
-                      <Users className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                      <UserRound className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                       <div>
                         <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
                           Wife
@@ -396,7 +398,7 @@ const EventDetailPage = () => {
                 )}
                 {events.childName && (
                   <div className="flex text-gray-700 dark:text-gray-400">
-                    <Users className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                    <Baby  className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                     <div>
                       <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
                         Child
