@@ -75,16 +75,7 @@ export async function createEvent(req, res) {
       });
     }
 
-    console.log("clientEmail: ", clientEmail);
-
-    if (clientEmail) {
-      // send email notification
-      await sendEmailNotification(
-        clientEmail,
-        `Your Event Request: ${eventType} on ${date}`,
-        htmlContentNotification
-      );
-    }
+    console.log("continue to check if there is conflict time");
 
     // Time conflict check
     const existingEvents = await pool.query(
@@ -92,8 +83,10 @@ export async function createEvent(req, res) {
       [date]
     );
 
-    const clientEnd = new Date(startTime);
-    const clientStart = new Date(endTime);
+    console.log("existingEvents: ", existingEvents.rows);
+
+    const clientStart = new Date(startTime);
+    const clientEnd = new Date(endTime);
 
     const clientStartTime = formatToManilaTime(clientStart); // Convert millisecond to Manila time format example: 2023-10-01T08:00:00.000Z to 08:00 AM
     const clientEndTime = formatToManilaTime(clientEnd);
@@ -107,6 +100,10 @@ export async function createEvent(req, res) {
 
       const convertedServerStartTime = formatToManilaTime(serverStart);
       const convertedServerEndTime = formatToManilaTime(serverEnd);
+      console.log("convertedServerStartTime: ", convertedServerStartTime); // military time example 13:10 (1:10 PM)
+      console.log("convertedServerEndTime: ", convertedServerEndTime); //military time example 14:10 (2:10 PM)
+      console.log("clientStartTime: ", clientStartTime); // military time example  13:40 (1:40 PM)
+      console.log("clientEndTime: ", clientEndTime); // military time example  14:40 (2:40 PM)
 
       if (
         clientStartTime <= convertedServerEndTime &&
@@ -117,6 +114,17 @@ export async function createEvent(req, res) {
           message: "Time slot already occupied. Please choose another time.",
         });
       }
+    }
+
+    console.log("clientEmail: ", clientEmail);
+
+    if (clientEmail) {
+      // send email notification
+      await sendEmailNotification(
+        clientEmail,
+        `Your Event Request: ${eventType} on ${date}`,
+        htmlContentNotification
+      );
     }
 
     // Insert event

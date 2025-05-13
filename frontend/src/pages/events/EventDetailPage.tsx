@@ -450,17 +450,6 @@ const EventDetailPage = () => {
             </div>
 
             {/* Additional Details Section */}
-            {events.priestName && (
-              <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex">
-                <p className="text-gray-600 dark:text-gray-400">
-                  <span className="font-medium text-gray-800 dark:text-gray-300">
-                    Officiated by:
-                  </span>{" "}
-                  {events.priestName}
-                </p>
-              </div>
-            )}
-
             {events.clientEmail && events.clientEmail.length > 0 && (
               <div className="pt-4 border-t border-gray-100 flex dark:border-gray-700">
                 <div className="">
@@ -483,6 +472,16 @@ const EventDetailPage = () => {
                       ))}
                   </p>
                 </div>
+              </div>
+            )}
+            {events.priestName && (
+              <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex">
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium text-gray-800 dark:text-gray-300">
+                    Officiated by:
+                  </span>{" "}
+                  {events.priestName}
+                </p>
               </div>
             )}
             <div className="border-t pt-6 flex justify-end dark:border-gray-700">

@@ -1,6 +1,11 @@
 import nodemailer from "nodemailer";
 
 export const sendEmailNotification = async (to, subject, htmlContent) => {
+  if (!to || (Array.isArray(to) && to.length === 0)) {
+    console.log("⚠️ No email provided. Skipping email notification.");
+    return;
+  }
+  
   const recipients = Array.isArray(to.to) ? to.to.join(", ") : to;
 
   console.log("subject: ", subject);
