@@ -36,9 +36,15 @@ const TableEvent = ({
           <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
             Category
           </TableHead>
-          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">Date</TableHead>
-          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">Time</TableHead>
-          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">Status</TableHead>
+          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
+            Date
+          </TableHead>
+          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
+            Time
+          </TableHead>
+          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
+            Status
+          </TableHead>
           {userRole && roles.includes(userRole) && (
             <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
               Actions

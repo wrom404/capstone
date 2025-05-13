@@ -12,6 +12,7 @@ import {
   Handshake,
   UserCog,
   Mail as MailIcon,
+  MessageCircleMore,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type FormDataProps } from "@/types/types";
@@ -90,6 +91,7 @@ const EventDetailPage = () => {
     endDate: "",
     status: "",
     id: "",
+    cancelReason: "",
     chapelName: "", // New field for chapel name
     sponsors: [], // New field for sponsors array
     organizers: [], // New field for organizers array
@@ -125,6 +127,7 @@ const EventDetailPage = () => {
         status: eventData.status || "",
         sponsors: eventData.sponsors || [],
         organizers: eventData.organizers || [],
+        cancelReason: eventData?.cancel_reason || "",
       });
     }
   }, [fetchedEvent]);
@@ -209,6 +212,8 @@ const EventDetailPage = () => {
                     ? "bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300"
                     : events.status === "completed"
                     ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-200"
+                    : events.status === "canceled"
+                    ? "bg-red-50 text-red-600 dark:bg-red-900 dark:text-red-300"
                     : "bg-indigo-50 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200"
                 }`}
               >
@@ -348,6 +353,17 @@ const EventDetailPage = () => {
                     <p>{events.expectedAttendance} people</p>
                   </div>
                 </div>
+                {events.cancelReason && (
+                  <div className="flex text-gray-700 dark:text-gray-400">
+                    <MessageCircleMore className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                    <div>
+                      <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
+                        Cancel Reason
+                      </p>
+                      <p>{events.cancelReason} </p>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="flex-1 space-y-6">
                 {events.sponsors.length > 0 && (
@@ -431,24 +447,26 @@ const EventDetailPage = () => {
               </div>
             )}
             <div className="border-t pt-6 flex justify-end dark:border-gray-700">
-              {userRole && adminRoles.includes(userRole) && (
-                <div className="">
-                  <Button
-                    type="submit"
-                    className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-5 px-4 text-base dark:bg-indigo-700 dark:hover:bg-indigo-800 text-gray-50"
-                    onClick={() => handleClickEvent(Number(events.id) || 0)}
-                  >
-                    Edit Event
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-5 px-4 text-base dark:bg-red-700 dark:hover:bg-red-800 text-gray-50 font-medium"
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    Cancel Event
-                  </Button>
-                </div>
-              )}
+              {userRole &&
+                adminRoles.includes(userRole) &&
+                events.status !== "canceled" && (
+                  <div className="">
+                    <Button
+                      type="submit"
+                      className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-5 px-4 text-base dark:bg-indigo-700 dark:hover:bg-indigo-800 text-gray-50"
+                      onClick={() => handleClickEvent(Number(events.id) || 0)}
+                    >
+                      Edit Event
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-5 px-4 text-base dark:bg-red-700 dark:hover:bg-red-800 text-gray-50 font-medium"
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      Cancel Event
+                    </Button>
+                  </div>
+                )}
             </div>
           </div>
         </div>

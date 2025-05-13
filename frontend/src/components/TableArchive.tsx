@@ -16,9 +16,11 @@ import { roles as adminRoles } from "@/constant/constant";
 function TableArchive({
   data,
   handleClickRestoreEvent,
+  handleClickEvent,
 }: {
   data: CanceledEvent[];
   handleClickRestoreEvent: (id: string) => void;
+  handleClickEvent: (id: number) => void;
 }) {
   const { userRole } = useUserStore();
 
@@ -37,12 +39,18 @@ function TableArchive({
           <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
             Event Name
           </TableHead>
-          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">Date</TableHead>
-          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">Time</TableHead>
+          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
+            Date
+          </TableHead>
+          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
+            Time
+          </TableHead>
           <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
             Canceled on
           </TableHead>
-          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">Status</TableHead>
+          <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
+            Status
+          </TableHead>
           {userRole && adminRoles.includes(userRole) && (
             <TableHead className="text-gray-800 dark:text-gray-300 font-semibold">
               Actions
@@ -58,6 +66,7 @@ function TableArchive({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               key={data.id}
+              onClick={() => handleClickEvent(data.id)}
               className="cursor-pointer hover:bg-gray-50 border border-gray-300 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:bg-zinc-800"
             >
               <TableCell className="font-medium">{data.title || ""}</TableCell>

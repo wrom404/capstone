@@ -7,6 +7,7 @@ import CustomDeleteModal from "@/components/CustomDeleteModal";
 import { RotateCcw } from "lucide-react";
 import useRestoreEvent from "@/hooks/events/useRestoreEvent";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const ArchivePage = () => {
   const [eventId, setEventId] = useState<string | null>(null);
@@ -30,7 +31,7 @@ const ArchivePage = () => {
   >([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  console.log("Data: ", data);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let events = data;
@@ -96,6 +97,10 @@ const ArchivePage = () => {
     }
   };
 
+  const handleClickEvent = (id: number) => {
+    navigate(`/event/${id}`);
+  };
+
   if (isFetching || isRestoring) {
     return (
       <div className="min-h-full flex justify-center items-center dark:bg-zinc-900">
@@ -150,6 +155,7 @@ const ArchivePage = () => {
         </div>
       </div>
       <TableArchive
+        handleClickEvent={handleClickEvent}
         data={paginatedEvents || []}
         handleClickRestoreEvent={handleClickRestoreEvent}
       />
