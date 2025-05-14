@@ -187,6 +187,9 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
         hasEndDate: eventData.has_end_date || false,
         endDate: eventData.end_date || "",
         chapelName: eventData.chapel_name || "",
+        husbandName: eventData.husband_name || "",
+        wifeName: eventData.wife_name || "",
+        childName: eventData.child_name || "",
         sponsors: eventData.sponsors || [],
         organizers: eventData.organizers || [],
       });

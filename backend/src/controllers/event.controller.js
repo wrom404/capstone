@@ -367,6 +367,10 @@ export async function updateEvent(req, res) {
     recurringDays,
     hasEndDate,
     endDate,
+    chapelName,
+    husbandName,
+    wifeName,
+    childName,
     sponsors = [], // Expecting: [{ sponsor_name, sponsor_type }]
     organizers = [], // Expecting: [{ name, position }]
   } = req.body;
@@ -387,8 +391,8 @@ export async function updateEvent(req, res) {
        SET title = $1, event_type = $2, priest_name = $3, description = $4,
            venue = $5, client_email = $6, date = $7, start_time = $8, end_time = $9,
            is_recurring = $10, recurring_days = $11, has_end_date = $12, end_date = $13,
-           expected_attendance = $14
-       WHERE id = $15
+           expected_attendance = $14, husband_name = $15, wife_name = $16, child_name = $17, chapel_name = $18
+       WHERE id = $19
        RETURNING *`,
       [
         title,
@@ -405,6 +409,10 @@ export async function updateEvent(req, res) {
         hasEndDate,
         endDate,
         expectedAttendance,
+        husbandName,
+        wifeName,
+        childName,
+        chapelName,
         id,
       ]
     );
