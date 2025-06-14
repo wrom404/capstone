@@ -15,6 +15,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import User from "@/pages/user/User";
 import Signup from "@/pages/auth/SignUp";
 import { roles as adminRoles } from "@/constant/constant";
+import MyMap from "@/pages/events/GoogleMaps";
 
 const RoutePage = () => {
   return (
@@ -79,6 +80,14 @@ const RoutePage = () => {
                     >
                       <ScheduleEventPage />
                     </AdminPrivateRoute>
+                  }
+                />
+                <Route
+                  path="/maps/:locationName?"
+                  element={
+                    <ProtectedRoute>
+                      <MyMap />
+                    </ProtectedRoute>
                   }
                 />
                 <Route

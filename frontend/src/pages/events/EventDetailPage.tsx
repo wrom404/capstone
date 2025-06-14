@@ -14,11 +14,13 @@ import {
   Mail as MailIcon,
   MessageCircleMore,
   UserRound,
-  Baby 
+  Baby,
+  Edit,
+  Trash2
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type FormDataProps } from "@/types/types";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import CustomCancelModal from "@/components/CustomCancelModal";
 import useCancelEvent from "@/hooks/events/useCancelEvent";
@@ -215,19 +217,18 @@ const EventDetailPage = () => {
                 </p>
               </div>
               <span
-                className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  events.status === "upcoming"
-                    ? "bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300"
-                    : events.status === "completed"
+                className={`px-4 py-2 rounded-full text-sm font-medium ${events.status === "upcoming"
+                  ? "bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300"
+                  : events.status === "completed"
                     ? "bg-yellow-50 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-200"
                     : events.status === "canceled"
-                    ? "bg-red-50 text-red-600 dark:bg-red-900 dark:text-red-300"
-                    : "bg-indigo-50 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200"
-                }`}
+                      ? "bg-red-50 text-red-600 dark:bg-red-900 dark:text-red-300"
+                      : "bg-indigo-50 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200"
+                  }`}
               >
                 {events.status &&
                   events.status.charAt(0).toUpperCase() +
-                    events.status.slice(1)}
+                  events.status.slice(1)}
               </span>
             </div>
           </div>
@@ -348,7 +349,7 @@ const EventDetailPage = () => {
                     <p className="font-medium text-gray-800 dark:text-gray-300">
                       Venue
                     </p>
-                    <p>{events.venue}</p>
+                    <p className="hover:underline hover:text-indigo-900"><Link to={`/maps/${events.venue}`}>{events.venue}</Link></p>
                   </div>
                 </div>
 
@@ -398,7 +399,7 @@ const EventDetailPage = () => {
                 )}
                 {events.childName && (
                   <div className="flex text-gray-700 dark:text-gray-400">
-                    <Baby  className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
+                    <Baby className="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-500" />
                     <div>
                       <p className="font-medium text-gray-800 dark:text-gray-300 text-base">
                         Child
@@ -496,14 +497,14 @@ const EventDetailPage = () => {
                       className="bg-indigo-600 hover:bg-indigo-700 font-medium cursor-pointer py-5 px-4 text-base dark:bg-indigo-700 dark:hover:bg-indigo-800 text-gray-50"
                       onClick={() => handleClickEvent(Number(events.id) || 0)}
                     >
-                      Edit Event
+                      <Edit /> Edit Event
                     </Button>
                     <Button
                       type="submit"
                       className="bg-red-600 hover:bg-red-700 cursor-pointer ml-2.5 py-5 px-4 text-base dark:bg-red-700 dark:hover:bg-red-800 text-gray-50 font-medium"
                       onClick={() => setIsModalOpen(true)}
                     >
-                      Cancel Event
+                      <Trash2 /> Cancel Event
                     </Button>
                   </div>
                 )}

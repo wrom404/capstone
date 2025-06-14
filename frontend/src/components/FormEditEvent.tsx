@@ -485,7 +485,7 @@ const FormEditEvent = ({ id }: { id: string | undefined }) => {
 
           <div className="grid w-full items-center gap-1.5 py-2.5">
             <Label className="dark:text-gray-300">
-              Client Email <span className="text-gray-50">*</span>
+              Email <span className="text-gray-50">*</span>
             </Label>
             <Input
               value={formEvent.clientEmail || ""}
