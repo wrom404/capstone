@@ -53,7 +53,7 @@ const fetchCoordinates = async (location: string): Promise<Coordinates | null> =
 };
 
 export default function SearchableMap() {
-  const { locationName } = useParams() ?? 'Merida Leyte';
+  const { locationName } = useParams() ?? 'Merida Church Leyte';
   const [coords, setCoords] = useState<Coordinates | null>(null);
 
   useEffect(() => {
@@ -76,7 +76,8 @@ export default function SearchableMap() {
       <GeocoderControl />
     </MapContainer>
   ) : (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center flex-col h-screen">
+      <div className="w-8 h-8 border-4 border-gray-400 border-t-transparent rounded-full animate-spin mb-2"></div>
       <p>Loading map for "{locationName}"...</p>
     </div>
   );

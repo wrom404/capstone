@@ -31,7 +31,7 @@ export const AppSidebar = () => {
           Parish Events
         </span>
       </h2>
-      <ul className="dark:bg-zinc-900 dark:text-gray-400 pt-4 bg-white h-full space-y-2 overflow-hidden">
+      <ul className="dark:bg-zinc-900 dark:text-gray-300 pt-4 bg-white h-full space-y-2 overflow-hidden">
         <li
           className={`py-2 px-2 cursor-pointer ${location.pathname === "/dashboard"
             ? "bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300"
@@ -111,7 +111,7 @@ export const AppSidebar = () => {
             }  rounded-lg flex items-center gap-2 hover:bg-gray-50`}
         >
           <MapPin size={20} />
-          <Link to={"/maps/Merida Leyte"} className="font-semibold">
+          <Link to={"/maps/Merida Church Leyte"} className="font-semibold">
             Location
           </Link>
         </li>
