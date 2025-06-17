@@ -24,7 +24,9 @@ A full-stack web application designed to streamline the scheduling of parish eve
 
 
 🚧 Project Status
+
 This project is finished but still open for improvement.
+
 
 
 
@@ -35,6 +37,8 @@ Frontend:
 React.js
 
 Tailwind CSS
+
+Framer Motion
 
 Axios
 
