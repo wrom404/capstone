@@ -1,4 +1,5 @@
 📅 Parish Event Scheduling System with Email Notification
+
 A full-stack web application designed to streamline the scheduling of parish events and improve communication through automated email notifications. Built as a capstone project to address manual scheduling issues and ensure parishioners and staff are always informed and organized.
 
 📌 Features
@@ -21,8 +22,10 @@ A full-stack web application designed to streamline the scheduling of parish eve
 🗺️ Interactive Map Integration – Users can view the exact venue location of an event using Leaflet.js. Clicking the event’s venue will redirect them to a dynamic map page showing the location based on the scheduled event’s data.
 
 
+
 🚧 Project Status
 This project is finished but still open for improvement.
+
 
 
 🛠️ Tech Stack
@@ -53,6 +56,7 @@ Nodemailer
 JWT (JSON Web Token)
 
 
+
 Tools & DevOps:
 
 Postman (API testing)
@@ -60,6 +64,7 @@ Postman (API testing)
 Git & GitHub
 
 VS Code
+
 
 
 🗃️ Database Schema
@@ -70,6 +75,8 @@ canceled_events
 roles
 positions
 notifications
+
+
 
 ⚙️ How to Run Locally
 Clone the repo:
@@ -107,10 +114,12 @@ npm run start:dev
 npm run dev
 
 
+
 👥 Team Members
 Wendel Rom – Full Stack Development and Documentation
 
 Others - Documentation
+
 
 
 🎯 Objectives
@@ -122,6 +131,7 @@ Improve communication using automatic email alerts.
 Allow granular control of user access based on roles and positions.
 
 Provide a visual reference for event venues via interactive maps.
+
 
 
 ✅ Future Improvements
